@@ -13,7 +13,7 @@ import java.sql.Date;
 public class Account {
    private int accountId;
     private String username;
-    private byte[] passwordHash;
+    private String passwordHash;
     private String email;
 
     public int getAccountId() {
@@ -32,11 +32,11 @@ public class Account {
         this.username = username;
     }
 
-    public byte[] getPasswordHash() {
+    public String getPasswordHash() {
         return passwordHash;
     }
 
-    public void setPasswordHash(byte[] passwordHash) {
+    public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
 
@@ -141,7 +141,7 @@ public class Account {
     public Account() {
     }
 
-    public Account(int accountId, String username, byte[] passwordHash, String email, String phoneNumber, int roleId,
+    public Account(int accountId, String username, String passwordHash, String email, String phoneNumber, int roleId,
                    Date createdDate, Date lastLogin, boolean isActive, String profileImage, String firstName, String lastName,
                    Date dateOfBirth, String gender) {
         this.accountId = accountId;
@@ -161,3 +161,4 @@ public class Account {
     }
  
 }
+

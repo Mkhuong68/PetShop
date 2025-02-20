@@ -24,6 +24,10 @@ public class Product {
     private int soldQuantity;
     private int views;
 
+    public Product(int aInt, String string, double aDouble, String string0, int aInt0) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     public int getProductId() {
         return productId;
     }
@@ -137,5 +141,17 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.soldQuantity = soldQuantity;
         this.views = views;
+    }
+
+    public String getDescription() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public double getPrice() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public String getName() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

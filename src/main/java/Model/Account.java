@@ -16,6 +16,7 @@ public class Account {
     private String passwordHash;
     private String email;
 
+
     public int getAccountId() {
         return accountId;
     }
@@ -158,6 +159,10 @@ public class Account {
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+    }
+
+    public byte[] getpasswordHash() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
  
 }

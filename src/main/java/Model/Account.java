@@ -16,7 +16,6 @@ public class Account {
     private String username;
     private String passwordHash;
     private String email;
-    private String address;
 
     public int getAccountId() {
         return accountId;
@@ -48,14 +47,6 @@ public class Account {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getAddress() {
-        return address;
     }
 
     public String getPhoneNumber() {

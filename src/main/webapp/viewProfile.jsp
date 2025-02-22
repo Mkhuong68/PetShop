@@ -20,14 +20,13 @@
                 <h2>Hello, ${account.firstName} ${account.lastName}!</h2>
                 <p><strong>Email:</strong> ${account.email}</p>
                 <p><strong>Phone:</strong> ${account.phoneNumber}</p>
-                <p><strong>Address:</strong> ${account.address}</p>
             </div>
 
             <!-- Update Profile and Change Password -->
             <div class="account-actions">
-                <a href="${pageContext.request.contextPath}/updateProfile">Update Profile</a>
-                <a href="${pageContext.request.contextPath}/changePassword">Change Password</a>
-                <a href="${pageContext.request.contextPath}/logout">Logout</a>
+                <a href="updateProfile.jsp">Update Profile</a>
+                <a href="changePassword.jsp">Change Password</a>
+                <a href="singinandlogin.jsp">Logout</a>
             </div>
 
 

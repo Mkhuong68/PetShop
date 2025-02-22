@@ -70,8 +70,7 @@ public class AccountDAO {
             ps.setString(2, account.getLastName());
             ps.setString(3, account.getEmail());
             ps.setString(4, account.getPhoneNumber());
-            ps.setString(5, account.getAddress());
-            ps.setInt(6, account.getAccountId());
+            ps.setInt(5, account.getAccountId());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {

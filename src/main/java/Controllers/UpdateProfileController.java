@@ -36,10 +36,9 @@ public class UpdateProfileController extends HttpServlet {
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
 
         // Kiểm tra thông tin không để trống
-        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty() ) {
             response.getWriter().write("All fields are required.");
             return;
         }
@@ -55,7 +54,7 @@ public class UpdateProfileController extends HttpServlet {
         account.setLastName(lastName);
         account.setEmail(email);
         account.setPhoneNumber(phone);
-        account.setAddress(address);
+        
 
         AccountDAO accountDAO = new AccountDAO();
         boolean isUpdated = accountDAO.updateAccount(account);

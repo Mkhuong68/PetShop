@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 
-function banAccount(id) {
+function banCustomerAccount(id) {
     let reason = prompt("Enter reason for banning:");
     if (!reason || reason.trim() === "") {
         alert("You must enter a reason!");
@@ -12,7 +12,7 @@ function banAccount(id) {
 
     let form = document.createElement("form");
     form.method = "POST";
-    form.action =  "/SWP_PetShop/BanAccountController"; 
+    form.action = "/SWP_PetShop/BanCustomerAccountController"; // ✅ Gọi đúng Servlet
 
     let idField = document.createElement("input");
     idField.type = "hidden";

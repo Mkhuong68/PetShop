@@ -62,37 +62,37 @@ public class AccountDAO {
     }
 
     // Lấy tất cả tài khoản
-    public List<Account> getAllAccounts() {
-        List<Account> accounts = new ArrayList<>();
-        String sql = "SELECT * FROM Account";  // Đảm bảo bảng có dữ liệu
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+   public List<Account> getAllCustomerAccounts() {
+    List<Account> customerAccounts = new ArrayList<>();
+    String sql = "SELECT * FROM Account WHERE role_id = 3";  // ✅ Chỉ lấy tài khoản Customer (role_id = 3)
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
 
-            while (rs.next()) {
-                accounts.add(new Account(
-                    rs.getInt("account_id"),
-                    rs.getString("username"),
-                    rs.getString("password_hash"),
-                    rs.getString("email"),
-                    rs.getString("phone_number"),
-                    rs.getInt("role_id"),
-                    rs.getDate("created_date"),
-                    rs.getDate("last_login"),
-                    rs.getBoolean("is_active"),
-                    rs.getString("profile_image"),
-                    rs.getString("first_name"),
-                    rs.getString("last_name"),
-                    rs.getDate("date_of_birth"),
-                    rs.getString("gender"),
-                    rs.getBoolean("is_active") ? null : "Banned"
-                ));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        while (rs.next()) {
+            customerAccounts.add(new Account(
+                rs.getInt("account_id"),
+                rs.getString("username"),
+                rs.getString("password_hash"),
+                rs.getString("email"),
+                rs.getString("phone_number"),
+                rs.getInt("role_id"),
+                rs.getDate("created_date"),
+                rs.getDate("last_login"),
+                rs.getBoolean("is_active"),
+                rs.getString("profile_image"),
+                rs.getString("first_name"),
+                rs.getString("last_name"),
+                rs.getDate("date_of_birth"),
+                rs.getString("gender"),
+                rs.getBoolean("is_active") ? null : "Banned"
+            ));
         }
-        return accounts;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return customerAccounts;
+}
 
     // Cập nhật thông tin tài khoản
     public boolean updateAccount(Account account) {
@@ -116,15 +116,15 @@ public class AccountDAO {
         }
     }
 
-    // Ban tài khoản với lý do cụ thể
-public boolean banAccount(int accountId, String reason) {
-    String sql = "UPDATE Account SET is_active = 0, banned_reason = ? WHERE account_id = ?";
+   // Ban tài khoản Customer
+public boolean banCustomerAccount(int customerId, String reason) {
+    String sql = "UPDATE Account SET is_active = 0, banned_reason = ? WHERE account_id = ? AND role_id = 3"; // ✅ Chỉ ban Customer
 
     try (Connection conn = DBConnection.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql)) {
 
         ps.setString(1, reason);
-        ps.setInt(2, accountId);
+        ps.setInt(2, customerId);
 
         return ps.executeUpdate() > 0;
     } catch (SQLException e) {

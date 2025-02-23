@@ -5,23 +5,27 @@
             30
         </session-timeout>
     </session-config>
+
+    <!-- Customer Profile Controller -->
     <servlet>
         <servlet-name>CustomerProfileController</servlet-name>
         <servlet-class>Controllers.CustomerProfileController</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>CustomerProfileController</servlet-name>
         <url-pattern>/viewProfile</url-pattern>
     </servlet-mapping>
-    <!-- Ban Staff Account Controller -->
-    <servlet>
-    <servlet-name>BanAccountController</servlet-name>
-    <servlet-class>Controllers.BanAccountController</servlet-class>
-</servlet>
 
-<servlet-mapping>
-    <servlet-name>BanAccountController</servlet-name>
-    <url-pattern>/BanAccountController</url-pattern>
-</servlet-mapping>
+    <!-- Ban Customer Account Controller -->
+    <servlet>
+        <servlet-name>BanCustomerAccountController</servlet-name>
+        <servlet-class>Controllers.BanCustomerAccountController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>BanCustomerAccountController</servlet-name>
+        <url-pattern>/BanCustomerAccountController</url-pattern>
+    </servlet-mapping>
 
 </web-app>

@@ -35,10 +35,7 @@
         </session-timeout>
     </session-config>
     <servlet>
-        <servlet-name>DeliveryOrderListController</servlet-name>
-        <servlet-class>Controllers.DeliveryOrderListController</servlet-class>
-    </servlet>
-    <servlet>
+        
         <servlet-name>VerifyEmailController</servlet-name>
         <servlet-class>Controllers.VerifyEmailController</servlet-class>
     </servlet>
@@ -52,10 +49,7 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>DeliveryOrderListController</servlet-name>
-        <url-pattern>/deliveryOrderList</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
+        
         <servlet-name>VerifyEmailController</servlet-name>
         <url-pattern>/verifyEmail</url-pattern>
     </servlet-mapping>
@@ -90,5 +84,13 @@
         <servlet-name>BanCustomerAccountController</servlet-name>
         <url-pattern>/BanCustomerAccountController</url-pattern>
     </servlet-mapping>
-    
+    <servlet>
+        <servlet-name>DeliveryOrderListController</servlet-name>
+        <servlet-class>Controllers.DeliveryOrderListController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeliveryOrderListController</servlet-name>
+        <url-pattern>/deliveryList</url-pattern>
+    </servlet-mapping>
+
 </web-app>

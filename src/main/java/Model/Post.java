@@ -4,19 +4,20 @@
  */
 package Model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
  * @author tvhun
  */
 public class Post {
+
     private int postId;
     private int accountId;
     private String title;
     private String content;
     private int statusId;
-    private Date createdDate;
+    private Timestamp createdDate;
 
     public int getPostId() {
         return postId;
@@ -58,17 +59,18 @@ public class Post {
         this.statusId = statusId;
     }
 
-    public Date getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Post() {}
+    public Post() {
+    }
 
-    public Post(int postId, int accountId, String title, String content, int statusId, Date createdDate) {
+    public Post(int postId, int accountId, String title, String content, int statusId, Timestamp createdDate) {
         this.postId = postId;
         this.accountId = accountId;
         this.title = title;
@@ -76,5 +78,9 @@ public class Post {
         this.statusId = statusId;
         this.createdDate = createdDate;
     }
-    
+
+    public static boolean isEmpty(Post p) {
+        return p.getPostId() < 0 && p.getAccountId() < 0;
+    }
+
 }

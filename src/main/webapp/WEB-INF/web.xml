@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-	 version="3.1">
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <servlet>
-    <servlet-name>CustomerProfileController</servlet-name>
-    <servlet-class>Controllers.CustomerProfileController</servlet-class>
+        <servlet-name>CustomerProfileController</servlet-name>
+        <servlet-class>Controllers.CustomerProfileController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CustomerProfileController</servlet-name>
+        <url-pattern>/viewProfile</url-pattern>
+    </servlet-mapping>
+    <!-- Ban Staff Account Controller -->
+    <servlet>
+    <servlet-name>BanAccountController</servlet-name>
+    <servlet-class>Controllers.BanAccountController</servlet-class>
 </servlet>
-<servlet-mapping>
-    <servlet-name>CustomerProfileController</servlet-name>
-    <url-pattern>/viewProfile</url-pattern>
-</servlet-mapping>
 
+<servlet-mapping>
+    <servlet-name>BanAccountController</servlet-name>
+    <url-pattern>/BanAccountController</url-pattern>
+</servlet-mapping>
 
 </web-app>

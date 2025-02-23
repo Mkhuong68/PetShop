@@ -11,10 +11,11 @@ import java.sql.Date;
  * @author tvhun
  */
 public class Account {
-   private int accountId;
+    private int accountId;
     private String username;
     private String passwordHash;
     private String email;
+    private String bannedReason;
 
     public int getAccountId() {
         return accountId;
@@ -80,12 +81,12 @@ public class Account {
         this.lastLogin = lastLogin;
     }
 
-    public boolean isIsActive() {
+    public boolean isActive() {
         return isActive;
     }
 
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setActive(boolean Active) {
+        this.isActive = Active;
     }
 
     public String getProfileImage() {
@@ -127,6 +128,15 @@ public class Account {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    // Phương thức kiểm tra tài khoản Google
+    public String getBannedReason() {
+        return bannedReason;
+    }
+
+    public boolean isGoogleAccount() {
+        return this.passwordHash == null || this.passwordHash.isEmpty();
+    }
     private String phoneNumber;
     private int roleId;
     private Date createdDate;
@@ -142,8 +152,8 @@ public class Account {
     }
 
     public Account(int accountId, String username, String passwordHash, String email, String phoneNumber, int roleId,
-                   Date createdDate, Date lastLogin, boolean isActive, String profileImage, String firstName, String lastName,
-                   Date dateOfBirth, String gender) {
+            Date createdDate, Date lastLogin, boolean isActive, String profileImage, String firstName, String lastName,
+            Date dateOfBirth, String gender, String bannedReason) {
         this.accountId = accountId;
         this.username = username;
         this.passwordHash = passwordHash;
@@ -158,7 +168,8 @@ public class Account {
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+        this.bannedReason = bannedReason;
     }
- 
+
 }
 

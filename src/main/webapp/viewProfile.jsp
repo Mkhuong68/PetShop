@@ -26,7 +26,7 @@
             <div class="account-actions">
                 <a href="updateProfile.jsp">Update Profile</a>
                 <a href="changePassword.jsp">Change Password</a>
-                <a href="singinandlogin.jsp">Logout</a>
+                <a href="hompage.jsp">Logout</a>
             </div>
 
 

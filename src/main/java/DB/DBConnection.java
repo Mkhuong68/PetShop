@@ -17,7 +17,11 @@ public class DBConnection {
         Connection conn;
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-           String url = "jdbc:sqlserver://MYDEVICE\\HUNGG:1433;databaseName=PetShop;user=sa;password=123456;encrypt=true;trustServerCertificate=true";
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=PetShop;"
+                    + "user=sa;"
+                    + "password=123;"
+                    + "encrypt=true;"
+                    + "trustServerCertificate=true;";
             conn = DriverManager.getConnection(url);
         } catch (Exception ex) {
             conn = null;

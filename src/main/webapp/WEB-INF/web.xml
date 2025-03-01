@@ -12,12 +12,39 @@
         <servlet-name>CustomerCommentController</servlet-name>
         <servlet-class>Controllers.CustomerCommentController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>StaffOrderController</servlet-name>
+        <servlet-class>Controllers.StaffOrderController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StaffOrderDetailController</servlet-name>
+        <servlet-class>Controllers.StaffOrderDetailController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CartController</servlet-name>
+        <servlet-class>Controllers.CartController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductListController</servlet-name>
+        <servlet-class>Controllers.ProductListController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductDetailController</servlet-name>
+        <servlet-class>Controllers.ProductDetailController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HomepageController</servlet-name>
+        <servlet-class>Controllers.HomepageController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CustomerOrderController</servlet-name>
+        <servlet-class>Controllers.CustomerOrderController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/HomeServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        
         <servlet-name>CustomerPostController</servlet-name>
         <url-pattern>/CustomerPostController</url-pattern>
     </servlet-mapping>
@@ -29,13 +56,40 @@
         <servlet-name>CustomerCommentController</servlet-name>
         <url-pattern>/CustomerCommentController</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffOrderController</servlet-name>
+        <url-pattern>/StaffOrderController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffOrderDetailController</servlet-name>
+        <url-pattern>/StaffOrderDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CartController</servlet-name>
+        <url-pattern>/Cart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductListController</servlet-name>
+        <url-pattern>/ProductList</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductDetailController</servlet-name>
+        <url-pattern>/ProductDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HomepageController</servlet-name>
+        <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CustomerOrderController</servlet-name>
+        <url-pattern>/OrderPage</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <servlet>
-        
         <servlet-name>VerifyEmailController</servlet-name>
         <servlet-class>Controllers.VerifyEmailController</servlet-class>
     </servlet>
@@ -47,9 +101,7 @@
         <servlet-name>HomeServlet</servlet-name>
         <servlet-class>Controllers.HomeServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
-        
         <servlet-name>VerifyEmailController</servlet-name>
         <url-pattern>/verifyEmail</url-pattern>
     </servlet-mapping>
@@ -62,24 +114,20 @@
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>CustomerPostController</welcome-file>
+        <welcome-file>login</welcome-file>
     </welcome-file-list>
-
     <servlet>
         <servlet-name>CustomerProfileController</servlet-name>
         <servlet-class>Controllers.CustomerProfileController</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>CustomerProfileController</servlet-name>
         <url-pattern>/viewProfile</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>BanCustomerAccountController</servlet-name>
         <servlet-class>Controllers.BanCustomerAccountController</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>BanCustomerAccountController</servlet-name>
         <url-pattern>/BanCustomerAccountController</url-pattern>
@@ -92,5 +140,4 @@
         <servlet-name>DeliveryOrderListController</servlet-name>
         <url-pattern>/deliveryList</url-pattern>
     </servlet-mapping>
-
 </web-app>

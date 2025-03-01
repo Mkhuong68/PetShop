@@ -1,0 +1,115 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 2, 2025, 3:20:51 AM
+    Author     : NgocNNCE181950
+*/
+/* Reset mặc định */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Tổng thể trang */
+body {
+    background-color: #f4f6f9;
+    padding: 30px;
+    text-align: center;
+}
+
+/* Tiêu đề */
+h1 {
+    color: #007bff;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+/* Bảng hiển thị thông tin */
+table {
+    width: 60%;
+    margin: auto;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Header của bảng */
+th {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    text-align: left;
+}
+
+/* Các ô dữ liệu */
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Hàng cuối cùng không có border */
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Select box */
+select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    background-color: white;
+    color: #333;
+    cursor: pointer;
+    transition: border 0.3s ease-in-out;
+    text-align: center;
+}
+
+select:hover {
+    border-color: #0056b3;
+}
+
+select:focus {
+    border-color: #ff9800;
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
+}
+
+/* Nút submit */
+input[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+/* Căn chỉnh form */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+

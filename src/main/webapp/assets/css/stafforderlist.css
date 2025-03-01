@@ -1,0 +1,90 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 2, 2025, 3:36:35 AM
+    Author     : NgocNNCE181950
+*/
+/* Reset mặc định */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Tổng thể trang */
+body {
+    background-color: #f4f6f9;
+    padding: 30px;
+    text-align: center;
+}
+
+/* Tiêu đề */
+h1 {
+    color: #007bff;
+    font-size: 26px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Bảng hiển thị */
+table {
+    width: 80%;
+    margin: auto;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Tiêu đề bảng */
+th {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    text-align: center;
+}
+
+/* Dữ liệu bảng */
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Hàng cuối không có border */
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Nút hành động */
+a {
+    text-decoration: none;
+    padding: 8px 12px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+a:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+/* Thông báo */
+p {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #d9534f;
+    font-weight: bold;
+}
+

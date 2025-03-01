@@ -9,8 +9,18 @@ package Model;
  * @author tvhun
  */
 public class OrderStatus {
+
     private int statusId;
     private String statusName;
+
+    public OrderStatus(int statusId, String statusName) {
+        this.statusId = statusId;
+        this.statusName = statusName;
+    }
+
+    public OrderStatus() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     public int getStatusId() {
         return statusId;
@@ -28,10 +38,4 @@ public class OrderStatus {
         this.statusName = statusName;
     }
 
-    public OrderStatus() {}
-
-    public OrderStatus(int statusId, String statusName) {
-        this.statusId = statusId;
-        this.statusName = statusName;
-    }
 }

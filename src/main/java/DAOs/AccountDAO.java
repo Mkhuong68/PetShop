@@ -1,85 +1,180 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package DAOs;
 
 import Model.Account;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import DB.DBConnection;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+/**
+ *
+ * @author THANH THAO
+ */
 
 public class AccountDAO {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/petshop";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "password";
 
-    public AccountDAO() {
-        // You might want to initialize a connection pool here instead
-    }
+    // Lấy thông tin tài khoản theo account_id
+    public Account getAccountById(int accountId) {
+        Account account = null;
+        String sql = "SELECT a.account_id, a.username, a.password_hash, a.email, a.phone_number, a.role_id, "
+                   + "a.created_date, a.last_login, a.is_active, a.profile_image, a.first_name, a.last_name, "
+                   + "a.date_of_birth, a.gender FROM Account a WHERE a.account_id = ?";
 
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-    }
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-    public List<Account> getAllAccounts() {
-        List<Account> accounts = new ArrayList<>();
-        String query = "SELECT * FROM accounts";
+            ps.setInt(1, accountId);
+            ResultSet rs = ps.executeQuery();
 
-        try (Connection connection = getConnection();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            while (rs.next()) {
-                Account account = new Account();
-                account.setAccountId(rs.getInt("accountId"));
-                account.setUsername(rs.getString("username"));
-                account.setEmail(rs.getString("email"));
-                accounts.add(account);
+            if (rs.next()) {
+                account = new Account(
+                    rs.getInt("account_id"),
+                    rs.getString("username"),
+                    rs.getString("password_hash"),
+                    rs.getString("email"),
+                    rs.getString("phone_number"),
+                    rs.getInt("role_id"),
+                    rs.getDate("created_date"),
+                    rs.getDate("last_login"),
+                    rs.getBoolean("is_active"),
+                    rs.getString("profile_image"),
+                    rs.getString("first_name"),
+                    rs.getString("last_name"),
+                    rs.getDate("date_of_birth"),
+                    rs.getString("gender"),
+                    rs.getBoolean("is_active") ? null : "Banned"  // ✅ Đã thêm dấu phẩy
+                );
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log the exception
+            e.printStackTrace();
         }
-        return accounts;
+        return account;
     }
 
-    public boolean createAccount(Account account) {
-        String query = "INSERT INTO accounts (username, email, passwordHash) VALUES (?, ?, ?)";
-        try (Connection connection = getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query)) {
+    // Lấy tất cả tài khoản
+   public List<Account> getAllCustomerAccounts() {
+    List<Account> customerAccounts = new ArrayList<>();
+    String sql = "SELECT * FROM Account WHERE role_id = 3";  // ✅ Chỉ lấy tài khoản Customer (role_id = 3)
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
 
-            pstmt.setString(1, account.getUsername());
-            pstmt.setString(2, account.getEmail());
-            pstmt.setBytes(3, account.getpasswordHash()); // Ensure password is hashed
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace(); // Log the exception
+        while (rs.next()) {
+            customerAccounts.add(new Account(
+                rs.getInt("account_id"),
+                rs.getString("username"),
+                rs.getString("password_hash"),
+                rs.getString("email"),
+                rs.getString("phone_number"),
+                rs.getInt("role_id"),
+                rs.getDate("created_date"),
+                rs.getDate("last_login"),
+                rs.getBoolean("is_active"),
+                rs.getString("profile_image"),
+                rs.getString("first_name"),
+                rs.getString("last_name"),
+                rs.getDate("date_of_birth"),
+                rs.getString("gender"),
+                rs.getBoolean("is_active") ? null : "Banned"
+            ));
         }
-        return false;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return customerAccounts;
+}
+
+    // Cập nhật thông tin tài khoản
+    public boolean updateAccount(Account account) {
+        String sql = "UPDATE Account SET first_name = ?, last_name = ?, email = ?, phone_number = ?, role_id = ?, is_active = ? WHERE account_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, account.getFirstName());
+            ps.setString(2, account.getLastName());
+            ps.setString(3, account.getEmail());
+            ps.setString(4, account.getPhoneNumber());
+            ps.setInt(5, account.getRoleId());
+            ps.setBoolean(6, account.isActive());
+            ps.setInt(7, account.getAccountId());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    public boolean updateAccount(int id, Account account) {
-        String query = "UPDATE accounts SET username = ?, email = ?, passwordHash = ? WHERE accountId = ?";
-        try (Connection connection = getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query)) {
+   // Ban tài khoản Customer
+public boolean banCustomerAccount(int customerId, String reason) {
+    String sql = "UPDATE Account SET is_active = 0, banned_reason = ? WHERE account_id = ? AND role_id = 3"; // ✅ Chỉ ban Customer
 
-            pstmt.setString(1, account.getUsername());
-            pstmt.setString(2, account.getEmail());
-            pstmt.setBytes(3, account.getpasswordHash()); // Ensure password is hashed
-            pstmt.setInt(4, id);
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace(); // Log the exception
-        }
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, reason);
+        ps.setInt(2, customerId);
+
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
         return false;
     }
+}
 
-    public boolean deleteAccount(int id) {
-        String query = "DELETE FROM accounts WHERE accountId = ?";
-        try (Connection connection = getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(query)) {
 
-            pstmt.setInt(1, id);
-            return pstmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace(); // Log the exception
+    // Đổi mật khẩu (chỉ áp dụng cho tài khoản không phải Google)
+    public boolean changePassword(int accountId, String oldPassword, String newPassword) {
+        if (oldPassword == null || newPassword == null || oldPassword.isEmpty() || newPassword.isEmpty()) {
+            return false;
         }
-        return false;
+
+        // Kiểm tra xem tài khoản có phải là tài khoản Google hay không
+        Account account = getAccountById(accountId);
+        if (account.isGoogleAccount()) {
+            return false; // Không thể thay đổi mật khẩu cho tài khoản Google
+        }
+
+        // Mã hóa mật khẩu
+        String oldPasswordHash = hashPassword(oldPassword);
+        String newPasswordHash = hashPassword(newPassword);
+
+        String sql = "UPDATE Account SET password_hash = ? WHERE account_id = ? AND password_hash = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newPasswordHash);
+            ps.setInt(2, accountId);
+            ps.setString(3, oldPasswordHash);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Mã hóa mật khẩu
+    private String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

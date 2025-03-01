@@ -5,35 +5,38 @@
 package Model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
  * @author tvhun
  */
 public class Category {
-     private int categoryId;
+    private int categoryId;
     private String categoryName;
     private String categoryDescription;
     private Integer parentCategoryId;
     private boolean isHidden;
     private Date createdDate;
     private Date lastUpdated;
+    private String categoryImage;
 
     public Category() {
     }
 
-    public Category(int categoryId, String categoryName, String categoryDescription, Integer parentCategoryId, boolean isHidden,
-                   Date createdDate, Date lastUpdated) {
+    public Category(int categoryId, String categoryName, String categoryDescription, Integer parentCategoryId, String categoryImage, boolean isHidden, Timestamp createdTimestamp, Timestamp lastUpdatedTimestamp) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.categoryDescription = categoryDescription;
         this.parentCategoryId = parentCategoryId;
+        this.categoryImage = categoryImage;
         this.isHidden = isHidden;
-        this.createdDate = createdDate;
-        this.lastUpdated = lastUpdated;
+        this.createdDate = createdTimestamp != null ? new Date(createdTimestamp.getTime()) : null;
+        this.lastUpdated = lastUpdatedTimestamp != null ? new Date(lastUpdatedTimestamp.getTime()) : null;
     }
 
-    public Category(int aInt, String string, String string0) {
+
+    public Category(int i, String name, String description, Integer parentId, String image, boolean hidden, Object object, Object object0) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -73,8 +76,8 @@ public class Category {
         return isHidden;
     }
 
-    public void setIsHidden(boolean isHidden) {
-        this.isHidden = isHidden;
+    public void setHidden(boolean hidden) {
+        this.isHidden = hidden;
     }
 
     public Date getCreatedDate() {
@@ -93,12 +96,16 @@ public class Category {
         this.lastUpdated = lastUpdated;
     }
 
-    public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String getCategoryImage() {
+        return ""; // Trả về một giá trị mặc định hoặc có thể sửa thành categoryImage nếu bạn thêm thuộc tính này
     }
 
-    public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void setCategoryImage(String categoryImage) {
+        this.categoryImage = categoryImage;
     }
-    
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
 }

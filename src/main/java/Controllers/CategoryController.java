@@ -1,50 +1,130 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package Controllers;
 
 import DAOs.CategoryDAO;
 import Model.Category;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
-@Path("categories")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public class CategoryController {
-    
-    private CategoryDAO categoryDAO = new CategoryDAO();
+/**
+ *
+ * @author admin
+ */
+@WebServlet(name = "CategoryController", urlPatterns = {"/categories"})
+public class CategoryController extends HttpServlet {
 
-    @GET
-    public List<Category> getAllCategories() {
-        return categoryDAO.getAllCategories();
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+
+        CategoryDAO categoryDAO = new CategoryDAO();
+        List<Category> categories = categoryDAO.getAllCategories();
+
+        // Gửi danh sách danh mục đến trang JSP để hiển thị
+        request.setAttribute("categories", categories);
+        request.getRequestDispatcher("manageCategories.jsp").forward(request, response);
     }
 
-    @POST
-    public Response createCategory(Category category) {
-        boolean created = categoryDAO.createCategory(category);
-        if (created) {
-            return Response.status(Response.Status.CREATED).build();
-        }
-        return Response.status(Response.Status.BAD_REQUEST).build();
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
     }
 
-    @PUT
-    @Path("{id}")
-    public Response updateCategory(@PathParam("id") int id, Category category) {
-        boolean updated = categoryDAO.updateCategory(id, category);
-        if (updated) {
-            return Response.ok().build();
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8"); // Đảm bảo tiếng Việt không bị lỗi
+        response.setCharacterEncoding("UTF-8");
+
+        String action = request.getParameter("action");
+
+        if (action == null) {
+            response.sendRedirect("CategoryController");
+            return;
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+
+        CategoryDAO categoryDAO = new CategoryDAO();
+
+        switch (action) {
+            case "add":
+                addCategory(request, response, categoryDAO);
+                break;
+            case "update":
+                updateCategory(request, response, categoryDAO);
+                break;
+            case "delete":
+                deleteCategory(request, response, categoryDAO);
+                break;
+            default:
+                response.sendRedirect("CategoryController");
+                break;
+        }
     }
 
-    @DELETE
-    @Path("{id}")
-    public Response deleteCategory(@PathParam("id") int id) {
-        boolean deleted = categoryDAO.deleteCategory(id);
-        if (deleted) {
-            return Response.ok().build();
+    private void addCategory(HttpServletRequest request, HttpServletResponse response, CategoryDAO categoryDAO)
+            throws ServletException, IOException {
+        String name = request.getParameter("category_name");
+        String description = request.getParameter("category_description");
+        String parentIdStr = request.getParameter("parent_category_id");
+        String image = request.getParameter("category_image");
+        boolean isHidden = request.getParameter("is_hidden") != null;
+
+        Integer parentId = (parentIdStr != null && !parentIdStr.isEmpty()) ? Integer.parseInt(parentIdStr) : null;
+
+        Category newCategory = new Category(0, name, description, parentId, image, isHidden, null, null);
+
+        if (categoryDAO.insertCategory(newCategory)) {
+            response.sendRedirect("CategoryController");
+        } else {
+            request.setAttribute("errorMessage", "Thêm danh mục thất bại.");
+            processRequest(request, response);
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    private void updateCategory(HttpServletRequest request, HttpServletResponse response, CategoryDAO categoryDAO)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("category_id"));
+        String name = request.getParameter("category_name");
+        String description = request.getParameter("category_description");
+        String parentIdStr = request.getParameter("parent_category_id");
+        String image = request.getParameter("category_image");
+        boolean isHidden = request.getParameter("is_hidden") != null;
+
+        Integer parentId = (parentIdStr != null && !parentIdStr.isEmpty()) ? Integer.parseInt(parentIdStr) : null;
+
+        Category updatedCategory = new Category(id, name, description, parentId, image, isHidden, null, null);
+
+        if (categoryDAO.updateCategory(updatedCategory)) {
+            response.sendRedirect("CategoryController");
+        } else {
+            request.setAttribute("errorMessage", "Cập nhật danh mục thất bại.");
+            processRequest(request, response);
+        }
+    }
+
+    private void deleteCategory(HttpServletRequest request, HttpServletResponse response, CategoryDAO categoryDAO)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("category_id"));
+
+        if (categoryDAO.deleteCategory(id)) {
+            response.sendRedirect("CategoryController");
+        } else {
+            request.setAttribute("errorMessage", "Xóa danh mục thất bại.");
+            processRequest(request, response);
+        }
+    }
+
+    @Override
+    public String getServletInfo() {
+        return "Category Controller";
     }
 }

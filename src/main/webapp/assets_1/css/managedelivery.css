@@ -1,0 +1,172 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Feb 22, 2025, 5:32:36 PM
+    Author     : tvhun
+*/
+/* Reset cơ bản */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+/* BODY - hiển thị Flex để chia sidebar & main-content */
+body {
+  display: flex;
+  min-height: 100vh; /* Đủ cao để sidebar kéo dài */
+  background-color: #f5f5f5;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.sidebar .logo {
+  font-size: 24px;
+  font-weight: bold;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+.menu {
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.menu li {
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+.menu li:hover {
+  background-color: #f0f0f0;
+}
+.menu li a {
+  text-decoration: none;
+  color: #333;
+}
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid #ddd;
+}
+.dark-mode-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.logout-btn {
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  background-color: #e74c3c;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+  text-decoration: none;
+  border: none;
+}
+.logout-btn:hover {
+  background-color: #c0392b;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  flex: 1; /* Chiếm phần còn lại bên phải */
+  display: flex;
+  flex-direction: column; /* header trên, dashboard dưới */
+}
+
+/* HEADER */
+header {
+  height: 60px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* user-info sang bên phải */
+  padding: 0 20px;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+}
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin-left: 10px;
+}
+
+/* DASHBOARD (phần nội dung trang con) */
+.dashboard {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+}
+.dashboard-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.table-container {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table th, table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #eee;
+}
+table th {
+  background-color: #f9f9f9;
+}
+
+/* DARK MODE (nếu muốn) */
+.dark-mode {
+  background-color: #222;
+  color: #ccc;
+}
+.dark-mode .sidebar {
+  background-color: #333;
+  color: #ccc;
+  border-right: 1px solid #444;
+}
+.dark-mode .menu li:hover {
+  background-color: #444;
+}
+.dark-mode header {
+  background-color: #333;
+  border-bottom: 1px solid #444;
+}
+.dark-mode .table-container {
+  background-color: #444;
+  border: 1px solid #555;
+}
+.dark-mode table th {
+  background-color: #555;
+}
+.dark-mode table td {
+  border: 1px solid #555;
+}
+

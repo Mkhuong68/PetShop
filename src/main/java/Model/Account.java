@@ -129,8 +129,6 @@ public class Account {
     public void setGender(String gender) {
         this.gender = gender;
     }
-
-    // Phương thức kiểm tra tài khoản Google
     public String getBannedReason() {
         return bannedReason;
     }

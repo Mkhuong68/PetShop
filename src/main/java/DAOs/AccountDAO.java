@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+
 /**
  *
  * @author THANH THAO
@@ -27,32 +28,31 @@ public class AccountDAO {
     public Account getAccountById(int accountId) {
         Account account = null;
         String sql = "SELECT a.account_id, a.username, a.password_hash, a.email, a.phone_number, a.role_id, "
-                   + "a.created_date, a.last_login, a.is_active, a.profile_image, a.first_name, a.last_name, "
-                   + "a.date_of_birth, a.gender FROM Account a WHERE a.account_id = ?";
+                + "a.created_date, a.last_login, a.is_active, a.profile_image, a.first_name, a.last_name, "
+                + "a.date_of_birth, a.gender FROM Account a WHERE a.account_id = ?";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, accountId);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 account = new Account(
-                    rs.getInt("account_id"),
-                    rs.getString("username"),
-                    rs.getString("password_hash"),
-                    rs.getString("email"),
-                    rs.getString("phone_number"),
-                    rs.getInt("role_id"),
-                    rs.getDate("created_date"),
-                    rs.getDate("last_login"),
-                    rs.getBoolean("is_active"),
-                    rs.getString("profile_image"),
-                    rs.getString("first_name"),
-                    rs.getString("last_name"),
-                    rs.getDate("date_of_birth"),
-                    rs.getString("gender"),
-                    rs.getBoolean("is_active") ? null : "Banned"  // ✅ Đã thêm dấu phẩy
+                        rs.getInt("account_id"),
+                        rs.getString("username"),
+                        rs.getString("password_hash"),
+                        rs.getString("email"),
+                        rs.getString("phone_number"),
+                        rs.getInt("role_id"),
+                        rs.getDate("created_date"),
+                        rs.getDate("last_login"),
+                        rs.getBoolean("is_active"),
+                        rs.getString("profile_image"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getDate("date_of_birth"),
+                        rs.getString("gender"),
+                        rs.getBoolean("is_active") ? null : "Banned" // ✅ Đã thêm dấu phẩy
                 );
             }
         } catch (SQLException e) {
@@ -62,41 +62,44 @@ public class AccountDAO {
     }
 
     // Lấy tất cả tài khoản
-   public List<Account> getAllCustomerAccounts() {
-    List<Account> customerAccounts = new ArrayList<>();
-    String sql = "SELECT * FROM Account WHERE role_id = 3";  // ✅ Chỉ lấy tài khoản Customer (role_id = 3)
-    try (Connection conn = DBConnection.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
+    public List<Account> getAllCustomerAccounts() {
+        List<Account> customerAccounts = new ArrayList<>();
+        String sql = "SELECT * FROM Account WHERE role_id = 3";  // ✅ Chỉ lấy tài khoản Customer (role_id = 3)
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
 
-        while (rs.next()) {
-            customerAccounts.add(new Account(
-                rs.getInt("account_id"),
-                rs.getString("username"),
-                rs.getString("password_hash"),
-                rs.getString("email"),
-                rs.getString("phone_number"),
-                rs.getInt("role_id"),
-                rs.getDate("created_date"),
-                rs.getDate("last_login"),
-                rs.getBoolean("is_active"),
-                rs.getString("profile_image"),
-                rs.getString("first_name"),
-                rs.getString("last_name"),
-                rs.getDate("date_of_birth"),
-                rs.getString("gender"),
-                rs.getBoolean("is_active") ? null : "Banned"
-            ));
+            while (rs.next()) {
+                customerAccounts.add(new Account(
+                        rs.getInt("account_id"),
+                        rs.getString("username"),
+                        rs.getString("password_hash"),
+                        rs.getString("email"),
+                        rs.getString("phone_number"),
+                        rs.getInt("role_id"),
+                        rs.getDate("created_date"),
+                        rs.getDate("last_login"),
+                        rs.getBoolean("is_active"),
+                        rs.getString("profile_image"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getDate("date_of_birth"),
+                        rs.getString("gender"),
+                        rs.getBoolean("is_active") ? null : "Banned"
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return customerAccounts;
     }
-    return customerAccounts;
-}
 
     // Cập nhật thông tin tài khoản
     public boolean updateAccount(Account account) {
-        String sql = "UPDATE Account SET first_name = ?, last_name = ?, email = ?, phone_number = ?, role_id = ?, is_active = ? WHERE account_id = ?";
+        if (account == null) {
+            System.out.println("LỖI: Account bị null!");
+            return false;
+        }
+
+        String sql = "UPDATE Account SET first_name = ?, last_name = ?, email = ?, phone_number = ? WHERE account_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -105,9 +108,25 @@ public class AccountDAO {
             ps.setString(2, account.getLastName());
             ps.setString(3, account.getEmail());
             ps.setString(4, account.getPhoneNumber());
-            ps.setInt(5, account.getRoleId());
-            ps.setBoolean(6, account.isActive());
-            ps.setInt(7, account.getAccountId());
+            ps.setInt(5, account.getAccountId());
+
+            int rowsUpdated = ps.executeUpdate();
+            System.out.println("Rows updated: " + rowsUpdated);
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Ban tài khoản Customer
+    public boolean banCustomerAccount(int customerId, String reason) {
+        String sql = "UPDATE Account SET is_active = 0, banned_reason = ? WHERE account_id = ? AND role_id = 3";
+
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, reason);
+            ps.setInt(2, customerId);
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -115,23 +134,6 @@ public class AccountDAO {
             return false;
         }
     }
-
-   // Ban tài khoản Customer
-public boolean banCustomerAccount(int customerId, String reason) {
-    String sql = "UPDATE Account SET is_active = 0, banned_reason = ? WHERE account_id = ? AND role_id = 3"; // ✅ Chỉ ban Customer
-
-    try (Connection conn = DBConnection.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-
-        ps.setString(1, reason);
-        ps.setInt(2, customerId);
-
-        return ps.executeUpdate() > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
-    }
-}
 
 
     // Đổi mật khẩu (chỉ áp dụng cho tài khoản không phải Google)
@@ -152,8 +154,7 @@ public boolean banCustomerAccount(int customerId, String reason) {
 
         String sql = "UPDATE Account SET password_hash = ? WHERE account_id = ? AND password_hash = ?";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, newPasswordHash);
             ps.setInt(2, accountId);

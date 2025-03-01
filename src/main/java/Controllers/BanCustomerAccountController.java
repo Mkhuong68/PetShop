@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Controllers;
 
 import DAOs.AccountDAO;
@@ -22,7 +18,7 @@ public class BanCustomerAccountController extends HttpServlet {
     private final AccountDAO accountDAO = new AccountDAO();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false); // ✅ Không tạo session mới nếu chưa có
+        HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("account") == null) {
             response.sendRedirect("access-denied.jsp");
             return;
@@ -30,8 +26,8 @@ public class BanCustomerAccountController extends HttpServlet {
 
         Account staffAccount = (Account) session.getAttribute("account");
 
-        // ✅ Kiểm tra nếu người dùng không phải Staff (role_id = 2) => Cấm truy cập
-        if (staffAccount.getRoleId() != 2) {
+        // ✅ Chỉ Staff (`role_id = 1`) mới có quyền ban Customer
+        if (staffAccount.getRoleId() != 1) {
             response.sendRedirect("access-denied.jsp");
             return;
         }
@@ -44,14 +40,10 @@ public class BanCustomerAccountController extends HttpServlet {
                 reason = "Banned by staff";
             }
 
-            // ✅ Kiểm tra xem `customerId` có tồn tại không trước khi ban
+            // ✅ Kiểm tra `customerId` có tồn tại trong DB không
             Account customer = accountDAO.getAccountById(customerId);
-            if (customer == null) { 
-                response.sendRedirect("customer-account-list.jsp?error=customer_not_found");
-                return;
-            }
-            if (customer.getRoleId() != 3) { // Chỉ ban Customer
-                response.sendRedirect("customer-account-list.jsp?error=not_a_customer");
+            if (customer == null || customer.getRoleId() != 3) { // Chỉ ban Customer (`role_id = 3`)
+                response.sendRedirect("customer-account-list.jsp?error=invalid_customer");
                 return;
             }
             if (!customer.isActive()) { // Nếu đã bị ban rồi, không cần ban lại
@@ -59,7 +51,7 @@ public class BanCustomerAccountController extends HttpServlet {
                 return;
             }
 
-            boolean result = accountDAO.banCustomerAccount(customerId, reason); // ✅ Chỉ ban Customer
+            boolean result = accountDAO.banCustomerAccount(customerId, reason);
 
             if (result) {
                 response.sendRedirect("customer-account-list.jsp?success=ban");

@@ -4,8 +4,8 @@
  */
 package Model;
 
-import java.sql.Date;
-
+import java.util.Date;
+import java.math.BigDecimal;
 /**
  *
  * @author tvhun
@@ -14,8 +14,7 @@ public class Product {
     private int productId;
     private String productName;
     private String productDescription;
-    private double productPrice;
-    private String productImage;
+    private BigDecimal productPrice;    private String productImage;
     private int categoryId;
     private Date createdDate;
     private Date lastUpdated;
@@ -23,6 +22,15 @@ public class Product {
     private int stockQuantity;
     private int soldQuantity;
     private int views;
+     private double rating;
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
 
     public int getProductId() {
         return productId;
@@ -48,11 +56,11 @@ public class Product {
         this.productDescription = productDescription;
     }
 
-    public double getProductPrice() {
+    public BigDecimal getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(double productPrice) {
+    public void setProductPrice(BigDecimal productPrice) {
         this.productPrice = productPrice;
     }
 
@@ -123,7 +131,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(int productId, String productName, String productDescription, double productPrice, String productImage,
+    public Product(int productId, String productName, String productDescription, BigDecimal productPrice, String productImage,
                   int categoryId, Date createdDate, Date lastUpdated, boolean isHidden, int stockQuantity, int soldQuantity, int views) {
         this.productId = productId;
         this.productName = productName;

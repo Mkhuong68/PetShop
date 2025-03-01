@@ -18,7 +18,7 @@ public class EmailService {
 
     public void sendVerificationEmail(String recipientEmail, String verificationCode) {
         final String senderEmail = "swpgrouppetshop@gmail.com";
-        final String senderPassword = "behp dabt quyr jkld";
+        final String senderPassword = "ajqv lded owoz zniw";
 
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");

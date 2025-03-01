@@ -5,6 +5,7 @@
 package DAOs;
 
 import DB.DBConnection;
+import Model.Account;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -79,5 +80,27 @@ public class RegisterDAO {
             e.printStackTrace();
             return "Unexpected error: " + e.getMessage();
         }
+    }
+    public Account getAccountByEmail(String email) {
+        Account account = null;
+        String sql = "SELECT account_id, username, email, password_hash " +
+                     "FROM Account WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+             
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                account = new Account();
+                account.setAccountId(rs.getInt("account_id"));
+                account.setUsername(rs.getString("username"));
+                account.setEmail(rs.getString("email"));
+                account.setPasswordHash(rs.getString("password_hash"));
+                // Nếu có các trường khác, hãy set thêm vào đây
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return account;
     }
 }

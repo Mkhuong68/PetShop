@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAOs.RegisterDAO;
+import Model.Account;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
@@ -19,7 +20,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 
 @WebServlet(name = "GoogleLoginController", urlPatterns = {"/GoogleLogin"})
 public class GoogleLoginController extends HttpServlet {
@@ -83,22 +83,25 @@ public class GoogleLoginController extends HttpServlet {
             GoogleIdToken.Payload payload = idToken.getPayload();
 
             String email = payload.getEmail();
-            String name = (String) payload.get("name");
-            if (name == null || name.trim().isEmpty()) {
+            String username = (String) payload.get("name");
+            if (username == null || username.trim().isEmpty()) {
                 // Nếu không có tên, sử dụng phần trước dấu @ của email làm tên đăng nhập
-                name = email.split("@")[0];
+                username = email.split("@")[0];
             }
             RegisterDAO registerDAO = new RegisterDAO();
 
             request.getSession().invalidate();
             request.getSession(true);
             if (registerDAO.isEmailExists(email)) {
-                request.getSession().setAttribute("email", email);
-                response.sendRedirect("hompage.jsp");
+                Account account = registerDAO.getAccountByEmail(email);
+                request.getSession().setAttribute("account", account);
+                response.sendRedirect("/Home");;
             } else {
-                registerDAO.registerUser(name, "", email);
-                request.getSession().setAttribute("email", email);
-                response.sendRedirect("hompage.jsp");
+                registerDAO.registerUser(username, "", email);
+                Account account = registerDAO.getAccountByEmail(email);
+                request.getSession().setAttribute("account", account);
+                response.sendRedirect("/Home");
+
             }
         } else {
             GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(

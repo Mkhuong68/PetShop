@@ -56,7 +56,7 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("register.jsp").forward(request, response);
+        request.getRequestDispatcher("registerandlogin.jsp").forward(request, response);
     }
 
     /**
@@ -79,13 +79,13 @@ public class RegisterController extends HttpServlet {
             request.setAttribute("msg", "Tên người dùng đã tồn tại, vui lòng thử lại.");
             request.setAttribute("username", username);
             request.setAttribute("email", email);
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.getRequestDispatcher("registerandlogin.jsp").forward(request, response);
             return;
         } else if (registerDAO.isEmailExists(email)) {
             request.setAttribute("msg", "Email đã tồn tại, vui lòng thử lại.");
             request.setAttribute("username", username);
             request.setAttribute("email", email);
-            request.getRequestDispatcher("singinandlogin.jsp").forward(request, response);
+            request.getRequestDispatcher("registerandlogin.jsp").forward(request, response);
             return;
         }
 
@@ -98,7 +98,7 @@ public class RegisterController extends HttpServlet {
         request.getSession().setAttribute("email", email);
         request.getSession().setAttribute("verificationCode", verificationCodeStr);
 
-        response.sendRedirect("verifyEmail.jsp");
+        response.sendRedirect("verifyEmail");
     }
 
     /**

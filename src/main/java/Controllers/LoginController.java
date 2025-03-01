@@ -59,7 +59,7 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("signinandlogin.jsp").forward(request, response);
+        request.getRequestDispatcher("registerandlogin.jsp").forward(request, response);
     }
 
     /**
@@ -80,7 +80,7 @@ public class LoginController extends HttpServlet {
         // Kiểm tra xem password có null hoặc rỗng không
         if (password == null || password.trim().isEmpty()) {
             request.setAttribute("errorMessage", "Mật khẩu không được để trống.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("registerandlogin.jsp").forward(request, response);
             return;
         }
 
@@ -115,11 +115,11 @@ public class LoginController extends HttpServlet {
 
             // Lưu thông tin tài khoản vào session và chuyển hướng đến homepage
             request.getSession().setAttribute("account", account);
-            response.sendRedirect("hompage.jsp");
+            response.sendRedirect("/Home");
         } else {
             // Đăng nhập không thành công, chuyển về trang đăng nhập với thông báo lỗi
             request.setAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("registerandlogin.jsp").forward(request, response);
         }
     }
 

@@ -1,0 +1,534 @@
+/*BANNER*/
+.banner {
+	width: 100%;
+	display: inline-block;
+	font-size: 16px;
+	
+}
+.content-box-banner {
+	position: absolute;
+	top: 30%;
+	z-index: 1;
+	margin: 0 20%;
+}
+.header-banner {
+	font-family: Verdana ;
+	text-align: left;
+	font-size: 2.0em;
+	color: blue;
+	margin-bottom: .5em;
+}
+.header-banner span {
+	color: #FFFFFF;
+	font-family: Verdana;
+}
+.sapo-banner {
+	width: 60%;
+	text-align: justify;
+	margin-bottom: 2em;
+	font-size: 1em;
+	color: #000;
+}
+.btn-banner {
+	display: inline-block;
+	padding: .8em 1.5em .6em 1.5em;
+	background: #8AAAE5;
+	color: #fff;
+	font-size: 1em;
+	margin-left: 0;
+}
+
+
+/* Bao bọc toàn bộ phần danh mục */
+.content-wrap {
+    max-width: 1200px; /* hoặc giá trị mong muốn */
+    margin: 0 auto;
+    padding: 20px 0;
+  }
+  
+  .content-wrap.container {
+    /* Hiển thị các item theo hàng, có thể tự xuống dòng */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 110px; /* Khoảng cách giữa các item */
+    margin-top: -50px;
+  }
+  
+  /* Khối danh mục (cả .categories và .category-item) */
+  .categories, .category-item {
+    text-align: center;
+    /* Đảm bảo mỗi khối có cùng độ rộng, có thể thay đổi tùy ý */
+    width: 100px; 
+  }
+  
+  /* Khung chứa icon/hình ảnh */
+  .category-img {
+    width: 180%;  
+    height: 180%;
+    margin: 0 auto 10px;
+  }
+  
+  .category-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Giữ tỉ lệ ảnh, không bị méo */
+  }
+  
+  /* Phần text bên dưới icon */
+  .categories p,
+  .category-item p {
+    font-size: 14px;
+    text-transform: uppercase; /* Chuyển text thành in hoa */
+    color: #202146; /* Màu chữ theo ví dụ trong hình */
+    margin: 0;
+    margin-top: -40px;
+    font-weight: 600; /* In đậm vừa phải */
+  }
+  
+  /* Bỏ gạch chân, giữ nguyên màu cho link */
+  .categories a,
+  .category-item a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  /* Hiệu ứng hover (nếu muốn) */
+  .categories a:hover p,
+  .category-item a:hover p {
+    color: #F59E0B; /* Ví dụ đổi màu khi hover */
+  }
+
+  /* Bao bọc phần sản phẩm nổi bật */
+.hot-product-wrap {
+    padding: 30px 0;
+    background-color: #fdfdfd; /* Màu nền tùy ý */
+  }
+  
+  /* Tiêu đề khối sản phẩm */
+  .header-prd {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #333;
+    margin-bottom: 30px;
+    position: relative;
+    margin-top: 70px;
+  }
+  
+  /* Tạo gạch ngang trang trí bên dưới tiêu đề (nếu muốn) */
+  .header-prd::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #c6a15b; /* Màu tùy ý (gold) */
+    margin: 10px auto 0;
+    border-radius: 2px;
+  }
+  
+  /* Khối chứa các sản phẩm, sắp xếp theo hàng */
+  .slide-prd {
+    display: flex;
+    flex-wrap: wrap;           /* Tự xuống dòng nếu không đủ chỗ */
+    justify-content: space-between;
+    gap: 20px;                 /* Khoảng cách giữa các sản phẩm */
+  }
+  
+  /* Mỗi khối sản phẩm */
+  .product {
+    flex: 1 1 calc(25% - 20px); /* Mỗi sản phẩm chiếm 1/4 chiều ngang trừ khoảng cách gap */
+    max-width: 280px;           /* Hạn chế độ rộng tối đa, tùy chỉnh */
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Đổ bóng nhẹ */
+    text-align: center;
+    padding: 15px;
+    overflow: hidden;
+  }
+  
+  /* Khối hình ảnh sản phẩm */
+  .product .img {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .product .img img {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Giữ tỉ lệ hình */
+    display: block;
+  }
+  
+  /* Thông tin sản phẩm */
+  .product .info .name {
+    margin: 0 0 5px;
+  }
+  
+  .product .info .name a {
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  
+  /* Đánh giá (sao) */
+  .product .vote span {
+    color: #ffc107; /* Màu sao vàng */
+    margin-right: 2px;
+  }
+  
+  /* Mô tả thương hiệu / loại sản phẩm */
+  .product .desc {
+    font-size: 14px;
+    color: #777;
+    margin: 5px 0;
+  }
+  
+  /* Giá sản phẩm */
+  .product .price {
+    margin-top: 10px;
+  }
+  
+  .product .price span {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f59e0b; /* Màu nhấn cho giá */
+  }
+
+/* Bao bọc toàn bộ khu vực giới thiệu */
+.about-us {
+  padding: 60px 0;               /* Khoảng cách trên-dưới */
+  background-color: #f8f8f8;     /* Màu nền tùy ý */
+}
+
+/* Tiêu đề chung trong .about-us */
+.about-us .header-abt {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #333;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+/* Tạo 1 thanh mỏng trang trí dưới tiêu đề (nếu muốn) */
+.about-us .header-abt::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  background-color: #c6a15b; /* hoặc màu bạn thích */
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+/* Ảnh bên trái và nội dung bên phải */
+.about-us .img img {
+  object-fit: cover; 
+  /* Sử dụng width:100%; height:100% từ HTML class="w-100 h-100" */
+  display: block;
+}
+
+/* Nội dung mô tả (col-lg-6 bên phải) */
+.about-us .content {
+  display: flex;
+  flex-direction: column;  /* Để xếp các đoạn văn, ảnh bên dưới theo chiều dọc */
+  justify-content: center; /* Canh giữa nội dung theo chiều dọc */
+  height: 100%;           /* Kế thừa từ .h-100 ở HTML */
+}
+
+.about-us .content h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #202146;
+}
+
+.about-us .content p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+/* Nhóm ảnh nhỏ trong đoạn văn thứ hai */
+.about-us .content p img {
+  width: 70px;    /* Tùy chỉnh kích thước ảnh nhỏ */
+  height: auto;
+  margin-right: 5px;
+  border-radius: 4px; /* Bo góc nhẹ */
+  object-fit: cover;
+}
+
+/* Tiêu đề “Why Choose Pet Heaven?” */
+.about-us .reason {
+  margin-top: 40px;  /* Khoảng cách phía trên */
+}
+
+/* Mỗi item lý do (col-md-6) với class d-flex từ Bootstrap */
+.reason-index-item {
+  background: #fff; /* Nền trắng (hoặc màu khác) để nổi bật trên background chung */
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px; /* Khoảng cách giữa các khối */
+  padding: 20px;
+  align-items: center; /* Căn giữa icon và nội dung theo trục ngang */
+}
+
+/* Icon (img) trong khối lý do */
+.reason-index-item .img {
+  width: 60px;  /* Kích thước khung icon */
+  height: 60px;
+  margin-right: 15px; /* Khoảng cách giữa icon và nội dung */
+  flex-shrink: 0;     /* Để icon không co lại */
+}
+
+.reason-index-item .img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Nội dung (tiêu đề, mô tả) trong khối lý do */
+.reason-index-item .content .title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.reason-index-item .content .desc {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+/*CONTACT*/
+.contact {
+padding: 8em 0 6em 0;
+background: url(../images/banner.jpg) no-repeat center;
+background-size: cover;
+}
+
+.contact.contact-index input {
+border: 0;
+}
+.contact-row {
+align-items: center;
+}
+.contact h2 {
+padding: 4px 0;
+position: relative;
+margin: 0 0 0 2em;
+text-align: left;
+text-transform: unset;
+color: #fff;
+font-size: 1.5em;
+font-family: "Gotham-Medium"!important;
+}
+.contact h2:before{
+left: 0;
+transform: translateX(0);
+border-color: #fff;
+}
+
+.contact input, .contact button {
+padding: 12px 15px;
+border: 0;
+background: #fff;
+color: #292a45;
+}
+
+.contact input::placeholder {
+color: #292a45;
+}
+
+.contact button {
+width: 20%;
+}
+
+.contact input {
+width: 70%;
+}
+
+.contact-index span {
+position: absolute;
+margin-top: -277px;
+}
+
+/*------------------PRODUCT PAGE------------------*/
+.banner-prod .item img {
+	width: 100%;
+}
+.banner-product .slick-prev {
+	left: 25px;
+}
+.banner-product .slick-next {
+	right: 25px;
+}
+.banner-product .slick-arrow {
+	z-index: 99;
+}
+.banner-product .slick-arrow::before {
+	font-size: 24px;
+}
+.banner-product .slick-dots {
+	bottom: 10px;
+}
+
+/* Reset cơ bản */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+/* 1. Thiết lập container cha hiển thị dạng Flexbox cho sidebar và main-content */
+.container-sidebar {
+  display: flex;           /* Hiển thị flex để sidebar và main-content nằm ngang */
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  background: #fff;        /* Nền trắng cho toàn bộ */
+}
+
+/* Sidebar bên trái */
+.sidebar {
+  width: 20%;              /* Sidebar chiếm 20% */
+  min-width: 220px;        /* Cho sidebar một độ rộng tối thiểu */
+  background: #f2f2f2;     /* Màu nền xám nhạt */
+  padding: 20px;
+}
+
+.sidebar .filter-block {
+  margin-bottom: 20px;
+}
+
+.sidebar h3 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  margin-bottom: 6px;
+}
+
+/* Main content bên phải */
+.main-content {
+  width: 80%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Thanh sắp xếp */
+.sort-select {
+  margin-bottom: 20px;
+}
+
+.sort-select select {
+  padding: 5px;
+  font-size: 1em;
+}
+
+/* Container cho product */
+.product-container {
+  background-color: #fff;
+  padding: 1em 0;
+   display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 40px;
+}
+
+/* Grid hiển thị 4 sản phẩm trên 1 hàng */
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 60px;
+}
+
+.product-item {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.product-item:hover {
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.product-item img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.product-item h4 {
+  font-size: 1.1em;
+  margin-bottom: 8px;
+}
+
+.product-item p {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.product-item .price {
+  font-weight: bold;
+  color: #bd945f;
+}
+
+/* Form tạo sản phẩm */
+.create-product {
+  margin-top: 20px;
+}
+
+.create-product input {
+  display: inline-block;
+  margin: 5px 0;
+  padding: 8px;
+  width: 200px;
+  font-size: 1em;
+}
+
+#create-product {
+  width: auto;
+  cursor: pointer;
+}
+
+/* Một số style cũ từ code bạn đưa (nếu muốn giữ) */
+.product-wrap {
+  margin-top: 7%;
+}
+
+.list-product {
+  background: #fff;
+  padding: 1.8em 1.5em 0 1.5em;
+  margin-bottom: 4em;
+  font-size: 16px;
+}
+
+.header-prod, .header-re-prod{
+  font-size: 1.5em;
+  margin: 0;
+}
+
+
+
+  
+
+  
+
+  

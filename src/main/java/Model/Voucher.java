@@ -4,29 +4,30 @@
  */
 package Model;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  *
  * @author tvhun
  */
 public class Voucher {
+
     private int voucherId;
-    private String code;
-    private double discountAmount;
-    private Date expirationDate;
-    private int accountId;
+    private String voucherCode;
+    private String voucherDescription;
+    private int voucherDiscount;
+    private Date voucherValidFrom;
+    private Date voucherValidTo;
+    private boolean voucherStatus;
+    private boolean isHidden;
+    // Loại voucher: 'high', 'medium', 'new'
+    private String voucherType;
+    private boolean isUsed;
 
-    public Voucher() {}
-
-    public Voucher(int voucherId, String code, double discountAmount, Date expirationDate, int accountId) {
-        this.voucherId = voucherId;
-        this.code = code;
-        this.discountAmount = discountAmount;
-        this.expirationDate = expirationDate;
-        this.accountId = accountId;
+    public Voucher() {
     }
 
+    // Getters và setters
     public int getVoucherId() {
         return voucherId;
     }
@@ -35,35 +36,75 @@ public class Voucher {
         this.voucherId = voucherId;
     }
 
-    public String getCode() {
-        return code;
+    public String getVoucherCode() {
+        return voucherCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setVoucherCode(String voucherCode) {
+        this.voucherCode = voucherCode;
     }
 
-    public double getDiscountAmount() {
-        return discountAmount;
+    public String getVoucherDescription() {
+        return voucherDescription;
     }
 
-    public void setDiscountAmount(double discountAmount) {
-        this.discountAmount = discountAmount;
+    public void setVoucherDescription(String voucherDescription) {
+        this.voucherDescription = voucherDescription;
     }
 
-    public Date getExpirationDate() {
-        return expirationDate;
+    public int getVoucherDiscount() {
+        return voucherDiscount;
     }
 
-    public void setExpirationDate(Date expirationDate) {
-        this.expirationDate = expirationDate;
+    public void setVoucherDiscount(int voucherDiscount) {
+        this.voucherDiscount = voucherDiscount;
     }
 
-    public int getAccountId() {
-        return accountId;
+    public Date getVoucherValidFrom() {
+        return voucherValidFrom;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
+    public void setVoucherValidFrom(Date voucherValidFrom) {
+        this.voucherValidFrom = voucherValidFrom;
+    }
+
+    public Date getVoucherValidTo() {
+        return voucherValidTo;
+    }
+
+    public void setVoucherValidTo(Date voucherValidTo) {
+        this.voucherValidTo = voucherValidTo;
+    }
+
+    public boolean isVoucherStatus() {
+        return voucherStatus;
+    }
+
+    public void setVoucherStatus(boolean voucherStatus) {
+        this.voucherStatus = voucherStatus;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(boolean isHidden) {
+        this.isHidden = isHidden;
+    }
+
+    public String getVoucherType() {
+        return voucherType;
+    }
+
+    public void setVoucherType(String voucherType) {
+        this.voucherType = voucherType;
+    }
+
+    public boolean isUsed() {
+        return isUsed;
+    }
+
+    public void setUsed(boolean isUsed) {
+        this.isUsed = isUsed;
     }
 }

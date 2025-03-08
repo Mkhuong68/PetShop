@@ -12,10 +12,29 @@
         <servlet-name>VoucherController</servlet-name>
         <url-pattern>/ManageVoucher</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>VoucherController</servlet-name>
         <servlet-class>Controllers.VoucherController</servlet-class>
     </servlet>
+   <servlet>
+        <servlet-name>NotificationController</servlet-name>
+        <servlet-class>Controllers.NotificationController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>NotificationDetailController</servlet-name>
+        <servlet-class>Controllers.NotificationDetailController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NotificationController</servlet-name>
+        <url-pattern>/notificationsJson</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NotificationDetailController</servlet-name>
+        <url-pattern>/NotificationDetailController</url-pattern>
+    </servlet-mapping>
+  
+  
     <session-config>
         <session-timeout>
             30

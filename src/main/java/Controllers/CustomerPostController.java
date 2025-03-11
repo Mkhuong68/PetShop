@@ -81,7 +81,6 @@ public class CustomerPostController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         CustomerPostDAO c = new CustomerPostDAO();
-        
         Cookie[] cookies = request.getCookies();
         String loggedInUser = null;
         if (cookies != null) {

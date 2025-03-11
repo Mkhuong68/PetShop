@@ -9,21 +9,21 @@
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <title>Xác nhận Email</title>
+        <title>Verify Email</title>
         <link rel="stylesheet" href="assets/css/verifyEmail.css">
     </head>
     <body>
         <div class="container">
-            <h2>Xác nhận Email</h2>
-            <form action="verifyEmail" method="POST">
+            <h2>Verify Email</h2>
+            <form action="/verifyEmail" method="POST">
                 <c:if test="${not empty msg}">
                     <div class="error">${msg}</div>
                 </c:if>
-                <input type="text" name="verificationCode" placeholder="Nhập mã xác thực" required>
-                <button type="submit">Xác nhận</button>
+                <input type="text" name="verificationCode" placeholder="Enter verification code" required>
+                <button type="submit">Submit</button>
             </form>
-            <form action="resendCode" method="POST">
-                <button type="submit">Gửi lại mã</button>
+            <form action="/resendCode" method="POST">
+                <button type="submit">Resend</button>
             </form>
         </div>
     </body>

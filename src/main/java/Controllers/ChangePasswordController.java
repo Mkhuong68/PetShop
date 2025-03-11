@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Controllers;
 
 import jakarta.servlet.ServletException;
@@ -17,8 +13,7 @@ import DAOs.AccountDAO;
 import Model.Account;   
 
 /**
- *
- * @author THANH THAO
+ * Servlet để xử lý yêu cầu đổi mật khẩu của người dùng.
  */
 @WebServlet("/changePassword")
 public class ChangePasswordController extends HttpServlet {
@@ -37,16 +32,28 @@ public class ChangePasswordController extends HttpServlet {
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 
+        // Kiểm tra xác nhận mật khẩu mới có khớp không
         if (!newPassword.equals(confirmPassword)) {
             response.getWriter().write("Passwords do not match.");
             return;
         }
 
         AccountDAO accountDAO = new AccountDAO();
+        
+        // Mã hóa mật khẩu bằng MD5 để phù hợp với hệ thống đăng nhập
+        String hashedOldPassword = accountDAO.hashPasswordMD5(oldPassword);
+        String hashedNewPassword = accountDAO.hashPasswordMD5(newPassword);
+
+        // Debug kiểm tra hash
+        System.out.println("🔍 Mật khẩu cũ nhập vào: " + oldPassword);
+        System.out.println("🔍 Mật khẩu cũ sau khi mã hóa: " + hashedOldPassword);
+        System.out.println("🔍 Mật khẩu mới sau khi mã hóa: " + hashedNewPassword);
+
         boolean isPasswordChanged = accountDAO.changePassword(account.getAccountId(), oldPassword, newPassword);
 
         if (isPasswordChanged) {
-            response.sendRedirect("/viewProfile");
+            session.invalidate(); // Đăng xuất người dùng sau khi đổi mật khẩu thành công
+            response.sendRedirect("/login");
         } else {
             response.getWriter().write("Incorrect old password.");
         }

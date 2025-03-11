@@ -4,18 +4,20 @@
  */
 package Model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
  * @author tvhun
  */
 public class Order {
+
     private int orderId;
+    private String username;
     private int accountId;
-    private Date orderDate;
-    private double totalAmount;
+    private Timestamp orderDate;
     private int statusId;
+    private String statusName;
     private String deliveryAddress;
 
     public int getOrderId() {
@@ -26,6 +28,22 @@ public class Order {
         this.orderId = orderId;
     }
 
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public int getAccountId() {
         return accountId;
     }
@@ -34,20 +52,12 @@ public class Order {
         this.accountId = accountId;
     }
 
-    public Date getOrderDate() {
+    public Timestamp getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(Timestamp orderDate) {
         this.orderDate = orderDate;
-    }
-
-    public double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
     }
 
     public int getStatusId() {
@@ -66,14 +76,17 @@ public class Order {
         this.deliveryAddress = deliveryAddress;
     }
 
-    public Order() {}
+    public Order() {
+    }
 
-    public Order(int orderId, int accountId, Date orderDate, double totalAmount, int statusId, String deliveryAddress) {
+    public Order(int orderId, String username, int accountId, Timestamp orderDate, int statusId, String statusName, String deliveryAddress) {
         this.orderId = orderId;
+        this.username = username;
         this.accountId = accountId;
         this.orderDate = orderDate;
-        this.totalAmount = totalAmount;
         this.statusId = statusId;
+        this.statusName = statusName;
         this.deliveryAddress = deliveryAddress;
     }
+
 }

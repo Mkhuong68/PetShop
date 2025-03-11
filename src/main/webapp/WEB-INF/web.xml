@@ -1,41 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <!-- Định nghĩa các Servlet -->
     <servlet>
-        <servlet-name>CustomerPostController</servlet-name>
-        <servlet-class>Controllers.CustomerPostController</servlet-class>
+        <servlet-name>ProductController</servlet-name>
+        <servlet-class>Controllers.ProductController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CustomerUpdatePostController</servlet-name>
-        <servlet-class>Controllers.CustomerUpdatePostController</servlet-class>
+        <servlet-name>HomepageController</servlet-name>
+        <servlet-class>Controllers.HomepageController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CustomerCommentController</servlet-name>
-        <servlet-class>Controllers.CustomerCommentController</servlet-class>
+        <servlet-name>ProductListController</servlet-name>
+        <servlet-class>Controllers.ProductListController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductDetailController</servlet-name>
+        <servlet-class>Controllers.ProductDetailController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CartController</servlet-name>
+        <servlet-class>Controllers.CartController</servlet-class>
+    </servlet>
+    <!-- Mapping URL đến các Servlet -->
+    <servlet>
+        <servlet-name>AAA</servlet-name>
+        <servlet-class>Controllers.AAA</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>HomeServlet</servlet-name>
-        <url-pattern>/HomeServlet</url-pattern>
+        <servlet-name>HomepageController</servlet-name>
+        <url-pattern>/Home</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        
-        <servlet-name>CustomerPostController</servlet-name>
-        <url-pattern>/CustomerPostController</url-pattern>
+        <servlet-name>ProductListController</servlet-name>
+        <url-pattern>/ProductList</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>CustomerUpdatePostController</servlet-name>
-        <url-pattern>/CustomerUpdatePostController</url-pattern>
+        <servlet-name>ProductDetailController</servlet-name>
+        <url-pattern>/ProductDetail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>CustomerCommentController</servlet-name>
-        <url-pattern>/CustomerCommentController</url-pattern>
+        <servlet-name>CartController</servlet-name>
+        <url-pattern>/Cart</url-pattern>
+    </servlet-mapping>
+    <!-- Cấu hình Session -->
+    <servlet-mapping>
+        <servlet-name>AAA</servlet-name>
+        <url-pattern>/AAA</url-pattern>
     </servlet-mapping>
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
+    <!-- Thêm các Servlet khác -->
     <servlet>
-        
         <servlet-name>VerifyEmailController</servlet-name>
         <servlet-class>Controllers.VerifyEmailController</servlet-class>
     </servlet>
@@ -43,13 +59,8 @@
         <servlet-name>LoginController</servlet-name>
         <servlet-class>Controllers.LoginController</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>HomeServlet</servlet-name>
-        <servlet-class>Controllers.HomeServlet</servlet-class>
-    </servlet>
-
+    <!-- Mapping URL đến các Servlet -->
     <servlet-mapping>
-        
         <servlet-name>VerifyEmailController</servlet-name>
         <url-pattern>/verifyEmail</url-pattern>
     </servlet-mapping>
@@ -61,59 +72,15 @@
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
-    <welcome-file-list>
-        <welcome-file>login</welcome-file>
-    </welcome-file-list>
-
     <servlet>
-        <servlet-name>CustomerProfileController</servlet-name>
-        <servlet-class>Controllers.CustomerProfileController</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>CustomerProfileController</servlet-name>
-        <url-pattern>/viewProfile</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>BanCustomerAccountController</servlet-name>
-        <servlet-class>Controllers.BanCustomerAccountController</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>BanCustomerAccountController</servlet-name>
-        <url-pattern>/BanCustomerAccountController</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>DeliveryOrderListController</servlet-name>
-        <servlet-class>Controllers.DeliveryOrderListController</servlet-class>
+        <servlet-name>CategoryController</servlet-name>
+        <servlet-class>Controllers.CategoryController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>DeliveryOrderListController</servlet-name>
-        <url-pattern>/deliveryList</url-pattern>
+        <servlet-name>CategoryController</servlet-name>
+        <url-pattern>/CategoryController</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>login</welcome-file>
+        <welcome-file>/AAA</welcome-file>
     </welcome-file-list>
-    <servlet>
-    <servlet-name>StaffManageProductController</servlet-name>
-    <servlet-class>Controllers.StaffManageProductController</servlet-class>
-</servlet>
-
-<servlet-mapping>
-    <servlet-name>StaffManageProductController</servlet-name>
-    <url-pattern>/manageProduct</url-pattern>
-</servlet-mapping>
-<servlet>
-    <servlet-name>CategoryController</servlet-name>
-    <servlet-class>Controllers.CategoryController</servlet-class>
-</servlet>
-
-<servlet-mapping>
-    <servlet-name>CategoryController</servlet-name>
-    <url-pattern>/categories</url-pattern>
-</servlet-mapping>
-
-
-
 </web-app>

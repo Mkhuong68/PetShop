@@ -4,36 +4,41 @@
     Author     : THANH THAO
 --%>
 
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page session="true" %>
+<!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Change Password</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/profile.css"> <!-- Liên kết với CSS nếu cần -->
+    <link rel="stylesheet" href="assets/css/profile.css">
+    <script src="assets/js/profile.js"></script>
 </head>
+
 <body>
-    <div class="container">
-        <div class="left">
-            <h2>Change Password</h2>
-            <p>Please enter your current password and new password to change it.</p>
-            <form action="/changePassword" method="POST">
-                <!-- Input for Old Password -->
-                <label for="oldPassword">Current Password</label>
-                <input type="password" id="oldPassword" name="oldPassword" placeholder="Enter current password" required><br><br>
 
-                <!-- Input for New Password -->
-                <label for="newPassword">New Password</label>
-                <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password" required><br><br>
+<div class="profile-container">
+    <h1>Change Password</h1>
 
-                <!-- Input for Confirm New Password -->
-                <label for="confirmPassword">Confirm New Password</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password" required><br><br>
+    <form action="changePassword" method="post">
+        <label for="oldPassword">Current Password</label>
+        <input type="password" id="oldPassword" name="oldPassword" placeholder="Enter current password"
+               required><br><br>
 
-                <button type="submit" class="btn-submit">Change Password</button>
-                <button type="button" class="btn-cancel" onclick="window.location.href='/viewProfile';">Cancel</button>
-            </form>
-        </div>
-    </div>
+        <label for="newPassword">New Password</label>
+        <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password"
+               required><br><br>
+
+        <label for="confirmPassword">Confirm New Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password"
+               required><br><br>
+
+        <button type="submit" class="btn-submit">Change Password</button>
+        <button type="button" class="btn-cancel" onclick="window.history.back()">Cancel</button>
+    </form>
+</div>
+
 </body>
 </html>

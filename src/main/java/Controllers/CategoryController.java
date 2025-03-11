@@ -1,130 +1,128 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Controllers;
 
 import DAOs.CategoryDAO;
 import Model.Category;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
 
-/**
- *
- * @author admin
- */
-@WebServlet(name = "CategoryController", urlPatterns = {"/categories"})
 public class CategoryController extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+    private Connection conn;
+    private CategoryDAO categoryDAO;
 
-        CategoryDAO categoryDAO = new CategoryDAO();
-        List<Category> categories = categoryDAO.getAllCategories();
+    @Override
+    public void init() throws ServletException {
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            conn = DriverManager.getConnection(
+                    "jdbc:sqlserver://LAPTOP-HKO7018L\\KHUONGTM:1433;databaseName=PetShop;encrypt=false;trustServerCertificate=true",
+                    "sa",
+                    "123456"
+            );
 
-        // Gửi danh sách danh mục đến trang JSP để hiển thị
-        request.setAttribute("categories", categories);
-        request.getRequestDispatcher("manageCategories.jsp").forward(request, response);
+            categoryDAO = new CategoryDAO(conn);
+            System.out.println("Database connected successfully!");
+        } catch (Exception e) {
+            System.out.println("Database connection failed: " + e.getMessage());
+            throw new ServletException(e);
+        }
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8"); // Đảm bảo tiếng Việt không bị lỗi
-        response.setCharacterEncoding("UTF-8");
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        try {
+            switch (action == null ? "list" : action) {
+                case "new":
+                    RequestDispatcher dispatcherNew = request.getRequestDispatcher("addCategory.jsp");
+                    dispatcherNew.forward(request, response);
+                    break;
+                case "edit":
+                    int categoryId = Integer.parseInt(request.getParameter("id"));
+                    Category existingCategory = categoryDAO.getCategoryById(categoryId);
+                    request.setAttribute("category", existingCategory);
+                    RequestDispatcher dispatcherEdit = request.getRequestDispatcher("updateCategory.jsp");
+                    dispatcherEdit.forward(request, response);
+                    break;
 
-        if (action == null) {
-            response.sendRedirect("CategoryController");
-            return;
-        }
+                case "delete":
+                    categoryId = Integer.parseInt(request.getParameter("id"));
+                    categoryDAO.deleteCategory(categoryId);
+                    response.sendRedirect("CategoryController?action=list");
+                    break;
+                default:
+                    List<Category> categories = categoryDAO.getAllCategories();
+                    if (categories == null) {
+                        categories = new ArrayList<>();
+                    }
+                    System.out.println("Controller - Categories found: " + categories.size()); // Debug
 
-        CategoryDAO categoryDAO = new CategoryDAO();
+                    request.setAttribute("categoryList", categories);
+                    RequestDispatcher dispatcherList = request.getRequestDispatcher("manageCategory.jsp");
+                    dispatcherList.forward(request, response);
+                    break;
 
-        switch (action) {
-            case "add":
-                addCategory(request, response, categoryDAO);
-                break;
-            case "update":
-                updateCategory(request, response, categoryDAO);
-                break;
-            case "delete":
-                deleteCategory(request, response, categoryDAO);
-                break;
-            default:
-                response.sendRedirect("CategoryController");
-                break;
-        }
-    }
-
-    private void addCategory(HttpServletRequest request, HttpServletResponse response, CategoryDAO categoryDAO)
-            throws ServletException, IOException {
-        String name = request.getParameter("category_name");
-        String description = request.getParameter("category_description");
-        String parentIdStr = request.getParameter("parent_category_id");
-        String image = request.getParameter("category_image");
-        boolean isHidden = request.getParameter("is_hidden") != null;
-
-        Integer parentId = (parentIdStr != null && !parentIdStr.isEmpty()) ? Integer.parseInt(parentIdStr) : null;
-
-        Category newCategory = new Category(0, name, description, parentId, image, isHidden, null, null);
-
-        if (categoryDAO.insertCategory(newCategory)) {
-            response.sendRedirect("CategoryController");
-        } else {
-            request.setAttribute("errorMessage", "Thêm danh mục thất bại.");
-            processRequest(request, response);
-        }
-    }
-
-    private void updateCategory(HttpServletRequest request, HttpServletResponse response, CategoryDAO categoryDAO)
-            throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("category_id"));
-        String name = request.getParameter("category_name");
-        String description = request.getParameter("category_description");
-        String parentIdStr = request.getParameter("parent_category_id");
-        String image = request.getParameter("category_image");
-        boolean isHidden = request.getParameter("is_hidden") != null;
-
-        Integer parentId = (parentIdStr != null && !parentIdStr.isEmpty()) ? Integer.parseInt(parentIdStr) : null;
-
-        Category updatedCategory = new Category(id, name, description, parentId, image, isHidden, null, null);
-
-        if (categoryDAO.updateCategory(updatedCategory)) {
-            response.sendRedirect("CategoryController");
-        } else {
-            request.setAttribute("errorMessage", "Cập nhật danh mục thất bại.");
-            processRequest(request, response);
-        }
-    }
-
-    private void deleteCategory(HttpServletRequest request, HttpServletResponse response, CategoryDAO categoryDAO)
-            throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("category_id"));
-
-        if (categoryDAO.deleteCategory(id)) {
-            response.sendRedirect("CategoryController");
-        } else {
-            request.setAttribute("errorMessage", "Xóa danh mục thất bại.");
-            processRequest(request, response);
+            }
+        } catch (SQLException e) {
+            throw new ServletException(e);
         }
     }
 
     @Override
-    public String getServletInfo() {
-        return "Category Controller";
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        try {
+            switch (action) {
+                case "insert":
+                    Category newCategory = new Category();
+                    newCategory.setCategoryName(request.getParameter("name"));
+                    newCategory.setCategoryDescription(request.getParameter("description"));
+                    newCategory.setParentCategoryId(request.getParameter("parentId").isEmpty() ? null : Integer.parseInt(request.getParameter("parentId")));
+                    newCategory.setIsHidden(request.getParameter("hidden") != null);
+                    categoryDAO.addCategory(newCategory);
+                    response.sendRedirect("CategoryController?action=list");
+                    break;
+                case "update":
+                    Category updatedCategory = new Category();
+                    updatedCategory.setCategoryId(Integer.parseInt(request.getParameter("id")));
+                    updatedCategory.setCategoryName(request.getParameter("name"));
+                    updatedCategory.setCategoryDescription(request.getParameter("description"));
+                    updatedCategory.setParentCategoryId(request.getParameter("parentId").isEmpty() ? null : Integer.parseInt(request.getParameter("parentId")));
+                    updatedCategory.setIsHidden(request.getParameter("hidden") != null);
+
+                    categoryDAO.updateCategory(updatedCategory);
+                    response.sendRedirect("CategoryController?action=list");
+                    break;
+                case "delete":
+                    int categoryIdToDelete = Integer.parseInt(request.getParameter("id"));
+                    categoryDAO.deleteCategory(categoryIdToDelete);
+                    response.sendRedirect("CategoryController?action=list");
+                    break;
+
+            }
+        } catch (SQLException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    @Override
+    public void destroy() {
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

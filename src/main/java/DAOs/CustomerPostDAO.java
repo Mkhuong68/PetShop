@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package DAOs;
 
 import DB.DBConnection;
@@ -11,17 +15,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author NgocNNCE181950
+ */
 public class CustomerPostDAO {
-    Connection conn;
 
-    public CustomerPostDAO() {
-        try {
-            conn = DBConnection.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            conn = null;
-        }
-    }
+    Connection conn = DBConnection.getConnection();
 
     public List<Comment> getCommentsByPostId(int postId) {
         List<Comment> list = new ArrayList<>();

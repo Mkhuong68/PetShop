@@ -4,20 +4,23 @@
         <servlet-name>DeliveryOrderListController</servlet-name>
         <servlet-class>Controllers.DeliveryOrderListController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OptionController</servlet-name>
+        <servlet-class>Controllers.OptionController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DeliveryOrderListController</servlet-name>
         <url-pattern>/deliveryList</url-pattern>
     </servlet-mapping>
-     <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>VoucherController</servlet-name>
         <url-pattern>/ManageVoucher</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>VoucherController</servlet-name>
         <servlet-class>Controllers.VoucherController</servlet-class>
     </servlet>
-   <servlet>
+    <servlet>
         <servlet-name>NotificationController</servlet-name>
         <servlet-class>Controllers.NotificationController</servlet-class>
     </servlet>
@@ -33,8 +36,10 @@
         <servlet-name>NotificationDetailController</servlet-name>
         <url-pattern>/NotificationDetailController</url-pattern>
     </servlet-mapping>
-  
-  
+   <servlet-mapping>
+        <servlet-name>OptionController</servlet-name>
+        <url-pattern>/ManageOption/*</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

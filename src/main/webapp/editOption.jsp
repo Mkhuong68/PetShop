@@ -1,6 +1,6 @@
 <%-- 
-    Document   : addVoucher
-    Created on : Feb 27, 2025, 6:38:06 PM
+    Document   : editOpion
+    Created on : Mar 12, 2025, 2:43:07 PM
     Author     : tvhun
 --%>
 
@@ -8,10 +8,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="manageStaff.jsp" />
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Add Voucher</title>
+    <title>Edit Option</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
@@ -121,7 +121,7 @@
     <div class="main-content">
         <div class="form-container">
             <div class="content-header">
-                <h1 class="content-title">Add Voucher</h1>
+                <h1 class="content-title">Edit Option</h1>
             </div>
 
             <c:if test="${not empty errorMessage}">
@@ -130,45 +130,60 @@
                 </div>
             </c:if>
 
-            <form action="ManageVoucher" method="post">
-                <input type="hidden" name="action" value="insert" />
+            <form action="${pageContext.request.contextPath}/ManageOption/edit" method="post">
+                <input type="hidden" name="optionId" value="${option.optionId}">
                 
                 <div class="mb-3">
-                    <label for="voucherCode" class="form-label">Voucher Name:</label>
-                    <input type="text" id="voucherCode" name="voucherCode" class="form-control" required />
+                    <label for="optionName" class="form-label">Option Name:</label>
+                    <input type="text" class="form-control" id="optionName" name="optionName" 
+                           value="${option.optionName}" required maxlength="50">
                 </div>
+
                 <div class="mb-3">
-                    <label for="voucherDiscount" class="form-label">Voucher Discount:</label>
-                    <input type="number" id="voucherDiscount"  name="voucherDiscount" class="form-control" required />
+                    <label for="optionDescription" class="form-label">Description:</label>
+                    <textarea class="form-control" id="optionDescription" name="optionDescription" 
+                              rows="3" required maxlength="500">${option.optionDescription}</textarea>
                 </div>
+
                 <div class="mb-3">
-                    <label for="voucherDescription" class="form-label">Description:</label>
-                    <textarea id="voucherDescription" name="voucherDescription" class="form-control" required></textarea>
+                    <label for="optionPrice" class="form-label">Price:</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="optionPrice" name="optionPrice" 
+                               value="${option.optionPrice}" step="0.001" required min="0">
+                        <span class="input-group-text">$</span>
+                    </div>
                 </div>
+
                 <div class="mb-3">
-                    <label for="voucherType" class="form-label">Voucher Type:</label>
-                    <select id="voucherType" name="voucherType" class="form-select" required>
-                        <option value="high">High (for orders over 2 million)</option>
-                        <option value="medium">Medium (for orders between 1 and 2 million)</option>
-                        <option value="new">New (for new customers)</option>
+                    <label for="productId" class="form-label">Applied Product:</label>
+                    <select class="form-select" id="productId" name="productId" required>
+                        <option value="">-- Select Product --</option>
+                        <c:forEach items="${products}" var="p">
+                            <option value="${p.productId}" ${p.productId == option.productId ? 'selected' : ''}>
+                                ${p.productName}
+                            </option>
+                        </c:forEach>
                     </select>
                 </div>
+
                 <div class="mb-3">
-                    <label for="voucherValidTo" class="form-label">Valid Until (yyyy-MM-dd):</label>
-                    <input type="date" id="voucherValidTo" name="voucherValidTo" class="form-control" required />
+                    <label for="isHidden" class="form-label">Status:</label>
+                    <select class="form-select" id="isHidden" name="isHidden">
+                        <option value="false" ${!option.hidden ? 'selected' : ''}>Visible</option>
+                        <option value="true" ${option.hidden ? 'selected' : ''}>Hidden</option>
+                    </select>
                 </div>
+
                 <div class="d-flex gap-3">
-                    <button type="submit" class="btn btn-primary flex-grow-1">
-                        <i class="bi bi-plus-circle me-2"></i>Add Voucher
-                    </button>
-                    <a href="ManageVoucher" class="btn btn-secondary flex-grow-1">
-                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    <button type="submit" class="btn btn-primary flex-grow-1">Update</button>
+                    <a href="${pageContext.request.contextPath}/ManageOption/list" class="btn btn-secondary flex-grow-1">
+                        Cancel
                     </a>
                 </div>
             </form>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -45,6 +45,7 @@
     </body>
 </html>
 <style>
+
 /* Đặt lại một số thuộc tính mặc định */
 * {
     margin: 0;
@@ -104,49 +105,6 @@
     margin-bottom: 10px;
 }
 
-
-.container {
-    display: flex;
-    height: 100vh;
-}
-
-.sidebar {
-    width: 250px;
-    background-color: #8AAAE5;
-    color: white;
-    padding: 20px;
-}
-
-.sidebar h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.sidebar ul {
-    list-style: none;
-}
-
-.sidebar ul li {
-    padding: 10px;
-}
-
-.sidebar ul li a {
-    text-decoration: none;
-    color: white;
-    display: block;
-}
-
-.sidebar ul li a.active {
-    font-weight: bold;
-    color: #f1c40f;
-}
-
-.main-content {
-    flex: 1;
-    padding: 20px;
-    background: #ecf0f1;
-}
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -165,7 +123,7 @@ th {
 }
 
 button {
-    background: #2ecc71;
+    background: #8AAAE5;
     color: white;
     border: none;
     padding: 5px 10px;
@@ -173,11 +131,11 @@ button {
 }
 
 button.edit {
-    background: #f39c12;
+    background: #8AAAE5;
 }
 
 button.delete {
-    background: #e74c3c;
+    background: #8AAAE5;
 }
 
 .form-container {
@@ -188,13 +146,15 @@ button.delete {
     padding: 5px;
     margin-right: 10px;
 }
-.button{
-    padding: 10px 20px; 
-    font-size: 16px; 
-    background-color: #8AAAE5; 
-    color: white; 
-    border: none; 
-    border-radius: 5px; 
+
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #8AAAE5;
+    color: white;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    padding-bottom: 30px;
 }
 </style>

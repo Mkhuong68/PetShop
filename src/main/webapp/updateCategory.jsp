@@ -1,6 +1,6 @@
 <%-- 
     Document   : updateCategory
-    Created on : Mar 8, 2025, 8:55:03 PM
+    Created on : Feb 28, 2025, 8:55:03 PM
     Author     : Admin
 --%>
 
@@ -27,4 +27,62 @@
     <a href="CategoryController?action=list">Back to List</a>
 </body>
 </html>
+
+ <style>
+        .form-container {
+            width: 50%;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="checkbox"] {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: block;
+        }
+
+        button, input[type="submit"] {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover, input[type="submit"]:hover {
+            background: #2980b9;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 

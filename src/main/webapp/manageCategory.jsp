@@ -1,6 +1,6 @@
 <%-- 
     Document   : manageCategory
-    Created on : Mar 8, 2025, 9:02:08 PM
+    Created on : Feb 28, 2025, 9:02:08 PM
     Author     : Admin
 --%>
 
@@ -13,8 +13,8 @@
     </head>
     <body>
         <h2>Category List</h2>
-        <a href="CategoryController?action=new">Add New Category</a>
-        
+        <button onclick="window.location.href='CategoryController?action=new'">Add New Category</button>
+
         <table border="1">
             <thead>
                 <tr>
@@ -180,7 +180,7 @@
     }
 
     button {
-        background: #2ecc71;
+        background: #8AAAE5;
         color: white;
         border: none;
         padding: 5px 10px;
@@ -188,11 +188,11 @@
     }
 
     button.edit {
-        background: #f39c12;
+        background: #8AAAE5;
     }
 
     button.delete {
-        background: #e74c3c;
+        background: #8AAAE5;
     }
 
     .form-container {
@@ -211,6 +211,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        padding-bottom: 30px;
     }
 </style>
 

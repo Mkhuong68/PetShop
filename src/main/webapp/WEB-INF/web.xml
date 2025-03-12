@@ -22,10 +22,6 @@
         <servlet-class>Controllers.CartController</servlet-class>
     </servlet>
     <!-- Mapping URL đến các Servlet -->
-    <servlet>
-        <servlet-name>AAA</servlet-name>
-        <servlet-class>Controllers.AAA</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>HomepageController</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -43,10 +39,6 @@
         <url-pattern>/Cart</url-pattern>
     </servlet-mapping>
     <!-- Cấu hình Session -->
-    <servlet-mapping>
-        <servlet-name>AAA</servlet-name>
-        <url-pattern>/AAA</url-pattern>
-    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
@@ -80,7 +72,4 @@
         <servlet-name>CategoryController</servlet-name>
         <url-pattern>/CategoryController</url-pattern>
     </servlet-mapping>
-    <welcome-file-list>
-        <welcome-file>/AAA</welcome-file>
-    </welcome-file-list>
 </web-app>

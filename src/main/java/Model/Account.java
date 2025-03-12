@@ -95,12 +95,13 @@ public class Account {
     }
 
     public void setProfileImage(String profileImage) {
-    if (profileImage != null && !profileImage.trim().isEmpty()) {
-        this.profileImage = profileImage;  // Lưu Base64 nếu có
-    } else {
-        this.profileImage = "assets/images/default-user.png"; // Ảnh mặc định nếu không có ảnh
+        if (profileImage != null && !profileImage.trim().isEmpty()) {
+            this.profileImage = profileImage;  // Lưu Base64 nếu có
+        } else {
+            this.profileImage = "assets/images/default-user.png"; // Ảnh mặc định nếu không có ảnh
+        }
     }
-}
+
     public String getFirstName() {
         return firstName;
     }
@@ -132,6 +133,7 @@ public class Account {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
     public String getBannedReason() {
         return bannedReason;
     }

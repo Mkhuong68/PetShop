@@ -36,9 +36,17 @@
         <servlet-name>NotificationDetailController</servlet-name>
         <url-pattern>/NotificationDetailController</url-pattern>
     </servlet-mapping>
-   <servlet-mapping>
+    <servlet-mapping>
         <servlet-name>OptionController</servlet-name>
         <url-pattern>/ManageOption/*</url-pattern>
+    </servlet-mapping>
+   <servlet>
+        <servlet-name>FeedbackController</servlet-name>
+        <servlet-class>Controllers.FeedbackController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FeedbackController</servlet-name>
+        <url-pattern>/ManageFeedback/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

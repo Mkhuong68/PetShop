@@ -197,7 +197,7 @@
                 <a class="nav-link" href="">
                     <i class="bi bi-cart"></i> Manage Order
                 </a>
-                <a class="nav-link" href="">
+                <a class="nav-link" href="/ManageFeedback/list">
                     <i class="bi bi-star"></i> Manage Feedback
                 </a>
                 <a class="nav-link" href="">

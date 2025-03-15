@@ -6,6 +6,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="Model.Category" %>
+<jsp:include page="manageStaff.jsp" />
 <html>
 <head>
     <title>Update Category</title>

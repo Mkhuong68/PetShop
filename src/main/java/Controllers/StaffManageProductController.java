@@ -14,6 +14,7 @@ import java.util.List;
 
 @WebServlet(name = "StaffManageProductController", urlPatterns = {"/manageProduct"}) // Đổi URL mapping để tránh lỗi 404
 public class StaffManageProductController extends HttpServlet {
+
     private final StaffManageProductDAO productDAO = new StaffManageProductDAO();
 
     @Override
@@ -57,10 +58,10 @@ public class StaffManageProductController extends HttpServlet {
                 String image = request.getParameter("image");
                 int category = Integer.parseInt(request.getParameter("category"));
                 int stock = Integer.parseInt(request.getParameter("stock"));
-                
+
                 Product newProduct = new Product(0, name, description, price, image, category, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), false, stock, 0, 0);
                 productDAO.addProduct(newProduct);
-                
+
                 response.sendRedirect("manageProduct");
                 break;
             case "update":
@@ -71,10 +72,10 @@ public class StaffManageProductController extends HttpServlet {
                 String newImage = request.getParameter("image");
                 int newCategory = Integer.parseInt(request.getParameter("category"));
                 int newStock = Integer.parseInt(request.getParameter("stock"));
-                
+
                 Product updatedProduct = new Product(id, newName, newDescription, newPrice, newImage, newCategory, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), false, newStock, 0, 0);
                 productDAO.updateProduct(updatedProduct);
-                
+
                 response.sendRedirect("manageProduct");
                 break;
         }

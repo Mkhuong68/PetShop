@@ -23,6 +23,7 @@ public class Product {
     private int stockQuantity;
     private int soldQuantity;
     private int views;
+     private double rating;
 
     public int getProductId() {
         return productId;
@@ -118,6 +119,9 @@ public class Product {
 
     public void setViews(int views) {
         this.views = views;
+    }
+    public double getRating() {
+        return rating;
     }
 
     public Product() {

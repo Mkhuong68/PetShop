@@ -5,8 +5,11 @@
 package Controllers;
 
 import DAOs.CategoryHomeDAO;
-import DAOs.ProductHomeDAO;
+import DAOs.NotificationDAO;
+import DAOs.ProductDAO;
+import Model.Account;
 import Model.Category;
+import Model.Notification;
 import Model.Product;
 import java.io.IOException;
 import java.util.List;
@@ -25,13 +28,15 @@ import java.io.PrintWriter;
 public class HomepageController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private ProductHomeDAO productDAO;
+    private ProductDAO productDAO;
     private CategoryHomeDAO categoryDAO;
+    private NotificationDAO notificationDAO;
 
     @Override
     public void init() throws ServletException {
-        productDAO = new ProductHomeDAO();
+        productDAO = new ProductDAO();
          categoryDAO = new CategoryHomeDAO();
+         notificationDAO = new NotificationDAO();
     }
 
     /**
@@ -79,7 +84,11 @@ public class HomepageController extends HttpServlet {
         // Lấy danh sách danh mục để hiển thị trong dropdown
         List<Category> categories = categoryDAO.getAllCategories();
         request.setAttribute("categories", categories);
-        
+         Account account = (Account) request.getSession().getAttribute("account");
+         if (account != null) {
+             List<Notification> notifications = notificationDAO.getNotificationsByAccountId(account.getAccountId());
+             request.setAttribute("notifications", notifications);
+         }
         // Forward tới trang homepage
         request.getRequestDispatcher("homepage.jsp").forward(request, response);
     }

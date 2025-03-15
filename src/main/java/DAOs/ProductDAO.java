@@ -21,36 +21,35 @@ import java.util.List;
 public class ProductDAO {
 
     public List<Product> getTopProducts() {
-        List<Product> list = new ArrayList<>();
-        String sql = "SELECT TOP 4 p.product_id, p.product_name, p.product_description, p.product_price, p.product_image, p.sold_quantity, "
-                + "       AVG(CAST(pf.rating AS FLOAT)) as avg_rating "
-                + "FROM Products p "
-                + "LEFT JOIN OrderDetails od ON p.product_id = od.product_id "
-                + "LEFT JOIN ProductFeedback pf ON od.order_detail_id = pf.order_detail_id "
-                + "GROUP BY p.product_id, p.product_name, p.product_description, p.product_price, p.product_image, p.sold_quantity "
-                + "ORDER BY p.sold_quantity DESC";
-        try ( Connection conn = DBConnection.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        List<Product> topProducts = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE rating IS NOT NULL ORDER BY rating DESC LIMIT 10"; // Truy vấn sản phẩm theo rating cao nhất
+
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Product p = new Product();
-                p.setProductId(rs.getInt("product_id"));
-                p.setProductName(rs.getString("product_name"));
-                p.setProductDescription(rs.getString("product_description"));
-                p.setProductPrice(rs.getDouble("product_price"));
-                p.setProductImage(rs.getString("product_image"));
-                p.setSoldQuantity(rs.getInt("sold_quantity"));
-                // Nếu avg_rating là null (chưa có phản hồi) thì gán giá trị 0
-                double avgRating = rs.getDouble("avg_rating");
-                if (rs.wasNull()) {
-                    avgRating = 0.0;
+                Product product = new Product();
+                product.setProductId(rs.getInt("product_id"));
+                product.setProductName(rs.getString("product_name"));
+                product.setProductDescription(rs.getString("product_description"));
+                product.setProductPrice(rs.getDouble("product_price"));
+                product.setProductImage(rs.getString("product_image"));
+                product.setCategoryId(rs.getInt("category_id"));
+
+                // Lấy và gán giá trị rating cho sản phẩm
+                double rating = rs.getDouble("rating");
+                if (rating >= 0 && rating <= 5) { // Kiểm tra rating hợp lệ
+                    product.setRating(rating);
+                } else {
+                    product.setRating(0); // Gán giá trị mặc định nếu rating không hợp lệ
                 }
-                p.setRating(avgRating);
-                list.add(p);
+
+                topProducts.add(product);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return list;
+
+        return topProducts;
     }
 
     // Phiên bản gốc không sắp xếp
@@ -257,12 +256,12 @@ public class ProductDAO {
         }
         return list;
     }
+
     public Product getProductById(int productId) {
         Product product = null;
-        String sql = "SELECT product_id, product_name, product_description, product_price, product_image, sold_quantity, created_date " +
-                     "FROM Products WHERE product_id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "SELECT product_id, product_name, product_description, product_price, product_image, sold_quantity, created_date "
+                + "FROM Products WHERE product_id = ?";
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -282,23 +281,4 @@ public class ProductDAO {
         return product;
     }
 
-    public void updateProduct(int id, Product product) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void deleteProduct(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void createProduct(Product product) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void updateProduct(Product product) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public void addProduct(Product product) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

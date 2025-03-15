@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  *
- * @author tvhun
+ * @author Diem Quynh
  */
 public class ProductDAO {
 

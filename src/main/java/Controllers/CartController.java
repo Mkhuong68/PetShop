@@ -21,7 +21,7 @@ import java.util.Locale;
 
 /**
  *
- * @author tvhun
+ * @author Diem Quynh
  */
 public class CartController extends HttpServlet {
 

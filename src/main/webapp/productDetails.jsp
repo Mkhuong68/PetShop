@@ -1,7 +1,7 @@
 <%-- 
     Document   : productDetails
     Created on : Feb 28, 2025, 5:15:13 PM
-    Author     : tvhun
+    Author     : Diem Quynh
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="Service.CartService" %>
@@ -28,13 +28,13 @@
         <c:if test="${not empty sessionScope.account}">
             <c:set var="cartCount" value="${CartService.getCartCount(pageContext.request)}" />
         </c:if>
-        
+
         <div id="main-content" class="wrap">
             <!-- Header mẫu (không thay đổi các icon) -->
             <header class="taskbar">
                 <nav class="container">
                     <div class="logo">
-                        <a href="login.jsp"><img src="assets/images/Pet Heaven.png" alt="PetShop" /></a>
+                        <a href="/Home"><img src="assets/images/Pet Heaven.png" alt="PetShop" /></a>
                     </div>
                     <div class="menu" data-show="0">
                         <div class="d-flex h-100 justify-content-center align-items-center">
@@ -45,11 +45,22 @@
                                         <button type="submit"><i class="bx bx-search"></i></button>
                                     </form>
                                 </li>
-                                <li class="active">
-                                    <a href="/Home"><i class="bx bxs-home"></i></a>
-                                </li>
                                 <li class="products">
-                                    <a href="/ProductList"><i class="bx bx-archive"></i></a>
+                                    <a href="/ProductList">
+                                        <i class='bx bx-archive'></i>
+                                    </a>
+                                    <div class="product-dropdown">
+                                        <div class="dropdown-grid">
+                                            <c:forEach var="category" items="${categories}" varStatus="status">
+                                                <div class="dropdown-category">
+                                                    <h4>${category.categoryName}</h4>
+                                                    <ul>
+                                                        <li><a href="/ProductList?category=${category.categoryId}">${category.categoryName}</a></li>
+                                                    </ul>
+                                                </div>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li class="community">
                                     <a href="news.jsp"><i class="bx bx-globe"></i></a>

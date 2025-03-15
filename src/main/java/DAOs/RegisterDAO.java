@@ -103,4 +103,19 @@ public class RegisterDAO {
         }
         return account;
     }
+    public boolean updatePassword(String email, String newPasswordHash) {
+    String updateQuery = "UPDATE Account SET password_hash = ? WHERE email = ?";
+    try (Connection connection = DBConnection.getConnection();
+         PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+        
+        updateStatement.setString(1, newPasswordHash);
+        updateStatement.setString(2, email);
+        
+        int affectedRows = updateStatement.executeUpdate();
+        return affectedRows > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 }

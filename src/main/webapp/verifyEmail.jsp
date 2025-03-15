@@ -1,7 +1,7 @@
 <%-- 
     Document   : verifyemail
     Created on : Feb 17, 2025, 7:32:54 AM
-    Author     : tvhun
+    Author     : Diem Quynh
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

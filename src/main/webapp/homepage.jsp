@@ -1,7 +1,7 @@
 <%-- 
     Document   : hompage
     Created on : Feb 17, 2025, 8:52:37 AM
-    Author     : tvhun
+    Author     : Diem Quynh
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -31,7 +31,7 @@
             <header class="taskbar">
                 <nav class="container">
                     <div class="logo">
-                        <a href="login.jsp"><img src="assets/images/Pet Heaven.png" alt="PetShop" /></a>
+                        <a href="/Home"><img src="assets/images/Pet Heaven.png" alt="PetShop" /></a>
                     </div>
                     <div class="menu" data-show="0">
                         <div class="d-flex h-100 justify-content-center align-items-center">
@@ -42,11 +42,23 @@
                                         <button type="submit"><i class="bx bx-search"></i></button>
                                     </form>
                                 </li>
-                                <li class="active">
-                                    <a href="/Home"><i class="bx bxs-home"></i></a>
-                                </li>
+                                
                                 <li class="products">
-                                    <a href="/ProductList"><i class="bx bx-archive"></i></a>
+                                    <a href="/ProductList">
+                                        <i class='bx bx-archive'></i>
+                                    </a>
+                                    <div class="product-dropdown">
+                                        <div class="dropdown-grid">
+                                            <c:forEach var="category" items="${categories}" varStatus="status">
+                                                <div class="dropdown-category">
+                                                    <h4>${category.categoryName}</h4>
+                                                    <ul>
+                                                        <li><a href="/ProductList?category=${category.categoryId}">${category.categoryName}</a></li>
+                                                    </ul>
+                                                </div>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li class="community">
                                     <a href="news.jsp"><i class="bx bx-globe"></i></a>
@@ -132,92 +144,219 @@
                 </div>
             </div>
 
-            <!-- Các nội dung khác của Homepage, ví dụ: categories, hot products, about us, contact, ... -->
-            <!-- ... -->
+            <!-- HOT PRODUCT -->
+            <div class="hot-product-wrap">
+                <h2 class="header-prd"> Boss's favorite product. </h2>
+                <div class="slide-prd">
+                    <c:forEach var="product" items="${topProducts}">
+                        <div class="product">
+                            <div class="img">
+                                <img src="${product.productImage}" alt="${product.productName}" class="img-fluid">
+                            </div>
+                            <div class="info">
+                                <p class="name">
+                                    <a href="#">${product.productName}</a>
+                                </p>
+                                <p class="vote">
 
-            <!-- FOOTER -->
-            <footer class="w-100" style="background:#8AAAE5">
+                                    <c:forEach var="i" begin="1" end="5">
+                                        <span><i class="fas fa-star"></i></span>
+                                        </c:forEach>
+                                </p>
+                                <p class="desc"> ${product.productDescription} </p>
+                                <p class="price">
+                                    <span>
+                                        <fmt:formatNumber value="${product.productPrice}" pattern="#,###" />
+                                    </span> VND
+                                </p>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+            <!-- ABOUT US -->
+            <div class="about-us">
                 <div class="container">
-                    <div class="row mt-3 mb-3">
+                    <h2 class="header-abt"> About Us </h2>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="img h-100">
+                                <img src="assets/images/z6331565599640_38a2d509c16e30ffc3d27db816be7aa9.jpg" alt="Reputable & High-Quality Pet Shop"
+                                     class="w-100 h-100">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="content h-100">
+                                <h3> Reputable & High-Quality Pet Shop </h3>
+                                <div>
+                                    <p>PetShop is a specialized store providing products and services for pets, including food, accessories, toys, and health care products. The shop is committed to offering high-quality, safe products that meet the needs of different pets. A team of experienced staff is always ready to provide advice to help customers choose the best products. Additionally, PetShop offers various promotions and attractive after-sales policies. Customers can shop directly at the store or place orders online with fast home delivery services. PetShop is not just a shopping destination but also a trusted place for pet lovers.</p>
+                                </div>
+                                <div>
+                                    <p><img alt="giới thiệu" src="assets/images/z6331584900980_19d8218ae50aea67108fa1a9ad7beaee.jpg">&nbsp;<img alt="giới thiệu"
+                                                                                                                                                src="assets/images/z6331578146709_7d2ab3ef01ab0c8bd9207e8d712614b6.jpg">&nbsp;<img alt=""
+                                                                                                                                                src="assets/images/z6331578089266_63c414e2a520308c74a8c96ac4d7292e.jpg">&nbsp;<a href="#"><img alt=""
+                                                                                                                                       src="assets/images/z6331578146708_195ae55e7d9ad7d260b29d54061c83be.jpg"></a></p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <h2 class="header-abt"> Why Choose Pet Heaven?</h2>
+                    <div class="row reason">
                         <div class="col-md-6">
-                            <h5>
-                                General Information
-                                <span class="line-remove" style="width: 78px;"></span>
-                            </h5>
-                            <h4 class="mt-2 pt-2 com-name">Pet Heaven</h4>
-                            <p class="com-phone">
-                                <i class="fas fa-phone-alt"></i>
-                                <a href="#" title="0999.999.999">0999 999 999</a>
-                            </p>
-                            <p class="com-email">
-                                <i class="fas fa-envelope"></i>
-                                <a href="#" title="cskh@petheaven.vn">cskh@petheaven.vn</a>
-                            </p>
-                            <address class="com-address">
-                                <i style="width: 22px;" class="fas fa-map-marker-alt"></i>Ninh Kiều, Cần Thơ 
-                            </address>
+                            <div class="reason-index-item d-flex">
+                                <div class="img">
+                                    <img src="assets/images/money.png" alt="lý do 1">
+                                </div>
+                                <div class="content">
+                                    <h3 class="title"> Pricing Policy </h3>
+                                    <p class="desc"> It is best to publicly display prices on the website.</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <h5>
-                                ABOUT US
-                                <span class="line-remove" style="width: 78px;"></span>
-                            </h5>
-                            <ul>
-                                <li><a href="about.html" title="Giới thiệu">About </a></li>
-                                <li><a href="product.html" title="Sản phẩm">Products</a></li>
-                                <li><a href="news.html" title="Tin tức">Community</a></li>
-                                <li><a href="contact.html" title="Đối tác">Contact</a></li>
-                            </ul>
+                        <div class="col-md-6">
+                            <div class="reason-index-item d-flex">
+                                <div class="img">
+                                    <img src="assets/images/product.png" alt="lý do 1">
+                                </div>
+                                <div class="content">
+                                    <h3 class="title"> Goods </h3>
+                                    <p class="desc"> The goods are imported from renowned and reliable brands.</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <h5>
-                                CONNECT WITH US
-                                <span class="line-remove" style="width: 78px;"></span>
-                            </h5>
-                            <div class="mt-4 social-icon">
-                                <a href="#" target="_blank">
-                                    <i class="fab fa-facebook-square"></i>
-                                </a>
-                                <a href="#" target="_blank">
-                                    <i class="far fa-envelope"></i>
-                                </a>
+                        <div class="col-md-6">
+                            <div class="reason-index-item d-flex">
+                                <div class="img">
+                                    <img src="assets/images/medal.png" alt="lý do 1">
+                                </div>
+                                <div class="content">
+                                    <h3 class="title"> Quality </h3>
+                                    <p class="desc"> Committed to product quality. </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="reason-index-item d-flex">
+                                <div class="img">
+                                    <img src="assets/images/open-24-h.png" alt="lý do 1">
+                                </div>
+                                <div class="content">
+                                    <h3 class="title"> Warranty </h3>
+                                    <p class="desc"> The best warranty service in the region.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </footer>
+            </div>
+
         </div>
 
-        <!-- jQuery & Bootstrap JS (bao gồm cả các thư viện bổ trợ khác) -->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-                integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-                integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-        <script type="text/javascript" src="assets/js/jquery-1.11.0.min.js"></script>
-        <script type="text/javascript" src="assets/js/jquery-migrate-1.2.1.min.js"></script>
-        <script src="https://kit.fontawesome.com/bf61fecb7c.js" crossorigin="anonymous"></script>
-        <script type="text/javascript" src="assets/js/javascript.js"></script>
+        <!-- CONTACT -->
+        <div class="contact contact-index">
+            <span><img src="assets/images/snapedit_1740325761444.png" alt="Shopping Experience with Pet Heaven"></span>
+            <div class="container">
+                <div class="row contact-row">
+                    <div class="col-lg-6 col-md-5 ">
+                        <h2 class="title"> Shopping Experience <br> <strong> with Pet Heaven </strong></h2>
+                    </div>
+                    <div class="col-lg-6 col-md-7">
+                        <p class="mb-1 text-white"> Contact Information </p>
+                        <div class="form-group">
+                            <input type="text" placeholder="Email/Phone Number">
+                            <button class="savePhone"> Send </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <!-- Script để làm mới số lượng giỏ hàng (cart count) trên taskbar -->
-        <script>
-            $(document).ready(function () {
-                $.ajax({
-                    url: "/Cart?action=getSummary",
-                    method: "GET",
-                    dataType: "json",
-                    success: function (data) {
-                        $("#cartCountDisplay").text(data.cartCount);
-                    },
-                    error: function () {
-                        console.log("Unable to refresh cart summary.");
-                    }
-                });
+        <!-- FOOTER -->
+        <footer class="w-100" style="background:#8AAAE5">
+            <div class="container">
+                <div class="row mt-3 mb-3">
+                    <div class="col-md-6">
+                        <h5>
+                            General Information
+                            <span class="line-remove" style="width: 78px;"></span>
+                        </h5>
+                        <h4 class="mt-2 pt-2 com-name">Pet Heaven</h4>
+                        <p class="com-phone">
+                            <i class="fas fa-phone-alt"></i>
+                            <a href="#" title="0999.999.999">0999 999 999</a>
+                        </p>
+                        <p class="com-email">
+                            <i class="fas fa-envelope"></i>
+                            <a href="#" title="cskh@petheaven.vn">cskh@petheaven.vn</a>
+                        </p>
+                        <address class="com-address">
+                            <i style="width: 22px;" class="fas fa-map-marker-alt"></i>Ninh Kiều, Cần Thơ 
+                        </address>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>
+                            ABOUT US
+                            <span class="line-remove" style="width: 78px;"></span>
+                        </h5>
+                        <ul>
+                            <li><a href="about.html" title="Giới thiệu">About </a></li>
+                            <li><a href="product.html" title="Sản phẩm">Products</a></li>
+                            <li><a href="news.html" title="Tin tức">Community</a></li>
+                            <li><a href="contact.html" title="Đối tác">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>
+                            CONNECT WITH US
+                            <span class="line-remove" style="width: 78px;"></span>
+                        </h5>
+                        <div class="mt-4 social-icon">
+                            <a href="#" target="_blank">
+                                <i class="fab fa-facebook-square"></i>
+                            </a>
+                            <a href="#" target="_blank">
+                                <i class="far fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- jQuery & Bootstrap JS (bao gồm cả các thư viện bổ trợ khác) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+    <script type="text/javascript" src="assets/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="assets/js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="https://kit.fontawesome.com/bf61fecb7c.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="assets/js/javascript.js"></script>
+    <script type="text/javascript" src="assets/js/dropdown.js"></script>
+
+    <!-- Script để làm mới số lượng giỏ hàng (cart count) trên taskbar -->
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "/Cart?action=getSummary",
+                method: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $("#cartCountDisplay").text(data.cartCount);
+                },
+                error: function () {
+                    console.log("Unable to refresh cart summary.");
+                }
             });
-        </script>
-    </body>
+        });
+    </script>
+</body>
 </html>

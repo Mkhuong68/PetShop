@@ -12,7 +12,7 @@ import Model.CartItem;
 
 /**
  *
- * @author tvhun
+ * @author Diem Quynh
  */
 public class CartService {
 

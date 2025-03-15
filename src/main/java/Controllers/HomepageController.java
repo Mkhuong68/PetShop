@@ -4,7 +4,9 @@
  */
 package Controllers;
 
+import DAOs.CategoryDAO;
 import DAOs.ProductDAO;
+import Model.Category;
 import Model.Product;
 import java.io.IOException;
 import java.util.List;
@@ -18,16 +20,18 @@ import java.io.PrintWriter;
 
 /**
  *
- * @author tvhun
+ * @author Diem Quynh
  */
 public class HomepageController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private ProductDAO productDAO;
+    private CategoryDAO categoryDAO;
 
     @Override
     public void init() throws ServletException {
         productDAO = new ProductDAO();
+         categoryDAO = new CategoryDAO();
     }
 
     /**
@@ -68,12 +72,16 @@ public class HomepageController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Lấy danh sách top products cho trang chủ
+        // Lấy sản phẩm nổi bật
         List<Product> topProducts = productDAO.getTopProducts();
         request.setAttribute("topProducts", topProducts);
-        // Forward tới homepage.jsp
-        RequestDispatcher dispatcher = request.getRequestDispatcher("homepage.jsp");
-        dispatcher.forward(request, response);
+        
+        // Lấy danh sách danh mục để hiển thị trong dropdown
+        List<Category> categories = categoryDAO.getAllCategories();
+        request.setAttribute("categories", categories);
+        
+        // Forward tới trang homepage
+        request.getRequestDispatcher("homepage.jsp").forward(request, response);
     }
     /**
      * Handles the HTTP <code>POST</code> method.

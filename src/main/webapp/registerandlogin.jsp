@@ -1,7 +1,7 @@
 <%-- 
     Document   : registerandlogin.jsp
     Created on : Feb 17, 2025, 7:05:01 AM
-    Author     : tvhun
+    Author     : Diem Quynh
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -32,7 +32,7 @@
                         <label>
                             <input type="checkbox" name="remember" value="true"> Remember Me
                         </label>
-                        <a href="#">Forgot Password ?</a>
+                        <a href="forgotPassword">Forgot Password ?</a>
                     </div>
                     <button type="submit" class="btn">Login</button>
                     <p>or login with</p>

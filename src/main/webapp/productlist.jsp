@@ -1,14 +1,14 @@
 <%-- 
     Document   : productlist
     Created on : Feb 28, 2025, 5:14:44 PM
-    Author     : tvhun
+    Author     : Diem Quynh
 --%>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="Service.CartService" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<fmt:setLocale value="vi_VN" />
+<fmt:setLocale value="en_US" />
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -26,53 +26,59 @@
         <title>Product List</title>
     </head>
     <body class="bgc">
-        <%-- Thiết lập biến cartCount từ CartService nếu người dùng đã đăng nhập --%>
         <c:set var="cartCount" value="0" />
         <c:if test="${not empty sessionScope.account}">
             <c:set var="cartCount" value="${CartService.getCartCount(pageContext.request)}" />
         </c:if>
 
         <div class="wrap">
-            <header>
+            <header class="taskbar">
                 <nav class="container">
                     <div class="logo">
-                        <a href="index.html"><img src="assets/images/Pet Heaven.png" alt="PetShop"></a>
+                        <a href="/Home"><img src="assets/images/Pet Heaven.png" alt="PetShop" /></a>
                     </div>
                     <div class="menu" data-show="0">
                         <div class="d-flex h-100 justify-content-center align-items-center">
                             <ul>
                                 <li class="search-item">
                                     <form class="search-form" action="#" method="get">
-                                        <input type="text" placeholder="Tìm kiếm..." />
-                                        <button type="submit">
-                                            <i class='bx bx-search'></i>
-                                        </button>
+                                        <input type="text" placeholder="Search..." />
+                                        <button type="submit"><i class="bx bx-search"></i></button>
                                     </form>
                                 </li>
-                                <li class="active">
-                                    <a href="/Home">
-                                        <i class='bx bxs-home'></i>
-                                    </a>
-                                </li>
+
                                 <li class="products">
                                     <a href="/ProductList">
                                         <i class='bx bx-archive'></i>
                                     </a>
+                                    <div class="product-dropdown">
+                                        <div class="dropdown-grid">
+                                            <c:forEach var="category" items="${categories}" varStatus="status">
+                                                <div class="dropdown-category">
+                                                    <h4>${category.categoryName}</h4>
+                                                    <ul>
+                                                        <li><a href="/ProductList?category=${category.categoryId}">${category.categoryName}</a></li>
+                                                    </ul>
+                                                </div>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li class="community">
-                                    <a href="news.html">
-                                        <i class='bx bx-globe'></i> 
-                                    </a>
+                                    <a href="news.jsp"><i class="bx bx-globe"></i></a>
+                                </li>
+                                <li class="partner">
+                                    <a href="partner.jsp"><i class="bx bx-bell"></i></a>
                                 </li>
                                 <li>
-                                    <a href="about.html" class="account-link">
-                                        <i class='bx bx-user'></i>
+                                    <a href="about.jsp" class="account-link">
+                                        <i class="bx bx-user"></i>
                                         <span class="account-text"></span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/Cart" class="cart-link">
-                                        <i class='bx bx-cart'></i>
+                                    <a href="/Cart" class="cart-link" style="position: relative;">
+                                        <i class="bx bx-cart"></i>
                                         <span class="cart-badge" id="cartCountDisplay">${cartCount}</span>
                                         <span class="cart-text"></span>
                                     </a>
@@ -92,8 +98,8 @@
 
             <!-- BANNER -->
             <div class="container-sidebar">
-                <!-- Form bộ lọc (Filter Form) -->
-                <form id="filterForm" action="ProductList" method="get">
+                <!-- Filter Form -->
+                <form id="filterForm" action="ProductList" method="get" onsubmit="combineFilterAndSortData()">
                     <aside class="sidebar">
                         <div class="filter-block">
                             <h3>Product Category</h3>
@@ -101,8 +107,8 @@
                                 <c:forEach var="category" items="${categories}">
                                     <li>
                                         <label>
-                                            <!-- Không auto submit ở đây -->
-                                            <input type="checkbox" name="category" value="${category.categoryId}" />
+                                            <input type="checkbox" name="category" value="${category.categoryId}" 
+                                                   <c:if test="${param.category == category.categoryId}">checked</c:if> />
                                             ${category.categoryName}
                                         </label>
                                     </li>
@@ -110,12 +116,12 @@
                             </ul>
                         </div>
                         <div class="filter-block">
-                            <h3>Giá</h3>
+                            <h3>Price</h3>
                             <ul>
                                 <li>
                                     <label>
                                         <input type="checkbox" name="priceRange" value="0-100000" />
-                                        Giá dưới 100,000 VND
+                                        Under 100,000 VND
                                     </label>
                                 </li>
                                 <li>
@@ -139,43 +145,43 @@
                                 <li>
                                     <label>
                                         <input type="checkbox" name="priceRange" value="500000-1000000" />
-                                        500,000 VND - 1.000,000 VND
+                                        500,000 VND - 1,000,000 VND
                                     </label>
                                 </li>
                                 <li>
                                     <label>
                                         <input type="checkbox" name="priceRange" value="1000000-1500000" />
-                                        1.000,000 VND - 1.500,000 VND
+                                        1,000,000 VND - 1,500,000 VND
                                     </label>
                                 </li>
                                 <li>
                                     <label>
                                         <input type="checkbox" name="priceRange" value="1500000-2000000" />
-                                        1.500,000 VND - 2.000,000 VND
+                                        1,500,000 VND - 2,000,000 VND
                                     </label>
                                 </li>
                             </ul>
                         </div>
-                    </aside>
-                </form>
 
-                <!-- Form sắp xếp (Sort Form) -->
-                <form id="sortForm" action="ProductList" method="get" onsubmit="combineFilterAndSortData()">
-                    <main class="main-content">
-                        <div class="sort-select">
-                            <label for="sort">Arrange by: </label>
-                            <select id="sort" name="sort">
-                                <option value="">-- Select --</option>
-                                <option value="popularity">Popular</option>
-                                <option value="price-asc">Increasing price</option>
-                                <option value="price-desc">Decreasing price</option>
-                                <option value="newest">New</option>
+                        <div class="filter-block">
+                            <h3>Sort</h3>
+                            <select id="sort" name="sort" class="form-control mb-3">
+                                <option value="">-- Choose sort order --</option>
+                                <option value="popularity">Most popular</option>
+                                <option value="price-asc">Price: Low to High</option>
+                                <option value="price-desc">Price: High to Low</option>
+                                <option value="newest">Newest</option>
                             </select>
                         </div>
-                        <!-- Nút submit dùng để gửi cả dữ liệu sắp xếp và bộ lọc -->
-                        <button type="submit">Apply Filter &amp; Sort</button>
 
-                        <!-- Danh sách sản phẩm -->
+                        <!-- Apply button at the end of the sidebar -->
+                        <div class="filter-actions">
+                            <button type="submit" class="apply-button">Apply</button>
+                        </div>
+                    </aside>
+
+                    <main class="main-content">
+                        <!-- Product list -->
                         <div class="product-container">
                             <div class="product-grid" id="product-list">
                                 <c:forEach var="product" items="${productList}">
@@ -188,7 +194,7 @@
                                                 <fmt:formatNumber value="${product.productPrice}" pattern="#,##0" /> VND
                                             </span>
                                         </a>
-                                        <!-- Có thể bổ sung nút Add to Cart ngay ở đây nếu cần -->
+                                        <!-- Optionally, you can add an Add to Cart button here if needed -->
                                     </div>
                                 </c:forEach>
                             </div>
@@ -217,7 +223,7 @@
                             </p>
                             <address class="com-address">
                                 <i style="width: 22px;" class="fas fa-map-marker-alt"></i>
-                                Ninh Kiều, Cần Thơ 
+                                Ninh Kieu, Can Tho
                             </address>
                         </div>
                         <div class="col-md-3">
@@ -226,10 +232,10 @@
                                 <span class="line-remove" style="width: 78px;"></span>
                             </h5>
                             <ul>
-                                <li><a href="about.html" title="Giới thiệu">About</a></li>
-                                <li><a href="product.html" title="Sản phẩm">Products</a></li>
-                                <li><a href="news.html" title="Tin tức">Community</a></li>
-                                <li><a href="contact.html" title="Đối tác">Contact</a></li>
+                                <li><a href="about.html" title="About">About</a></li>
+                                <li><a href="product.html" title="Products">Products</a></li>
+                                <li><a href="news.html" title="Community">Community</a></li>
+                                <li><a href="contact.html" title="Contact">Contact</a></li>
                             </ul>
                         </div>
                         <div class="col-md-3">
@@ -251,31 +257,31 @@
             </footer>
         </div>
 
-        <!-- JavaScript: kết hợp dữ liệu bộ lọc vào form sắp xếp -->
+        <!-- JavaScript: Combine filter data with sort data -->
         <script>
-            function combineFilterAndSortData() {
-                // Lấy form bộ lọc và form sắp xếp
-                var filterForm = document.getElementById('filterForm');
-                var sortForm = document.getElementById('sortForm');
+            // Preselect the category if one was passed in the URL
+            document.addEventListener('DOMContentLoaded', function () {
+                // Get the category from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const categoryId = urlParams.get('category');
 
-                // Xóa các hidden inputs cũ nếu có (các input có class "hiddenFilter")
-                var existingHidden = sortForm.querySelectorAll('.hiddenFilter');
-                existingHidden.forEach(function (input) {
-                    input.parentNode.removeChild(input);
-                });
+                if (categoryId) {
+                    // Find and check the checkbox for this category
+                    const checkbox = document.querySelector(`input[name="category"][value="${categoryId}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                }
 
-                // Lấy tất cả checkbox được chọn từ form bộ lọc
-                var checkedBoxes = filterForm.querySelectorAll('input[type="checkbox"]:checked');
-                // Với mỗi checkbox được chọn, tạo input ẩn và thêm vào form sắp xếp
-                checkedBoxes.forEach(function (box) {
-                    var hiddenInput = document.createElement("input");
-                    hiddenInput.type = "hidden";
-                    hiddenInput.name = box.name; // "category" hoặc "priceRange"
-                    hiddenInput.value = box.value;
-                    hiddenInput.className = "hiddenFilter";
-                    sortForm.appendChild(hiddenInput);
-                });
-            }
+                // Also preselect sort option if in URL
+                const sortOption = urlParams.get('sort');
+                if (sortOption) {
+                    const sortSelect = document.getElementById('sort');
+                    if (sortSelect) {
+                        sortSelect.value = sortOption;
+                    }
+                }
+            });
         </script>
 
         <!-- Font Awesome -->
@@ -283,19 +289,19 @@
         <!-- Bootstrap & JQuery JS -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" 
                 integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" 
-        crossorigin="anonymous"></script>
+                crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="assets/js/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="assets/js/jquery-migrate-1.2.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" 
                 integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" 
-        crossorigin="anonymous"></script>
+                crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" 
                 integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" 
-        crossorigin="anonymous"></script>
+                crossorigin="anonymous"></script>
         <script type="text/javascript" src="assets/js/javascript.js"></script>
 
-        <!-- Script để làm mới số lượng giỏ hàng (cart count) trên taskbar -->
+        <!-- Script to refresh cart count on the taskbar -->
         <script>
             $(document).ready(function () {
                 $.ajax({

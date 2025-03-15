@@ -87,7 +87,7 @@ public class VerifyEmailController extends HttpServlet {
                 // Gọi hàm đăng ký với mật khẩu đã hash
                 String result = registerDAO.registerUser(username, hashedPassword, email);
                 if ("SUCCESS".equals(result)) {
-                    response.sendRedirect("registerandlogin.jsp?msg=Xác thực thành công, bạn có thể đăng nhập.");
+                    response.sendRedirect("/login");
                 } else {
                     request.setAttribute("msg", "Đăng ký không thành công, vui lòng thử lại.");
                     request.getRequestDispatcher("verifyEmail.jsp").forward(request, response);

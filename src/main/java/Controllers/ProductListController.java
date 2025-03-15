@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 
 /**
  *
- * @author tvhun
+ * @author Diem Quynh
  */
 public class ProductListController extends HttpServlet {
 

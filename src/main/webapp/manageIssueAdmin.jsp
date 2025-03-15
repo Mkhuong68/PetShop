@@ -1,50 +1,49 @@
-<%-- 
-    Document   : manageIssueAdmin
-    Created on : Feb 25, 2025, 10:16:09 AM
-    Author     : Admin
---%>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
-<head>
-    <title>Manage Reported Issues</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-</head>
-<body>
-    <h2>Reported Issues</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Issue ID</th>
-                <th>Reporter ID</th>
-                <th>Description</th>
-                <th>Reported Date</th>
-                <th>Resolved</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:forEach var="issue" items="${issueList}">
-                <tr>
-                    <td>${issue.issueId}</td>
-                    <td>${issue.accountId}</td>
-                    <td>${issue.issueDescription}</td>
-                    <td>${issue.reportedDate}</td>
-                    <td>${issue.isIsResolved() ? "Yes" : "No"}</td>
-                    <td>
-                        <a href="ManageIssueAdminController?action=edit&id=${issue.issueId}">Edit</a>
-                    </td>
-                </tr>
-            </c:forEach>
-            <c:if test="${empty issueList}">
-                <tr>
-                    <td colspan="6">No reported issues found.</td>
-                </tr>
-            </c:if>
-        </tbody>
-    </table>
-</body>
+    <head>
+        <title>Manage Reported Issues</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    <body>
+        <div class="main-content">
+            <h2>Reported Issues</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Issue ID</th>
+                        <th>Reporter ID</th>
+                        <th>Description</th>
+                        <th>Reported Date</th>
+                        <th>Resolved</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="issue" items="${issueList}">
+                        <tr>
+                            <td>${issue.issueId}</td>
+                            <td>${issue.accountId}</td>
+                            <td>${issue.issueDescription}</td>
+                            <td>${issue.reportedDate}</td>
+                            <td>${issue.isIsResolved() ? "Yes" : "No"}</td>
+                            <td>
+                                <a href="ManageIssueAdminController?action=edit&id=${issue.issueId}" class="action-btn edit-btn">Edit</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    <c:if test="${empty issueList}">
+                        <tr>
+                            <td colspan="6" class="no-data">No reported issues found.</td>
+                        </tr>
+                    </c:if>
+                </tbody>
+            </table>
+            <a href="manageAdmin.jsp">
+                <button class="button">Back to Manage Admin</button>
+            </a>
+        </div>
+    </body>
 </html>
 
 <style>
@@ -159,5 +158,23 @@
         text-align: center;
         font-style: italic;
         color: #7f8c8d;
+    }
+
+    .button {
+        padding: 6px 12px;  /* Giảm padding để nút nhỏ lại */
+        font-size: 14px;     /* Điều chỉnh kích thước font nhỏ hơn */
+        background-color: #8AAAE5;
+        color: white;
+        border: none;
+        border-radius: 5px;  /* Bo tròn góc nhẹ */
+        cursor: pointer;
+        text-align: center;  /* Căn giữa văn bản */
+        display: inline-block; /* Giúp nút không chiếm hết chiều rộng */
+        width: auto;  /* Để nút có kích thước tự động, không kéo dài */
+        margin-top: 15px; /* Thêm một chút khoảng cách trên nút */
+    }
+
+    .button:hover {
+        background-color: #7A9AD5; /* Hiệu ứng hover */
     }
 </style>

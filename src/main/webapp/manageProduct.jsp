@@ -17,12 +17,13 @@
     </head>
     <body>
         <h2>List Product</h2>
-        <button onclick="window.location.href='addProduct.jsp'"> Add Product</button>
+        <button onclick="window.location.href = 'addProduct.jsp'"> Add Product</button>
         <table border="1">
             <tr>
                 <th>ID</th>
                 <th>Product Name</th>
                 <th>Description</th> 
+                <th>Category</th>
                 <th>Price</th>
                 <th>Image</th>
                 <th>Operation</th>
@@ -32,7 +33,8 @@
             <tr>
                 <td><%= count++%></td> <!-- Hiển thị số thứ tự thay vì ID từ database -->
                 <td><%= p.getProductName()%></td>
-                <td><%= p.getProductDescription() %></td> <!-- Hiển thị mô tả -->
+                <td><%= p.getProductDescription()%></td> <!-- Hiển thị mô tả -->
+                <td><%= p.getCategoryId()%></td>
                 <td><%= currencyFormatter.format(p.getProductPrice())%> VND</td>
                 <td><img src="<%= p.getProductImage()%>" width="50"></td>
                 <td>
@@ -42,119 +44,130 @@
             </tr>
             <% }%>
         </table>
+        <!-- Nút Back sử dụng CSS .button -->
+        <a href="manageStaff.jsp">
+            <button class="button">Back to Manage Staff</button>
+        </a>
     </body>
 </html>
 <style>
 
-/* Đặt lại một số thuộc tính mặc định */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+    /* Đặt lại một số thuộc tính mặc định */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
 
-/* Container chính */
-.container {
-    display: flex;
-    height: 100vh;
-}
+    /* Container chính */
+    .container {
+        display: flex;
+        height: 100vh;
+    }
 
-/* Sidebar */
-.sidebar {
-    width: 250px;
-    background-color: #8AAAE5;
-    color: white;
-    padding: 20px;
-}
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+        background-color: #8AAAE5;
+        color: white;
+        padding: 20px;
+    }
 
-.sidebar h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
+    .sidebar h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-.sidebar ul {
-    list-style: none;
-}
+    .sidebar ul {
+        list-style: none;
+    }
 
-.sidebar ul li {
-    padding: 10px;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
+    .sidebar ul li {
+        padding: 10px;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
 
-.sidebar ul li a {
-    text-decoration: none;
-    color: white;
-    display: block;
-}
+    .sidebar ul li a {
+        text-decoration: none;
+        color: white;
+        display: block;
+    }
 
-.sidebar ul li:hover {
-    background: #34495e;
-}
+    .sidebar ul li:hover {
+        background: #34495e;
+    }
 
-/* Phần nội dung chính */
-.main-content {
-    flex: 1;
-    padding: 20px;
-    background: #ecf0f1;
-}
+    /* Phần nội dung chính */
+    .main-content {
+        flex: 1;
+        padding: 20px;
+        background: #ecf0f1;
+    }
 
-.main-content h1 {
-    color: #2c3e50;
-    margin-bottom: 10px;
-}
+    .main-content h1 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
 
-th, td {
-    border: 1px solid #bdc3c7;
-    padding: 10px;
-    text-align: left;
-}
+    th, td {
+        border: 1px solid #bdc3c7;
+        padding: 10px;
+        text-align: left;
+    }
 
-th {
-    background: #8AAAE5;
-    color: white;
-}
+    th {
+        background: #8AAAE5;
+        color: white;
+    }
 
-button {
-    background: #8AAAE5;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
+    button {
+        background: #8AAAE5;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
 
-button.edit {
-    background: #8AAAE5;
-}
+    button.edit {
+        background: #8AAAE5;
+    }
 
-button.delete {
-    background: #8AAAE5;
-}
+    button.delete {
+        background: #8AAAE5;
+    }
 
-.form-container {
-    margin-top: 20px;
-}
+    .form-container {
+        margin-top: 20px;
+    }
 
-.form-container input {
-    padding: 5px;
-    margin-right: 10px;
-}
+    .form-container input {
+        padding: 5px;
+        margin-right: 10px;
+    }
 
-.button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #8AAAE5;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    padding-bottom: 30px;
-}
+    .button {
+        padding: 6px 12px;  /* Giảm padding để nút nhỏ lại */
+        font-size: 14px;     /* Điều chỉnh kích thước font nhỏ hơn */
+        background-color: #8AAAE5;
+        color: white;
+        border: none;
+        border-radius: 5px;  /* Bo tròn góc nhẹ */
+        cursor: pointer;
+        text-align: center;  /* Căn giữa văn bản */
+        display: inline-block; /* Giúp nút không chiếm hết chiều rộng */
+        width: auto;  /* Để nút có kích thước tự động, không kéo dài */
+        margin-top: 15px; /* Thêm một chút khoảng cách trên nút */
+    }
+
+    .button:hover {
+        background-color: #7A9AD5; /* Hiệu ứng hover */
+    }
 </style>

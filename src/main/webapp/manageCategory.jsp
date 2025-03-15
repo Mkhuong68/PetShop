@@ -1,6 +1,6 @@
 <%-- 
     Document   : manageCategory
-    Created on : Feb 28, 2025, 9:02:08 PM
+    Created on : Mar 8, 2025, 9:02:08 PM
     Author     : Admin
 --%>
 
@@ -10,10 +10,11 @@
 <html>
     <head>
         <title>Manage Categories</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
     </head>
     <body>
         <h2>Category List</h2>
-        <button onclick="window.location.href='CategoryController?action=new'">Add New Category</button>
+        <button onclick="window.location.href = 'CategoryController?action=new'">Add New Category</button>
 
         <table border="1">
             <thead>
@@ -25,7 +26,7 @@
                     <th>Hidden</th>
                     <th>Created Date</th>
                     <th>Last Updated</th>
-                    <th>Actions</th> <!-- ✅ Thêm cột Actions -->
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,8 +57,15 @@
                 </c:choose>
             </tbody>
         </table>
+
+        <!-- Nút Back sử dụng CSS .button -->
+        <a href="manageStaff.jsp">
+            <button class="button">Back to Manage Staff</button>
+        </a>
     </body>
 </html>
+
+
 
 <style>
     /* Đặt lại một số thuộc tính mặc định */
@@ -203,16 +211,25 @@
         padding: 5px;
         margin-right: 10px;
     }
-    .button{
-        padding: 10px 20px;
-        font-size: 16px;
+    .button {
+        padding: 6px 12px;  /* Giảm padding để nút nhỏ lại */
+        font-size: 14px;     /* Điều chỉnh kích thước font nhỏ hơn */
         background-color: #8AAAE5;
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 5px;  /* Bo tròn góc nhẹ */
         cursor: pointer;
-        padding-bottom: 30px;
+        text-align: center;  /* Căn giữa văn bản */
+        display: inline-block; /* Giúp nút không chiếm hết chiều rộng */
+        width: auto;  /* Để nút có kích thước tự động, không kéo dài */
+        margin-top: 15px; /* Thêm một chút khoảng cách trên nút */
     }
+
+    .button:hover {
+        background-color: #7A9AD5; /* Hiệu ứng hover */
+    }
+
+
 </style>
 
 

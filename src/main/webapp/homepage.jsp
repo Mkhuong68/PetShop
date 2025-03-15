@@ -21,6 +21,7 @@
         <title>Homepage</title>
     </head>
     <body>
+        <a href="/AAA">Category</a>
         
         <%-- Thiết lập biến cartCount dựa trên session (nếu người dùng đã đăng nhập) --%>
         <c:set var="cartCount" value="0" />

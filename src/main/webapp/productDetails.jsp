@@ -1,7 +1,7 @@
 <%-- 
     Document   : productDetails
     Created on : Feb 28, 2025, 5:15:13 PM
-    Author     : tvhun
+    Author     : Diem Quynh
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="Service.CartService" %>
@@ -28,13 +28,13 @@
         <c:if test="${not empty sessionScope.account}">
             <c:set var="cartCount" value="${CartService.getCartCount(pageContext.request)}" />
         </c:if>
-        
+
         <div id="main-content" class="wrap">
             <!-- Header mẫu (không thay đổi các icon) -->
             <header class="taskbar">
                 <nav class="container">
                     <div class="logo">
-                        <a href="login.jsp"><img src="assets/images/Pet Heaven.png" alt="PetShop" /></a>
+                        <a href="/Home"><img src="assets/images/Pet Heaven.png" alt="PetShop" /></a>
                     </div>
                     <div class="menu" data-show="0">
                         <div class="d-flex h-100 justify-content-center align-items-center">
@@ -45,11 +45,22 @@
                                         <button type="submit"><i class="bx bx-search"></i></button>
                                     </form>
                                 </li>
-                                <li class="active">
-                                    <a href="/Home"><i class="bx bxs-home"></i></a>
-                                </li>
                                 <li class="products">
-                                    <a href="/ProductList"><i class="bx bx-archive"></i></a>
+                                    <a href="/ProductList">
+                                        <i class='bx bx-archive'></i>
+                                    </a>
+                                    <div class="product-dropdown">
+                                        <div class="dropdown-grid">
+                                            <c:forEach var="category" items="${categories}" varStatus="status">
+                                                <div class="dropdown-category">
+                                                    <h4>${category.categoryName}</h4>
+                                                    <ul>
+                                                        <li><a href="/ProductList?category=${category.categoryId}">${category.categoryName}</a></li>
+                                                    </ul>
+                                                </div>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li class="community">
                                     <a href="news.jsp"><i class="bx bx-globe"></i></a>
@@ -105,14 +116,14 @@
                         <div class="product-variations">
                             <label for="color-select">Chọn màu:</label>
                             <select id="color-select" name="color">
-                                <option value="Vang">Vàng</option>
-                                <option value="Hong">Hồng</option>
-                                <option value="Xanh">Xanh</option>
+                                <option value="Vang">Yellow</option>
+                                <option value="Hong">Pink</option>
+                                <option value="Xanh">Blue</option>
                             </select>
                         </div>
 
                         <div class="product-quantity">
-                            <label for="quantity">Số lượng:</label>
+                            <label for="quantity">Quantity:</label>
                             <input type="number" id="quantity" name="quantity" value="1" min="1" />
                         </div>
 
@@ -128,39 +139,39 @@
                 <!-- Tabs: Description, Reviews, Q&A -->
                 <div class="product-detail-tabs">
                     <ul class="tabs">
-                        <li class="tab active" data-tab="description">Mô tả</li>
-                        <li class="tab" data-tab="reviews">Đánh giá</li>
-                        <li class="tab" data-tab="qna">Hỏi đáp</li>
+                        <li class="tab active" data-tab="description">Description</li>
+                        <li class="tab" data-tab="reviews">Feedback</li>
+                        <li class="tab" data-tab="qna">Q&A</li>
                     </ul>
                     <div class="tab-content active" id="description">
-                        <h2>Mô tả sản phẩm</h2>
+                        <h2>Description</h2>
                         <p>${product.productDescription}</p>
                     </div>
                     <div class="tab-content" id="reviews">
-                        <h2>Đánh giá</h2>
-                        <p>Hiển thị các đánh giá từ khách hàng.</p>
+                        <h2>Feedback</h2>
+                        <p>Show reviews from customers.</p>
                     </div>
                     <div class="tab-content" id="qna">
-                        <h2>Hỏi đáp</h2>
-                        <p>Nơi khách hàng đặt câu hỏi và được trả lời.</p>
+                        <h2>Q&A</h2>
+                        <p>Where customers ask questions and get answers.</p>
                     </div>
                 </div>
 
                 <!-- Related Products Section (demo tĩnh) -->
                 <div class="related-products-section">
-                    <h2>Sản phẩm liên quan</h2>
+                    <h2>Related products</h2>
                     <div class="related-products">
                         <div class="product-item">
                             <img src="https://via.placeholder.com/150" alt="related1" />
-                            <p>Tên SP liên quan 1</p>
+                            <p>Related product name 1</p>
                         </div>
                         <div class="product-item">
                             <img src="https://via.placeholder.com/150" alt="related2" />
-                            <p>Tên SP liên quan 2</p>
+                            <p>Related product name 2</p>
                         </div>
                         <div class="product-item">
                             <img src="https://via.placeholder.com/150" alt="related3" />
-                            <p>Tên SP liên quan 3</p>
+                            <p>Related product name 3</p>
                         </div>
                     </div>
                 </div>
@@ -252,7 +263,75 @@
                 });
             });
         </script>
+            <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "/Cart?action=getSummary",
+                method: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $("#cartCountDisplay").text(data.cartCount);
+                },
+                error: function () {
+                    console.log("Unable to refresh cart summary.");
+                }
+            });
+        });
+    </script>
+     <script src="https://kit.fontawesome.com/bf61fecb7c.js" crossorigin="anonymous"></script>
+        <!-- Bootstrap & JQuery JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" 
+                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" 
+        crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="assets/js/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="assets/js/jquery-migrate-1.2.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" 
+                integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" 
+        crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" 
+                integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" 
+        crossorigin="anonymous"></script>
+        <script type="text/javascript" src="assets/js/javascript.js"></script>
+        <script type="text/javascript" src="assets/js/dropdown.js"></script>
         <!-- Bootstrap JS -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </body>
 </html>
+<style>
+    .product-item img {
+        width: 270px;
+        height: 270px;
+        object-fit: cover; /* Đảm bảo ảnh không bị méo */
+    }
+
+    .product-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-between;
+    }
+
+    .product-item {
+        width: 270px;
+        text-align: center;
+        margin: 10px;
+    }
+
+    .product-item h4 {
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    .product-item p {
+        font-size: 14px;
+        color: #777;
+    }
+
+    .price {
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+</style>
+

@@ -4,29 +4,22 @@
  */
 package Controllers;
 
-import DAOs.ProductHomeDAO;
-import Model.Product;
-import java.io.IOException;
-import jakarta.servlet.RequestDispatcher;
+import DAOs.RegisterDAO;
+import Service.EmailService;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
  *
  * @author Diem Quynh
  */
-public class ProductDetailController extends HttpServlet {
-
-    private static final long serialVersionUID = 1L;
-    private ProductHomeDAO productDAO;
-
-    @Override
-    public void init() throws ServletException {
-        productDAO = new ProductHomeDAO();
-    }
+public class ForgotPasswordController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,10 +38,10 @@ public class ProductDetailController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProductDetailController</title>");
+            out.println("<title>Servlet ForgotPasswordController</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ProductDetailController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ForgotPasswordController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,26 +58,8 @@ public class ProductDetailController extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-         throws ServletException, IOException {
-         String productIdParam = request.getParameter("productId");
-         if (productIdParam != null) {
-             try {
-                 int productId = Integer.parseInt(productIdParam);
-                 Product product = productDAO.getProductById(productId);
-                 if (product != null) {
-                     request.setAttribute("product", product);
-                     RequestDispatcher dispatcher = request.getRequestDispatcher("productDetails.jsp");
-                     dispatcher.forward(request, response);
-                 } else {
-                     response.sendRedirect("productNotFound.jsp");
-                 }
-             } catch (NumberFormatException e) {
-                 e.printStackTrace();
-                 response.sendRedirect("error.jsp");
-             }
-         } else {
-             response.sendRedirect("productDetails.jsp");
-         }
+            throws ServletException, IOException {
+        request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
     }
 
     /**
@@ -97,8 +72,34 @@ public class ProductDetailController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-         throws ServletException, IOException {
-         doGet(request, response);
+            throws ServletException, IOException {
+        String email = request.getParameter("email");
+        RegisterDAO registerDAO = new RegisterDAO();
+        
+        // Kiểm tra email có tồn tại trong hệ thống không
+        if (!registerDAO.isEmailExists(email)) {
+            request.setAttribute("message", "Email không tồn tại trong hệ thống");
+            request.setAttribute("messageType", "error");
+            request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
+            return;
+        }
+        
+        // Tạo mã xác thực ngẫu nhiên
+        int verificationCode = (int) (Math.random() * 900000) + 100000;
+        String verificationCodeStr = String.valueOf(verificationCode);
+        
+        // Gửi email chứa mã xác thực
+        EmailService emailService = new EmailService();
+        emailService.sendVerificationEmail(email, verificationCodeStr);
+        
+        // Lưu thông tin vào session để xác thực sau này
+        HttpSession session = request.getSession();
+        session.setAttribute("resetEmail", email);
+        session.setAttribute("verificationCode", verificationCodeStr);
+        session.setAttribute("resetPasswordStep", "verify"); // Đánh dấu bước xác thực
+        
+        // Chuyển hướng đến trang xác thực email
+        response.sendRedirect("verifyPasswordReset");
     }
 
     /**

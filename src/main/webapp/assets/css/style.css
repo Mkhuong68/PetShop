@@ -263,7 +263,7 @@
   object-fit: cover;
 }
 
-/* Tiêu đề “Why Choose Pet Heaven?” */
+/* Tiêu đề "Why Choose Pet Heaven?" */
 .about-us .reason {
   margin-top: 40px;  /* Khoảng cách phía trên */
 }
@@ -525,10 +525,45 @@ margin-top: -277px;
   margin: 0;
 }
 
+/* CÁC SỬA ĐỔI MỚI ĐỂ SỬA LỖI BỐ CỤC PRODUCTLIST */
+/* Đảm bảo container-sidebar hiển thị theo chiều ngang */
+.container-sidebar {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin: 20px auto;
+}
 
+/* Chỉnh form để không phá vỡ bố cục flex */
+#filterForm {
+  display: flex;
+  width: 100%;
+}
 
-  
+/* Đảm bảo sidebar chiếm đúng 25% chiều rộng */
+.sidebar {
+  flex: 0 0 250px;
+  width: 250px;
+  min-width: 250px;
+  padding: 20px;
+  border-right: 1px solid #eee;
+}
 
-  
+/* Main content chiếm phần còn lại */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
 
-  
+/* Cải thiện hiển thị lưới sản phẩm */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* Sửa container sản phẩm */
+.product-container {
+  padding: 0;
+  display: block;
+}

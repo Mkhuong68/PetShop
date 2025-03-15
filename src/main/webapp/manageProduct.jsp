@@ -36,7 +36,7 @@
                 <td><%= p.getProductDescription()%></td> <!-- Hiển thị mô tả -->
                 <td><%= p.getCategoryId()%></td>
                 <td><%= currencyFormatter.format(p.getProductPrice())%> VND</td>
-                <td><img src="<%= p.getProductImage()%>" width="50"></td>
+                <td><img src="<%= p.getProductImage()%>" width="150x150"></td>
                 <td>
                     <a href="editProduct.jsp?id=<%= p.getProductId()%>">Edit</a>
                     <a href="deleteProduct.jsp?id=<%= p.getProductId()%>" onclick="return confirm('Xóa sản phẩm này?')">Delete</a>

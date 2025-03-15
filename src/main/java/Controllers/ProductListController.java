@@ -4,8 +4,8 @@
  */
 package Controllers;
 
-import DAOs.ProductDAO;
-import DAOs.CategoryDAO;
+import DAOs.ProductHomeDAO;
+import DAOs.CategoryHomeDAO;
 import Model.Product;
 import Model.Category;
 import java.io.IOException;
@@ -19,18 +19,18 @@ import java.io.PrintWriter;
 
 /**
  *
- * @author tvhun
+ * @author Diem Quynh
  */
 public class ProductListController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private ProductDAO productDAO;
-    private CategoryDAO categoryDAO;
+    private ProductHomeDAO productDAO;
+    private CategoryHomeDAO categoryDAO;
 
     @Override
     public void init() throws ServletException {
-        productDAO = new ProductDAO();
-        categoryDAO = new CategoryDAO();
+        productDAO = new ProductHomeDAO();
+        categoryDAO = new CategoryHomeDAO();
     }
 
     /**

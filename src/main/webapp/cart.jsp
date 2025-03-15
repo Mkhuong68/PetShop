@@ -1,7 +1,7 @@
 <%-- 
     Document   : cart
     Created on : Mar 1, 2025, 1:47:42 AM
-    Author     : tvhun
+    Author     : Diem Quynh
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -37,7 +37,7 @@
             <header class="taskbar">
                 <nav class="container">
                     <div class="logo">
-                        <a href="login.html"><img src="assets/images/Pet Heaven.png" alt="PetShop"></a>
+                        <a href="/Home"><img src="assets/images/Pet Heaven.png" alt="PetShop" /></a>
                     </div>
                     <div class="menu" data-show="0">
                         <div class="d-flex h-100 justify-content-center align-items-center">
@@ -48,64 +48,38 @@
                                         <button type="submit"><i class="bx bx-search"></i></button>
                                     </form>
                                 </li>
-                                <li class="active">
-                                    <a href="/Home"><i class="bx bxs-home"></i></a>
-                                </li>
+                                
                                 <li class="products">
-                                    <a href="/ProductList"><i class="bx bx-archive"></i></a>
+                                    <a href="/ProductList">
+                                        <i class='bx bx-archive'></i>
+                                    </a>
                                     <div class="product-dropdown">
-                                        <div class="column">
-                                            <ul>
-                                                <li><a href="#">Cat Food</a></li>
-                                                <li><a href="#">Cat Treats</a></li>
-                                                <li><a href="#">Dog Food</a></li>
-                                                <li><a href="#">Dog Treats</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="column">
-                                            <ul>
-                                                <li><a href="#">Collars & Leashes</a></li>
-                                                <li><a href="#">Beds</a></li>
-                                                <li><a href="#">Toys</a></li>
-                                                <li><a href="#">Apparel</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="column">
-                                            <ul>
-                                                <li><a href="#">Cat Litter</a></li>
-                                                <li><a href="#">Shampoo</a></li>
-                                                <li><a href="#">Odor Control</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="column">
-                                            <ul>
-                                                <li><a href="#">Vitamins</a></li>
-                                                <li><a href="#">Dental Care</a></li>
-                                                <li><a href="#">Flea & Tick</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="column">
-                                            <ul>
-                                                <li><a href="#">Carriers</a></li>
-                                                <li><a href="#">Strollers</a></li>
-                                            </ul>
+                                        <div class="dropdown-grid">
+                                            <c:forEach var="category" items="${categories}" varStatus="status">
+                                                <div class="dropdown-category">
+                                                    <h4>${category.categoryName}</h4>
+                                                    <ul>
+                                                        <li><a href="/ProductList?category=${category.categoryId}">${category.categoryName}</a></li>
+                                                    </ul>
+                                                </div>
+                                            </c:forEach>
                                         </div>
                                     </div>
                                 </li>
                                 <li class="community">
-                                    <a href="news.html"><i class="bx bx-globe"></i></a>
+                                    <a href="news.jsp"><i class="bx bx-globe"></i></a>
                                 </li>
                                 <li class="partner">
-                                    <a href="partner.html"><i class="bx bx-bell"></i></a>
+                                    <a href="partner.jsp"><i class="bx bx-bell"></i></a>
                                 </li>
                                 <li>
-                                    <a href="about.html" class="account-link">
+                                    <a href="about.jsp" class="account-link">
                                         <i class="bx bx-user"></i>
                                         <span class="account-text"></span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/Cart" class="cart-link">
+                                    <a href="/Cart" class="cart-link" style="position: relative;">
                                         <i class="bx bx-cart"></i>
                                         <span class="cart-badge" id="cartCountDisplay">${cartCount}</span>
                                         <span class="cart-text"></span>

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 
 /**
  *
- * @author tvhun
+ * @author Diem Quynh
  */
 public class CartDAO {
 

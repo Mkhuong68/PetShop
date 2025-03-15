@@ -140,7 +140,7 @@ public class CustomerPostDAO {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, p.getTitle());
             ps.setString(2, p.getContent());
-            ps.setTimestamp(3, new Timestamp(System.currentTimeMillis())); 
+            ps.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
             ps.setInt(4, p.getPostId());
             ps.executeUpdate();
         } catch (Exception e) {
@@ -149,7 +149,7 @@ public class CustomerPostDAO {
     }
 
     public boolean addPost(Post p) {
-        String sql = "insert into posts (title, content, author_id, status_id, created_date) values (?, ?, ?, ?, ?)";
+        String sql = "insert into posts (title, content, author_id, status_id, created_date, last_updated) values (?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, p.getTitle());
@@ -157,6 +157,7 @@ public class CustomerPostDAO {
             ps.setInt(3, p.getAccountId());
             ps.setInt(4, p.getStatusId());
             ps.setTimestamp(5, p.getCreatedDate());
+            ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
             ps.executeUpdate();
             return true;
         } catch (SQLException e) {

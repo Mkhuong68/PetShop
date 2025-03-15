@@ -1,90 +1,56 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
-*/
-/* 
-    Created on : Mar 2, 2025, 3:36:35 AM
-    Author     : NgocNNCE181950
-*/
-/* Reset mặc định */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-}
-
-/* Tổng thể trang */
-body {
-    background-color: #f4f6f9;
-    padding: 30px;
-    text-align: center;
-}
-
-/* Tiêu đề */
-h1 {
-    color: #007bff;
-    font-size: 26px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-/* Bảng hiển thị */
-table {
-    width: 80%;
-    margin: auto;
-    border-collapse: collapse;
-    background: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-/* Tiêu đề bảng */
-th {
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    padding: 12px;
-    text-align: center;
-}
-
-/* Dữ liệu bảng */
-td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-    font-size: 14px;
-    color: #333;
-}
-
-/* Hàng cuối không có border */
-tr:last-child td {
-    border-bottom: none;
-}
-
-/* Nút hành động */
-a {
-    text-decoration: none;
-    padding: 8px 12px;
-    background-color: #28a745;
-    color: white;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: 0.3s ease;
-}
-
-a:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-}
-
-/* Thông báo */
-p {
-    margin-top: 15px;
-    font-size: 16px;
-    color: #d9534f;
-    font-weight: bold;
-}
-
+.main-content {
+            margin-left: 250px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            min-height: 8vh;
+        }
+        
+        .form-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 10px;
+            margin: 0 auto;
+        }
+        
+        .content-header {
+            margin-bottom: 10px;
+        }
+        
+        .content-title {
+            color: #333;
+            font-size: 24px;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: #8AAAE5;
+            border-color: #8AAAE5;
+        }
+        
+        .btn-primary:hover {
+            background-color: #7A9AD5;
+            border-color: #7A9AD5;
+        }
+        
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }

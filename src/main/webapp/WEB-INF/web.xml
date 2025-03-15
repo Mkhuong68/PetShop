@@ -21,10 +21,6 @@
         <servlet-class>Controllers.StaffOrderDetailController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CartController</servlet-name>
-        <servlet-class>Controllers.CartController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ProductListController</servlet-name>
         <servlet-class>Controllers.ProductListController</servlet-class>
     </servlet>
@@ -39,6 +35,22 @@
     <servlet>
         <servlet-name>CustomerOrderController</servlet-name>
         <servlet-class>Controllers.CustomerOrderController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CustomerOrderHistoryController</servlet-name>
+        <servlet-class>Controllers.CustomerOrderHistoryController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CustomerOrderDetailController</servlet-name>
+        <servlet-class>Controllers.CustomerOrderDetailController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CustomerCancelOrderController</servlet-name>
+        <servlet-class>Controllers.CustomerCancelOrderController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminRevenueReportController</servlet-name>
+        <servlet-class>Controllers.AdminRevenueReportController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
@@ -65,10 +77,6 @@
         <url-pattern>/StaffOrderDetailController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>CartController</servlet-name>
-        <url-pattern>/Cart</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ProductListController</servlet-name>
         <url-pattern>/ProductList</url-pattern>
     </servlet-mapping>
@@ -83,6 +91,22 @@
     <servlet-mapping>
         <servlet-name>CustomerOrderController</servlet-name>
         <url-pattern>/OrderPage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CustomerOrderHistoryController</servlet-name>
+        <url-pattern>/CustomerOrderHistoryController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CustomerOrderDetailController</servlet-name>
+        <url-pattern>/CustomerOrderDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CustomerCancelOrderController</servlet-name>
+        <url-pattern>/CustomerCancelOrderController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminRevenueReportController</servlet-name>
+        <url-pattern>/AdminRevenueReportController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

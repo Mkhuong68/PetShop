@@ -4,23 +4,19 @@
  */
 package Controllers;
 
-import DAOs.OrderStatusDAO;
-import DAOs.StaffOrderDAO;
-import Model.OrderStatus;
+import DAOs.CustomerOrderDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.Timestamp;
-import java.util.List;
 
 /**
  *
  * @author NgocNNCE181950
  */
-public class StaffOrderDetailController extends HttpServlet {
+public class CustomerCancelOrderController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +35,10 @@ public class StaffOrderDetailController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet StaffOrderDetailController</title>");
+            out.println("<title>Servlet CustomerCancelOrderController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet StaffOrderDetailController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CustomerCancelOrderController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,19 +56,7 @@ public class StaffOrderDetailController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String oId = request.getParameter("orderId");
-        StaffOrderDAO s = new StaffOrderDAO();
-        OrderStatusDAO o = new OrderStatusDAO();
-        int orderId = -1;
-        if (oId != null) {
-            orderId = Integer.parseInt(oId);
-            if (orderId > 0) {
-                request.setAttribute("data", s.getOrderbyId(orderId));
-                request.setAttribute("statusList", o.getAllOrderStatus());
-                request.getRequestDispatcher("viewOrderDetailStaff.jsp").forward(request, response);
-            }
-        }
-
+        processRequest(request, response);
     }
 
     /**
@@ -86,22 +70,19 @@ public class StaffOrderDetailController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        CustomerOrderDAO cd = new CustomerOrderDAO();
+        String orderId = request.getParameter("orderId");
         String statusName = request.getParameter("statusName");
-        String oId = request.getParameter("orderId");
-        if (oId != null && statusName != null) {
-            int orderId = Integer.parseInt(oId);
-            OrderStatusDAO o = new OrderStatusDAO();
-            List<OrderStatus> statusList = o.getAllOrderStatus();
-            int statusId = -1;
-            for (OrderStatus os : statusList) {
-                if (os.getStatusName().equalsIgnoreCase(statusName)) {
-                    statusId = os.getStatusId();
-                    break;
+        if (orderId != null) {
+            int oId = Integer.parseInt(orderId);
+            if (statusName.equals("Received")) {
+                boolean isCancel = cd.cancelOrder(oId);
+                if (isCancel) {
+                    response.sendRedirect(request.getContextPath() + "/CustomerOrderHistoryController");
                 }
-            }
-            if (statusId > 0) {
-                o.changeStatus(statusId, orderId);
-                response.sendRedirect(request.getContextPath() + "StaffOrderController");
+            } else {
+                request.setAttribute("msg", "You can only cancel orders with status 'Received'!");
+                request.getRequestDispatcher("viewOrderDetailCustomer.jsp").forward(request, response);
             }
         }
     }

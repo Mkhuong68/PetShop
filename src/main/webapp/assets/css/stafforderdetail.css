@@ -23,7 +23,7 @@ body {
 
 /* Tiêu đề */
 h1 {
-    color: #007bff;
+    color: #8AAAE5;
     font-size: 24px;
     margin-bottom: 20px;
     text-transform: uppercase;
@@ -42,7 +42,7 @@ table {
 
 /* Header của bảng */
 th {
-    background-color: #007bff;
+    background-color: #8AAAE5;
     color: white;
     font-size: 16px;
     padding: 12px;
@@ -88,7 +88,7 @@ select:focus {
 
 /* Nút submit */
 input[type="submit"] {
-    background-color: #28a745;
+    background-color: #8AAAE5;
     color: white;
     font-weight: bold;
     border: none;
@@ -101,7 +101,7 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-    background-color: #218838;
+    background-color: #8AAAE8;
     transform: scale(1.05);
 }
 

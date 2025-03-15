@@ -4,9 +4,10 @@
  */
 package Controllers;
 
-import DAOs.CustomerPostDAO;
+import DAOs.AdminRevenueReportDAO;
+import DAOs.CustomerOrderDAO;
 import Model.Account;
-import Model.Post;
+import Model.RevenueReport;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,13 +16,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  *
  * @author NgocNNCE181950
  */
-public class CustomerUpdatePostController extends HttpServlet {
+public class AdminRevenueReportController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +44,10 @@ public class CustomerUpdatePostController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CustomerUpdatePostController</title>");
+            out.println("<title>Servlet AdminRevenueReportController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CustomerUpdatePostController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AdminRevenueReportController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,16 +65,18 @@ public class CustomerUpdatePostController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String pId = request.getParameter("postId");
-        CustomerPostDAO cd = new CustomerPostDAO();
-        int postId = Integer.parseInt(pId);
-        Post p = cd.getPostbyId(postId);
-        if (!Post.isEmpty(p)) {
-            request.setAttribute("data", p);
-            request.getRequestDispatcher("upost.jsp").forward(request, response);
-        } else {
-            response.sendRedirect(request.getContextPath() + "/CustomerPostController");
+        AdminRevenueReportDAO r = new AdminRevenueReportDAO();
+        List<RevenueReport> reports = r.getAllRevenueReports();
+        if (reports != null || reports.size() != 0) {
+            request.setAttribute("reports", reports);
         }
+
+        String action = request.getParameter("action");
+        if ("delete".equals(action)) {
+            int reportId = Integer.parseInt(request.getParameter("reportId"));
+            r.deleteRevenueReport(reportId);
+        }
+        request.getRequestDispatcher("viewRevenueReportAdmin.jsp").forward(request, response);
     }
 
     /**
@@ -84,16 +90,13 @@ public class CustomerUpdatePostController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String pId = request.getParameter("postId");
-        int postId = Integer.parseInt(pId);
-        String title = request.getParameter("title");
-        String content = request.getParameter("content");
-        CustomerPostDAO cd = new CustomerPostDAO();
-        String loggedInUser = null;
         HttpSession session = request.getSession();
+        CustomerOrderDAO c = new CustomerOrderDAO();
+        String loggedInUser = null;
         Account account = (Account) request.getSession().getAttribute("account");
         if (account != null) {
             loggedInUser = account.getUsername();
+
         } else {
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
@@ -105,37 +108,35 @@ public class CustomerUpdatePostController extends HttpServlet {
                 }
             } else {
                 request.setAttribute("msg", "No cookie");
-                request.getRequestDispatcher("cpost.jsp").forward(request, response);
+                request.getRequestDispatcher("viewRevenueReportAdmin.jsp").forward(request, response);
                 return;
             }
         }
-        Post post = cd.getPostbyId(postId);
-        int accountId = cd.getAccountId(loggedInUser);
-        if (accountId < 0) {
-            request.setAttribute("msg", "You are not logged in yet");
-            request.setAttribute("data", post);
-            request.getRequestDispatcher("upost.jsp").forward(request, response);
+        if (loggedInUser == null || loggedInUser.isEmpty()) {
+            request.setAttribute("msg", "No user");
+            request.getRequestDispatcher("viewRevenueReportAdmin.jsp").forward(request, response);
             return;
         }
-        if (post == null) {
-            request.setAttribute("msg", "The post does not exist.");
-            request.setAttribute("data", post);
-            request.getRequestDispatcher("upost.jsp").forward(request, response);
-            return;
-        }
-        if (!cd.isPostOwner(postId, accountId)) {
-            request.setAttribute("msg", "You do not have the right to update this post!");
-            request.setAttribute("data", post);
-            request.getRequestDispatcher("upost.jsp").forward(request, response);
-            return;
-        }
-        if (title.isEmpty() || content.isEmpty()) {
-            request.setAttribute("msg", "Use blank title or post content!");
-            request.setAttribute("data", post);
-            request.getRequestDispatcher("upost.jsp").forward(request, response);
-        } else {
-            cd.UpdatePost(new Post(postId, accountId, title, content, post.getStatusId(), post.getCreatedDate()));
-            response.sendRedirect(request.getContextPath() + "/CustomerPostController");
+        int accountId = c.getAccountId(loggedInUser);
+
+        String action = request.getParameter("action");
+        if (action.equals("create")) {
+            AdminRevenueReportDAO r = new AdminRevenueReportDAO();
+            Date reportDate = Date.valueOf(request.getParameter("reportDate"));
+            int totalOrders = r.getTotalOrdersByDate(reportDate);
+            BigDecimal totalRevenue = r.getTotalRevenue(reportDate);
+            BigDecimal averageOrderValue = r.getAverageOrderValue(reportDate);
+            
+            RevenueReport report = new RevenueReport(0, reportDate, totalRevenue, totalOrders,
+                    averageOrderValue, accountId, new Timestamp(System.currentTimeMillis())
+            );
+            boolean isAdded = r.createRevenueReport(report);
+            if (isAdded) {
+                request.setAttribute("msg", "Revenue report created successfully!");
+            } else {
+                request.setAttribute("msg", "Failed to create revenue report!");
+            }
+            response.sendRedirect(request.getContextPath() + "/AdminRevenueReportController");
         }
     }
 

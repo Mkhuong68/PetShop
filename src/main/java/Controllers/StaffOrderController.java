@@ -60,11 +60,11 @@ public class StaffOrderController extends HttpServlet {
             throws ServletException, IOException {
         StaffOrderDAO c = new StaffOrderDAO();
         List<Order> list = c.getAllOrder();
-        if (list != null) {
+        if (list != null || list.size() != 0) {
             request.setAttribute("list", list);
             request.getRequestDispatcher("viewOrderListStaff.jsp").forward(request, response);
         } else {
-            request.setAttribute("msg", "khong co danh sach");
+            request.setAttribute("msg", "There is no list");
             request.getRequestDispatcher("viewOrderListStaff.jsp").forward(request, response);
         }
     }

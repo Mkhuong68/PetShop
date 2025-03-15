@@ -1,67 +1,80 @@
 /*
 Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
 */
 /* 
-    Created on : Feb 23, 2025, 4:04:36 PM
-    Author     : NgocNNCE181950
+    Created on : Mar 15, 2025, 10:50:14 AM
+    Author     : THANH THAO
 */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #8AAAE5;
+/* Định dạng chung cho phần cập nhật bài viết */
+.updatepost {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
-}
-
-form {
-    background: white;
+    min-height: 80vh;
+    background-color: #f4f4f4;
     padding: 20px;
-    border-radius: 8px;
+}
+
+/* Hộp chứa form */
+.form-updatepost {
+    background: #ffffff;
+    padding: 25px;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 350px;
-    text-align: center;
 }
 
-h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-input[type="text"] {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-    display: block;
-}
-
-form label {
+/* Tiêu đề và nhãn */
+.form-updatepost label {
     font-weight: bold;
     display: block;
-    text-align: left;
-    margin-top: 10px;
-    font-size: 14px;
+    margin: 10px 0 5px;
+    color: #333;
 }
 
-input[type="submit"] {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px;
-    margin-top: 15px;
-    cursor: pointer;
+/* Ô nhập liệu */
+.form-updatepost input[type="text"] {
     width: 100%;
-    border-radius: 6px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     font-size: 16px;
     transition: 0.3s;
 }
 
-input[type="submit"]:hover {
-    background-color: #8AAAE5;
+/* Hiệu ứng khi focus vào ô nhập */
+.form-updatepost input[type="text"]:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Nút cập nhật */
+.form-updatepost input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background: #007bff;
+    border: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Hiệu ứng khi hover vào nút */
+.form-updatepost input[type="submit"]:hover {
+    background: #0056b3;
+}
+
+/* Thông báo (nếu có) */
+.form-updatepost p {
+    text-align: center;
+    font-size: 16px;
+    color: #28a745;
+    margin-top: 15px;
 }

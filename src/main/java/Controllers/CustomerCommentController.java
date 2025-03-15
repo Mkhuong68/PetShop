@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAOs.CustomerPostDAO;
+import Model.Account;
 import Model.Comment;
 import Model.Post;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -62,7 +64,6 @@ public class CustomerCommentController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pId = request.getParameter("postId");
-
         int postId = Integer.parseInt(pId);
         CustomerPostDAO cd = new CustomerPostDAO();
         Post post = cd.getPostbyId(postId);
@@ -74,7 +75,7 @@ public class CustomerCommentController extends HttpServlet {
                 request.setAttribute("comments", comments);
             }
             request.setAttribute("post", post);
-            request.getRequestDispatcher("comment.jsp").forward(request, response);
+            request.getRequestDispatcher("cpost.jsp").forward(request, response);
         }
 
     }
@@ -95,24 +96,35 @@ public class CustomerCommentController extends HttpServlet {
         String comment = request.getParameter("comment");
         Timestamp createdDate = new Timestamp(System.currentTimeMillis());
         CustomerPostDAO cd = new CustomerPostDAO();
-        Cookie[] cookies = request.getCookies();
         String loggedInUser = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("username".equals(cookie.getName())) {
-                    loggedInUser = cookie.getValue();
-                    break;
+        HttpSession session = request.getSession();
+        Account account = (Account) request.getSession().getAttribute("account");
+        if (account != null) {
+            loggedInUser = account.getUsername();
+        } else {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("username".equals(cookie.getName())) {
+                        loggedInUser = cookie.getValue();
+                        break;
+                    }
                 }
+            } else {
+                request.setAttribute("msg", "No cookie");
+                request.getRequestDispatcher("cpost.jsp").forward(request, response);
+                return;
             }
         }
         int accountId = cd.getAccountId(loggedInUser);
         if (accountId < 0) {
             request.setAttribute("msg", "You are not logged in");
-            request.getRequestDispatcher("comment.jsp").forward(request, response);
+            request.getRequestDispatcher("cpost .jsp").forward(request, response);
             return;
         }
         cd.addComment(new Comment(0, postId, accountId, comment, createdDate));
-        response.sendRedirect(request.getContextPath() + "/CustomerCommentController?postId=" + postId);
+        response.sendRedirect(request.getContextPath() + "/CustomerPostController");
+
     }
 
     /**

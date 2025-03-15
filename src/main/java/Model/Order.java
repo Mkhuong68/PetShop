@@ -19,9 +19,55 @@ public class Order {
     private int statusId;
     private String statusName;
     private String deliveryAddress;
+    private int voucherId;
+    private boolean paymentStatus;
+    private String paymentMethod;
+    private double shippingFee;
+    private String orderNote;
+
+    public String getOrderNote() {
+        return orderNote;
+    }
+
+    public void setOrderNote(String orderNote) {
+        this.orderNote = orderNote;
+    }
+
+    
+    public int getVoucherId() {
+        return voucherId;
+    }
+
+    public void setVoucherId(int voucherId) {
+        this.voucherId = voucherId;
+    }
 
     public int getOrderId() {
         return orderId;
+    }
+
+    public boolean getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(boolean paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public double getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(double shippingFee) {
+        this.shippingFee = shippingFee;
     }
 
     public void setOrderId(int orderId) {
@@ -79,7 +125,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(int orderId, String username, int accountId, Timestamp orderDate, int statusId, String statusName, String deliveryAddress) {
+    public Order(int orderId, String username, int accountId, Timestamp orderDate, int statusId, String statusName, String deliveryAddress, int voucherId, boolean paymentStatus, String paymentMethod, double shippingFee, String orderNote) {
         this.orderId = orderId;
         this.username = username;
         this.accountId = accountId;
@@ -87,6 +133,13 @@ public class Order {
         this.statusId = statusId;
         this.statusName = statusName;
         this.deliveryAddress = deliveryAddress;
+        this.voucherId = voucherId;
+        this.paymentStatus = paymentStatus;
+        this.paymentMethod = paymentMethod;
+        this.shippingFee = shippingFee;
+        this.orderNote = orderNote;
     }
+
+
 
 }

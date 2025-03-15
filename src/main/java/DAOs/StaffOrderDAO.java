@@ -24,10 +24,12 @@ public class StaffOrderDAO {
 
     public List<Order> getAllOrder() {
         List<Order> list = new ArrayList<>();
-        String sql = "SELECT Orders.order_id, Account.account_id, Account.username, Orders.order_date, OrderStatus.status_id, OrderStatus.status_name, Orders.deliver_to\n"
+        String sql = "SELECT Orders.order_id, Account.account_id, Account.username, OrderStatus.status_id, Orders.shipping_fee, Orders.order_note, OrderStatus.status_name, Vouchers.voucher_id, Orders.order_date, Orders.payment_status, Orders.payment_method, \n"
+                + "                  Orders.deliver_to\n"
                 + "FROM     Account INNER JOIN\n"
                 + "                  Orders ON Account.account_id = Orders.account_id INNER JOIN\n"
-                + "                  OrderStatus ON Orders.status_id = OrderStatus.status_id";
+                + "                  OrderStatus ON Orders.status_id = OrderStatus.status_id LEFT JOIN\n"
+                + "                  Vouchers ON Orders.voucher_id = Vouchers.voucher_id order bY order_date DESC";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -39,11 +41,16 @@ public class StaffOrderDAO {
                         rs.getTimestamp("order_date"),
                         rs.getInt("status_id"),
                         rs.getString("status_name"),
-                        rs.getString("deliver_to"));
+                        rs.getString("deliver_to"),
+                        rs.getInt("voucher_id"),
+                        rs.getBoolean("payment_status"),
+                        rs.getString("payment_method"),
+                        rs.getDouble("shipping_fee"),
+                        rs.getString("order_note"));
                 list.add(o);
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return list;
     }
@@ -51,14 +58,16 @@ public class StaffOrderDAO {
     public Order getOrderbyId(int id) {
         Order o = new Order();
         try {
-            String sql = "SELECT Orders.order_id, Account.account_id, Account.username, Orders.order_date, OrderStatus.status_id, OrderStatus.status_name, Orders.deliver_to\n"
+            String sql = "SELECT Account.account_id, Account.username, Orders.order_id, OrderStatus.status_id, OrderStatus.status_name, Vouchers.voucher_id, Orders.order_note, Orders.shipping_fee, Orders.order_date, \n"
+                    + "                  Orders.payment_status, Orders.payment_method, Orders.deliver_to\n"
                     + "FROM     Account INNER JOIN\n"
                     + "                  Orders ON Account.account_id = Orders.account_id INNER JOIN\n"
-                    + "                  OrderStatus ON Orders.status_id = OrderStatus.status_id where order_id = ?";
+                    + "                  OrderStatus ON Orders.status_id = OrderStatus.status_id LEFT JOIN\n"
+                    + "                  Vouchers ON Orders.voucher_id = Vouchers.voucher_id where Orders.order_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 o.setOrderId(rs.getInt("order_id"));
                 o.setUsername(rs.getString("username"));
                 o.setAccountId(rs.getInt("account_id"));
@@ -66,15 +75,15 @@ public class StaffOrderDAO {
                 o.setStatusId(rs.getInt("status_id"));
                 o.setStatusName(rs.getString("status_name"));
                 o.setDeliveryAddress(rs.getString("deliver_to"));
+                o.setVoucherId(rs.getInt("voucher_id"));
+                o.setPaymentStatus(rs.getBoolean("payment_status"));
+                o.setPaymentMethod(rs.getString("payment_method"));
+                o.setShippingFee(rs.getDouble("shipping_fee"));
+                o.setOrderNote(rs.getString("order_note"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return o;
-    }
-
-    public void changeStatus(int statusId) {
-        Order o = new Order();
-
     }
 }

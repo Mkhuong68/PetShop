@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAOs.CustomerPostDAO;
+import Model.Account;
 import Model.Post;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,15 +82,27 @@ public class CustomerPostController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        CustomerPostDAO c = new CustomerPostDAO();
-        Cookie[] cookies = request.getCookies();
         String loggedInUser = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("username".equals(cookie.getName())) {
-                    loggedInUser = cookie.getValue();
-                    break;
+        CustomerPostDAO c = new CustomerPostDAO();
+
+        // Kiem tra co dang nhap hay khong (session hay cookie)
+        HttpSession session = request.getSession();
+        Account account = (Account) request.getSession().getAttribute("account");
+        if (account != null) {
+            loggedInUser = account.getUsername();
+        } else {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("username".equals(cookie.getName())) {
+                        loggedInUser = cookie.getValue();
+                        break;
+                    }
                 }
+            } else {
+                request.setAttribute("msg", "No cookie");
+                request.getRequestDispatcher("cpost.jsp").forward(request, response);
+                return;
             }
         }
         if (loggedInUser == null || loggedInUser.isEmpty()) {
@@ -102,6 +116,8 @@ public class CustomerPostController extends HttpServlet {
             request.getRequestDispatcher("cpost.jsp").forward(request, response);
             return;
         }
+
+        // Kiem tra du lieu nhap vao, khong duoc de trong
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         if (title == null || title.isEmpty() || content == null || content.isEmpty()) {

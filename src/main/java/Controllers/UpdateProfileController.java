@@ -1,69 +1,73 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package Controllers;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
-
-import DAOs.AccountDAO;  
-import Model.Account;   
 /**
  *
  * @author THANH THAO
  */
-@WebServlet("/updateProfile")
+import DAOs.AccountDAO;
+import Model.Account;
+import Model.UserAddress;
+import java.sql.*;
+import java.io.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+
 public class UpdateProfileController extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Account account = (Account) session.getAttribute("account");
+        AccountDAO c = new AccountDAO();
+        String loggedInUser = null;
+        Account account = (Account) request.getSession().getAttribute("account");
+        if (account != null) {
+            loggedInUser = account.getUsername();
 
-        if (account == null) {
-            response.sendRedirect("/login");
+        } else {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("username".equals(cookie.getName())) {
+                        loggedInUser = cookie.getValue();
+                        break;
+                    }
+                }
+            } else {
+                request.setAttribute("msg", "No cookie");
+                request.getRequestDispatcher("viewProfilep").forward(request, response);
+                return;
+            }
+        }
+        if (loggedInUser == null || loggedInUser.isEmpty()) {
+            request.setAttribute("msg", "No user");
+            request.getRequestDispatcher("viewProfile.jsp").forward(request, response);
             return;
         }
+        int accountId = c.getAccountId(loggedInUser);
 
+        // Lấy thông tin từ form
+        String email = request.getParameter("email");
+        String phoneNumber = request.getParameter("phoneNumber");
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-
-        // Kiểm tra thông tin không để trống
-        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty() ) {
-            response.getWriter().write("All fields are required.");
-            return;
-        }
-
-        // Kiểm tra định dạng số điện thoại
-        if (!phone.matches("\\d{10,11}")) {
-            response.getWriter().write("Invalid phone number format.");
-            return;
-        }
-
-        // Cập nhật thông tin người dùng
-        account.setFirstName(firstName);
-        account.setLastName(lastName);
-        account.setEmail(email);
-        account.setPhoneNumber(phone);
-        
-
-        AccountDAO accountDAO = new AccountDAO();
-        boolean isUpdated = accountDAO.updateAccount(account);
-
+        Date dateOfBirth = Date.valueOf(request.getParameter("dateOfBirth"));
+        String gender = request.getParameter("gender");
+        // Cập nhật tài khoản
+        account = new Account(accountId, email, phoneNumber, firstName, lastName, dateOfBirth, gender);
+        boolean isUpdated = c.updateAccount(account);
         if (isUpdated) {
+            request.setAttribute("account", c.getAccountById(accountId));
             session.setAttribute("account", account);
-            response.sendRedirect("/viewProfile");
-        } else {
-            response.getWriter().write("Error updating profile.");
+            request.getRequestDispatcher("viewProfile.jsp").forward(request, response);
         }
+
     }
 }

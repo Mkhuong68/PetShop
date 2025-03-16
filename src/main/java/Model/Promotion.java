@@ -5,6 +5,7 @@
 package Model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -14,35 +15,30 @@ import java.time.LocalDateTime;
  */
 
 public class Promotion {
-
     private int promotionId;
     private String promotionName;
     private String promotionImage;
-    private String description;
-    private int discountRate;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private String promotionDescription;
+    private int promotionDiscount;
+    private Timestamp promotionValidFrom;
+    private Timestamp promotionValidTo;
     private int priority;
     private int createdBy;
-    private Boolean isHidden;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastUpdated;
+    private boolean isHidden;
+    private Timestamp createdDate;
+    private Date lastUpdated;
 
-    // Constructor mặc định
-    public Promotion() {
-    }
+    // Constructor
+    public Promotion() {}
 
-    // Constructor đầy đủ
-    public Promotion(int promotionId, String promotionName, String promotionImage, String description,
-            int discountRate, LocalDate startDate, LocalDate endDate, int priority,
-            int createdBy, Boolean isHidden, LocalDateTime createdDate, LocalDateTime lastUpdated) {
+    public Promotion(int promotionId, String promotionName, String promotionImage, String promotionDescription, int promotionDiscount, Timestamp promotionValidFrom, Timestamp promotionValidTo, int priority, int createdBy, boolean isHidden, Timestamp createdDate, Date lastUpdated) {
         this.promotionId = promotionId;
         this.promotionName = promotionName;
         this.promotionImage = promotionImage;
-        this.description = description;
-        this.discountRate = discountRate;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.promotionDescription = promotionDescription;
+        this.promotionDiscount = promotionDiscount;
+        this.promotionValidFrom = promotionValidFrom;
+        this.promotionValidTo = promotionValidTo;
         this.priority = priority;
         this.createdBy = createdBy;
         this.isHidden = isHidden;
@@ -50,7 +46,9 @@ public class Promotion {
         this.lastUpdated = lastUpdated;
     }
 
-    // Getters và Setters
+
+
+    // Getters and Setters
     public int getPromotionId() {
         return promotionId;
     }
@@ -75,36 +73,44 @@ public class Promotion {
         this.promotionImage = promotionImage;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPromotionDescription() {
+        return promotionDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPromotionDescription(String promotionDescription) {
+        this.promotionDescription = promotionDescription;
     }
 
-    public int getDiscountRate() {
-        return discountRate;
+    public int getPromotionDiscount() {
+        return promotionDiscount;
     }
 
-    public void setDiscountRate(int discountRate) {
-        this.discountRate = discountRate;
+    public void setPromotionDiscount(int promotionDiscount) {
+        this.promotionDiscount = promotionDiscount;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public Timestamp getPromotionValidFrom() {
+        return promotionValidFrom;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setPromotionValidFrom(Timestamp promotionValidFrom) {
+        this.promotionValidFrom = promotionValidFrom;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public Timestamp getPromotionValidTo() {
+        return promotionValidTo;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setPromotionValidTo(Timestamp promotionValidTo) {
+        this.promotionValidTo = promotionValidTo;
+    }
+
+    public boolean isIsHidden() {
+        return isHidden;
+    }
+
+    public void setIsHidden(boolean isHidden) {
+        this.isHidden = isHidden;
     }
 
     public int getPriority() {
@@ -123,27 +129,27 @@ public class Promotion {
         this.createdBy = createdBy;
     }
 
-    public Boolean getIsHidden() {
+    public boolean isHidden() {
         return isHidden;
     }
 
-    public void setIsHidden(Boolean isHidden) {
+    public void setHidden(boolean isHidden) {
         this.isHidden = isHidden;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
-    public LocalDateTime getLastUpdated() {
+    public Date getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(LocalDateTime lastUpdated) {
+    public void setLastUpdated(Date lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 }

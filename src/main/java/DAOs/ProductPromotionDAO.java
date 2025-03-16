@@ -59,16 +59,19 @@ public class ProductPromotionDAO {
 
     // Thêm một ProductPromotion vào cơ sở dữ liệu
     public boolean addProductPromotion(ProductPromotion productPromotion) {
-        String sql = "INSERT INTO ProductPromotions (product_id, promotion_id) VALUES (?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, productPromotion.getProductId());
-            stmt.setInt(2, productPromotion.getPromotionId());
-            return stmt.executeUpdate() > 0; // Nếu thành công, trả về true
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false; // Nếu không thành công, trả về false
+    String sql = "INSERT INTO ProductPromotions (product_id, promotion_id, original_price, discounted_price) VALUES (?, ?, ?, ?)";
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setInt(1, productPromotion.getProductId());
+        stmt.setInt(2, productPromotion.getPromotionId());
+        stmt.setDouble(3, productPromotion.getOriginalPrice());
+        stmt.setDouble(4, productPromotion.getDiscountedPrice());
+        return stmt.executeUpdate() > 0; // Nếu thành công, trả về true
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return false; // Nếu không thành công, trả về false
+}
+
 
     // Xóa một ProductPromotion khỏi cơ sở dữ liệu
     public boolean deleteProductPromotion(int productId, int promotionId) {

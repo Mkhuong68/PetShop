@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controllers;
 
 import java.io.PrintWriter;
 import DAOs.CartDAO;
+import DAOs.ProductDAO; // Import mới thêm
 import Model.Account;
 import Model.CartItem;
 import java.io.IOException;
@@ -27,10 +24,12 @@ public class CartController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private CartDAO cartDAO;
+    private ProductDAO productDAO; // Biến mới thêm
 
     @Override
     public void init() throws ServletException {
         cartDAO = new CartDAO();
+        productDAO = new ProductDAO(); // Khởi tạo productDAO
     }
 
     /**
@@ -97,7 +96,10 @@ public class CartController extends HttpServlet {
             case "add":
                 int productId = Integer.parseInt(request.getParameter("productId"));
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
-                BigDecimal price = new BigDecimal("100000");
+
+                // Lấy giá sản phẩm từ cơ sở dữ liệu thay vì dùng giá cố định
+                BigDecimal price = productDAO.getProductPrice(productId);
+
                 CartItem item = new CartItem();
                 item.setProductId(productId);
                 item.setQuantity(quantity);
@@ -133,6 +135,7 @@ public class CartController extends HttpServlet {
         }
         int accountId = account.getAccountId();
         String action = request.getParameter("action");
+
         if ("update".equals(action)) {
             int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
             int newQuantity = Integer.parseInt(request.getParameter("quantity"));
@@ -173,6 +176,22 @@ public class CartController extends HttpServlet {
             BigDecimal discount = cartDAO.applyVoucher(accountId, voucherCode);
             request.setAttribute("discount", discount);
             listCart(request, response, accountId);
+        } else if ("deleteSelected".equals(action)) {
+            // Thêm xử lý xóa các mục được chọn
+            String selectedItems = request.getParameter("selectedItems");
+            if (selectedItems != null && !selectedItems.isEmpty()) {
+                String[] itemIds = selectedItems.split(",");
+                for (String itemId : itemIds) {
+                    try {
+                        int cartItemId = Integer.parseInt(itemId.trim());
+                        cartDAO.deleteCartItem(cartItemId);
+                    } catch (NumberFormatException e) {
+                        // Bỏ qua ID không hợp lệ
+                    }
+                }
+            }
+            sendCartSummary(response, accountId);
+            return;
         } else {
             doGet(request, response);
         }

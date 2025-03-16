@@ -4,17 +4,19 @@
  */
 package Model;
 
-import java.sql.Date;
+import java.util.Date;
+import java.math.BigDecimal;
 
 /**
  *
  * @author tvhun
  */
 public class Product {
+
     private int productId;
     private String productName;
     private String productDescription;
-    private double productPrice;
+    private BigDecimal productPrice;
     private String productImage;
     private int categoryId;
     private Date createdDate;
@@ -23,7 +25,19 @@ public class Product {
     private int stockQuantity;
     private int soldQuantity;
     private int views;
-     private double rating;
+    private double rating;
+
+    public Product(int i, String name, String description, double price, String image, int category, java.sql.Date date, java.sql.Date date0, boolean b, int stock, int i0, int i1) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
 
     public int getProductId() {
         return productId;
@@ -49,11 +63,11 @@ public class Product {
         this.productDescription = productDescription;
     }
 
-    public double getProductPrice() {
+    public BigDecimal getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(double productPrice) {
+    public void setProductPrice(BigDecimal productPrice) {
         this.productPrice = productPrice;
     }
 
@@ -120,15 +134,12 @@ public class Product {
     public void setViews(int views) {
         this.views = views;
     }
-    public double getRating() {
-        return rating;
-    }
 
     public Product() {
     }
 
-    public Product(int productId, String productName, String productDescription, double productPrice, String productImage,
-                  int categoryId, Date createdDate, Date lastUpdated, boolean isHidden, int stockQuantity, int soldQuantity, int views) {
+    public Product(int productId, String productName, String productDescription, BigDecimal productPrice, String productImage,
+            int categoryId, Date createdDate, Date lastUpdated, boolean isHidden, int stockQuantity, int soldQuantity, int views) {
         this.productId = productId;
         this.productName = productName;
         this.productDescription = productDescription;
@@ -141,9 +152,5 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.soldQuantity = soldQuantity;
         this.views = views;
-    }
-
-    public void setRating(double avgRating) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

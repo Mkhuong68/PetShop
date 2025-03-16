@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:include page="manageStaff.jsp" />
+
 <html>
 <head>
     <title>Add Product</title>

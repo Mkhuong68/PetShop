@@ -38,12 +38,9 @@ public class DeliveryOrderListController extends HttpServlet {
         Account currentUser = (Account) request.getSession().getAttribute("account");
         if (currentUser == null) {
             // Nếu chưa đăng nhập, chuyển hướng về trang đăng nhập
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("/login");
             return;
         }
-
-        // 2. Nếu đã đăng nhập, tiếp tục xử lý logic cho DeliveryOrderList
-        // Lấy tham số action
         String action = request.getParameter("action");
         if (action != null) {
             if (action.equals("edit")) {
@@ -56,6 +53,9 @@ public class DeliveryOrderListController extends HttpServlet {
                         request.setAttribute("customerName", orderDetailsMap.get("customerName"));
                         request.setAttribute("customerPhone", orderDetailsMap.get("customerPhone"));
                         request.setAttribute("customerAddress", orderDetailsMap.get("customerAddress"));
+                        // Thêm dòng này để lấy trạng thái hiện tại
+                        request.setAttribute("currentStatusId", deliveryDAO.getCurrentStatusId(deliveryId));
+
                         RequestDispatcher dispatcher = request.getRequestDispatcher("editDeliveryOrder.jsp");
                         dispatcher.forward(request, response);
                         return;
@@ -82,14 +82,42 @@ public class DeliveryOrderListController extends HttpServlet {
 
         // 3. Mặc định hiển thị danh sách đơn giao hàng
         List<Map<String, Object>> deliveryList = deliveryDAO.getDeliveryOrderDisplayList();
-        request.setAttribute("deliveryList", deliveryList);
+
+        request.setAttribute(
+                "deliveryList", deliveryList);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/deliveryOrderList.jsp");
+
         dispatcher.forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String action = request.getParameter("action");
+
+        if (action != null && action.equals("updateStatus")) {
+            try {
+                int deliveryId = Integer.parseInt(request.getParameter("deliveryId"));
+                int newStatusId = Integer.parseInt(request.getParameter("newStatus"));
+
+                boolean updated = deliveryDAO.updateDeliveryStatus(deliveryId, newStatusId);
+
+                if (updated) {
+                    request.setAttribute("successMessage", "Delivery status updated successfully.");
+                } else {
+                    request.setAttribute("errorMessage", "Failed to update delivery status.");
+                }
+
+                // Chuyển hướng về trang danh sách đơn hàng
+                response.sendRedirect("deliveryList");
+                return;
+
+            } catch (NumberFormatException e) {
+                request.setAttribute("errorMessage", "Invalid input parameters.");
+            }
+        }
+
+        // Nếu không phải action updateStatus, chuyển đến phương thức doGet
         doGet(request, response);
     }
 

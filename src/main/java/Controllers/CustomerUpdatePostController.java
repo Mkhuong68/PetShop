@@ -5,6 +5,7 @@
 package Controllers;
 
 import DAOs.CustomerPostDAO;
+import Model.Account;
 import Model.Post;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Timestamp;
 
 /**
@@ -87,14 +89,24 @@ public class CustomerUpdatePostController extends HttpServlet {
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         CustomerPostDAO cd = new CustomerPostDAO();
-        Cookie[] cookies = request.getCookies();
         String loggedInUser = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("username".equals(cookie.getName())) {
-                    loggedInUser = cookie.getValue();
-                    break;
+        HttpSession session = request.getSession();
+        Account account = (Account) request.getSession().getAttribute("account");
+        if (account != null) {
+            loggedInUser = account.getUsername();
+        } else {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("username".equals(cookie.getName())) {
+                        loggedInUser = cookie.getValue();
+                        break;
+                    }
                 }
+            } else {
+                request.setAttribute("msg", "No cookie");
+                request.getRequestDispatcher("cpost.jsp").forward(request, response);
+                return;
             }
         }
         Post post = cd.getPostbyId(postId);

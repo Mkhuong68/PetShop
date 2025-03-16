@@ -2,7 +2,7 @@
 <%@ page import="java.util.List, Model.Product" %>
 <%@ page import="DAOs.StaffManageProductDAO" %>
 <%@ page import="java.text.NumberFormat, java.util.Locale" %>
-<jsp:include page="manageStaff.jsp" />
+
 
 <%
     StaffManageProductDAO productDAO = new StaffManageProductDAO();

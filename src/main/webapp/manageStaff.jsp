@@ -194,7 +194,7 @@
                 <a class="nav-link" href="${pageContext.request.contextPath}/ManageVoucher">
                     <i class="bi bi-ticket-perforated"></i> Manage Voucher
                 </a>
-                <a class="nav-link" href="">
+                <a class="nav-link" href="StaffOrderController">
                     <i class="bi bi-cart"></i> Manage Order
                 </a>
                 <a class="nav-link" href="">

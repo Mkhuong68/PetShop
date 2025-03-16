@@ -17,6 +17,32 @@ public class Account {
     private String passwordHash;
     private String email;
     private String bannedReason;
+    private int priority;  // Thêm thuộc tính priority
+    private int voucherId;  // Thêm thuộc tính voucherId
+    private UserAddress userAddress;
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public UserAddress getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(UserAddress userAddress) {
+        this.userAddress = userAddress;
+    }
+        public int getVoucherId() {
+        return voucherId;
+    }
+
+    public void setVoucherId(int voucherId) {
+        this.voucherId = voucherId;
+    }
 
     public int getAccountId() {
         return accountId;

@@ -9,11 +9,30 @@ package Model;
  * @author tvhun
  */
 public class OrderDetail {
+
     private int orderDetailId;
     private int orderId;
     private int productId;
     private int quantity;
-    private double price;
+    private double finalPrice;
+    private double purchasePrice;
+    
+
+    public double getFinalPrice() {
+        return finalPrice;
+    }
+
+    public void setFinalPrice(double finalPrice) {
+        this.finalPrice = finalPrice;
+    }
+
+    public double getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(double purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
 
     public int getOrderDetailId() {
         return orderDetailId;
@@ -47,21 +66,16 @@ public class OrderDetail {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
-        return price;
+    public OrderDetail() {
     }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public OrderDetail() {}
-
-    public OrderDetail(int orderDetailId, int orderId, int productId, int quantity, double price) {
+    public OrderDetail(int orderDetailId, int orderId, int productId, int quantity, double finalPrice, double purchasePrice) {
         this.orderDetailId = orderDetailId;
         this.orderId = orderId;
         this.productId = productId;
         this.quantity = quantity;
-        this.price = price;
+        this.finalPrice = finalPrice;
+        this.purchasePrice = purchasePrice;
     }
+
 }

@@ -19,7 +19,6 @@ public class CartDAO {
 
     public List<CartItem> getCartItems(int accountId) {
         List<CartItem> list = new ArrayList<>();
-        // Ví dụ query kết hợp với bảng Products để lấy tên và hình ảnh sản phẩm
         String sql = "SELECT c.cart_item_id, c.account_id, c.product_id, c.quantity, c.final_price, c.original_price, c.created_date, c.last_updated, p.product_name, p.product_image "
                 + "FROM CartItems c JOIN Products p ON c.product_id = p.product_id "
                 + "WHERE c.account_id = ?";

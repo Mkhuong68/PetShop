@@ -1,0 +1,113 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Feb 21, 2025, 3:47:54 PM
+    Author     : NgocNNCE181950
+*/
+body {
+    font-family: Arial, sans-serif;
+    background-color: #8AAAE5;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.post-form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #218838;
+}
+
+.message {
+    color: red;
+    font-weight: bold;
+}
+
+.post-list {
+    margin-top: 20px;
+}
+
+.post-item {
+    background: white;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.post-author {
+    color: #666;
+    font-size: 14px;
+}
+
+.post-title {
+    color: #333;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.post-content {
+    color: #555;
+    font-size: 16px;
+}
+
+.btn-update, .btn-comment {
+    display: inline-block;
+    text-decoration: none;
+    background: #007bff;
+    color: white;
+    padding: 8px 15px;
+    margin: 5px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.btn-update:hover {
+    background: #0056b3;
+}
+
+.btn-comment {
+    background: #ffc107;
+    color: #333;
+}
+
+.btn-comment:hover {
+    background: #e0a800;
+}

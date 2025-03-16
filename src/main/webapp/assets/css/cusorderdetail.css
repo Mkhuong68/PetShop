@@ -1,0 +1,131 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 12, 2025, 4:56:36 PM
+    Author     : NgocNNCE181950
+*/
+
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Container chính */
+.container {
+    width: 60%;
+    margin: 30px auto;
+    padding: 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề trang */
+h1 {
+    text-align: center;
+    color: #8AAAE5;
+    margin-bottom: 20px;
+}
+
+/* Order Info */
+.order-info, .order-summary {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+
+/* Heading nhỏ */
+h2 {
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+/* Thông tin đơn hàng */
+.order-info p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+/* Bảng sản phẩm */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background: #8AAAE5;
+    color: white;
+}
+
+/* Tổng tiền */
+p strong {
+    font-size: 18px;
+    color: #333;
+}
+
+/* Nút Cancel Order */
+.checkout-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: #8AAAE5;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.back-btn{
+    display: block;
+    width: 10%;
+    padding: 12px;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: #8AAAE5;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-left: 20%;
+}
+
+.checkout-btn:hover {
+    background: #8AAAE5;
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+a:hover {
+    background-color: #0056b3;
+}

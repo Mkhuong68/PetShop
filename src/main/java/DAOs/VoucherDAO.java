@@ -9,6 +9,7 @@ import Model.Voucher;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.List;
  * @author tvhun
  */
 public class VoucherDAO {
+
+    Connection conn = DBConnection.getConnection();
 
     public void addVoucher(Voucher voucher) {
         String sql = "INSERT INTO Vouchers (voucher_code, voucher_description, voucher_discount, voucher_valid_from, voucher_valid_to, voucher_status, voucher_type, is_used, is_hidden, created_date) "
@@ -101,6 +104,53 @@ public class VoucherDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Voucher> getAllVoucherAcc(int Account_id) {
+        List<Voucher> list = new ArrayList<>();
+        String sql = "SELECT  Vouchers.voucher_id, Vouchers.voucher_code, Vouchers.voucher_discount, Vouchers.voucher_description, Vouchers.voucher_valid_from, Vouchers.voucher_valid_to, Vouchers.voucher_status, \n"
+                + " Vouchers.is_used,Vouchers.voucher_type, Vouchers.is_hidden\n"
+                + "FROM     Account CROSS JOIN\n"
+                + " Vouchers where Account.account_id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, Account_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Voucher v = new Voucher(
+                        rs.getInt("voucher_id"),
+                        rs.getString("voucher_code"),
+                        rs.getString("voucher_description"),
+                        rs.getInt("voucher_discount"),
+                        rs.getTimestamp("voucher_valid_from"),
+                        rs.getDate("voucher_valid_to"),
+                        rs.getBoolean("voucher_status"),
+                        rs.getBoolean("is_used"),
+                        rs.getString("voucher_type"),
+                        rs.getBoolean("is_hidden")
+                );
+                list.add(v);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public int getVoucherIdByAccId(String voucher_code) {
+        int id = -1;
+        try {
+            String sql = "SELECT voucher_id FROM Vouchers WHERE voucher_code = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, voucher_code);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("voucher_id");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return id;
     }
 
 }

@@ -1,39 +1,32 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package Controllers;
 
+import DAOs.AccountDAO;
+import Model.Account;
+import Model.UserAddress;
+import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import DAOs.AccountDAO;
-import Model.Account;
-import jakarta.servlet.annotation.MultipartConfig;
-import jakarta.servlet.http.Part;
 
-import java.io.IOException;
-import java.io.File;
-import java.nio.file.Paths;
-
-@WebServlet("/updateProfile")
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-                 maxFileSize = 1024 * 1024 * 10,      // 10MB
-                 maxRequestSize = 1024 * 1024 * 50)   // 50MB
+@WebServlet("/UpdateProfileController")
 public class UpdateProfileController extends HttpServlet {
-
     private static final long serialVersionUID = 1L;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Kiểm tra session
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            response.sendRedirect("/login");
-            return;
-        }
-
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
+
         if (account == null) {
-            response.sendRedirect("/login");
+            response.sendRedirect("/login"); // Nếu không đăng nhập, chuyển hướng đến trang login
             return;
         }
 
@@ -42,32 +35,20 @@ public class UpdateProfileController extends HttpServlet {
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
-        String profileImage = request.getParameter("profileImage");  // Lấy dữ liệu Base64 của ảnh
+        String address = request.getParameter("address");
 
-        System.out.println("First Name: " + firstName);
-        System.out.println("Last Name: " + lastName);
-        System.out.println("Email: " + email);
-        System.out.println("Phone: " + phone);
-        System.out.println("Profile Image: " + (profileImage != null ? "Có ảnh" : "Không có ảnh"));
-
-        // Kiểm tra các trường dữ liệu không trống
-        if (firstName == null || lastName == null || email == null || phone == null
-                || firstName.trim().isEmpty() || lastName.trim().isEmpty() || email.trim().isEmpty() || phone.trim().isEmpty()) {
-            response.getWriter().write("All fields are required.");
+        // Kiểm tra các trường không để trống
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+            request.setAttribute("error", "All fields are required.");
+            request.getRequestDispatcher("updateProfile.jsp").forward(request, response);
             return;
         }
 
-        // Kiểm tra file ảnh
-        Part filePart = request.getPart("profilePicture");
-        String fileName = null;
-        if (filePart != null && filePart.getSize() > 0) {
-            fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            // Đường dẫn mới để lưu ảnh vào thư mục profile
-            String uploadPath = getServletContext().getRealPath("") + File.separator + "assets" + File.separator + "images" + File.separator + "profile";
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
-            filePart.write(uploadPath + File.separator + fileName);
-            account.setProfileImage("assets/images/profile/" + fileName);  // Lưu đường dẫn ảnh mới vào account
+        // Kiểm tra định dạng số điện thoại
+        if (!phone.matches("\\d{10,11}")) {
+            request.setAttribute("error", "Invalid phone number format.");
+            request.getRequestDispatcher("updateProfile.jsp").forward(request, response);
+            return;
         }
 
         // Cập nhật thông tin tài khoản
@@ -76,15 +57,22 @@ public class UpdateProfileController extends HttpServlet {
         account.setEmail(email);
         account.setPhoneNumber(phone);
 
-        // Cập nhật database
+        // Tạo đối tượng UserAddress và cập nhật địa chỉ
+        UserAddress userAddress = new UserAddress();
+        userAddress.setAddress(address);  // Cập nhật địa chỉ mới vào UserAddress
+        account.setUserAddress(userAddress);  // Gán UserAddress vào Account
+
+        // Cập nhật tài khoản vào cơ sở dữ liệu
         AccountDAO accountDAO = new AccountDAO();
         boolean isUpdated = accountDAO.updateAccount(account);
 
+        // Nếu cập nhật thành công, lưu thông tin mới vào session và chuyển hướng đến trang profile
         if (isUpdated) {
-            session.setAttribute("account", account);
-            response.sendRedirect("viewProfile.jsp");
+            session.setAttribute("account", account); // Cập nhật lại session
+            response.sendRedirect("viewProfile.jsp");  // Chuyển hướng đến trang viewProfile
         } else {
-            response.getWriter().write("Error updating profile.");
+            request.setAttribute("error", "Error updating profile.");
+            request.getRequestDispatcher("updateProfile.jsp").forward(request, response);
         }
     }
 }

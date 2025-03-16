@@ -10,7 +10,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 /* Thiết lập display: flex để chia 2 cột */
 body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(90deg, #FFFFFF, #8AAAE5);
     margin: 0;
     padding: 0;
 }
@@ -43,19 +42,15 @@ h1 {
 /* Cột bên trái (menu điều hướng) */
 .account-actions {
     width: 30%;
-    background-color: #f9f9f9;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
 }
 
 /* Căn chỉnh văn bản bên trái */
 .profile-info {
     width: 60%;
     padding: 50px;
-    background-color: #f9f9f9;
-    border-radius: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
 }
 
 /* Thiết lập kiểu cho các liên kết trong cột account actions */

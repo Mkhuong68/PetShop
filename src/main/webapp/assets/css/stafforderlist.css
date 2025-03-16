@@ -1,0 +1,61 @@
+/* Căn giữa nội dung trong các th và td */
+th, td {
+    text-align: center; /* Căn giữa nội dung */
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+}
+.main-content {
+            margin-left: 250px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            min-height: 8vh;
+        }
+        
+        .form-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 10px;
+            margin: 0 auto;
+        }
+        
+        .content-header {
+            margin-bottom: 10px;
+        }
+        
+        .content-title {
+            color: #333;
+            font-size: 24px;
+            margin-left: 40%;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: #8AAAE5;
+            border-color: #8AAAE5;
+        }
+        
+        .btn-primary:hover {
+            background-color: #7A9AD5;
+            border-color: #7A9AD5;
+        }
+        
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }

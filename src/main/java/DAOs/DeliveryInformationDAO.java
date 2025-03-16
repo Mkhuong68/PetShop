@@ -132,4 +132,40 @@ public class DeliveryInformationDAO {
         }
         return false;
     }
+
+    public boolean updateDeliveryStatus(int deliveryId, int newStatusId) {
+        String sql = "UPDATE DeliveryInformation SET status_id = ?, last_updated = GETDATE() WHERE delivery_id = ?";
+
+        try ( Connection con = DBConnection.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, newStatusId);
+            ps.setInt(2, deliveryId);
+
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public int getCurrentStatusId(int deliveryId) {
+        String sql = "SELECT status_id FROM DeliveryInformation WHERE delivery_id = ?";
+
+        try ( Connection con = DBConnection.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, deliveryId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("status_id");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; // Trả về -1 nếu không tìm thấy
+    }
 }

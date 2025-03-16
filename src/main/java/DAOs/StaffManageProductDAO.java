@@ -2,6 +2,7 @@ package DAOs;
 
 import DB.DBConnection;
 import Model.Product;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class StaffManageProductDAO {
                         rs.getInt("product_id"),
                         rs.getString("product_name"),
                         rs.getString("product_description"),
-                        rs.getDouble("product_price"),
+                        rs.getBigDecimal("product_price"),
                         rs.getString("product_image"),
                         rs.getInt("category_id"),
                         rs.getDate("created_date"),
@@ -54,7 +55,7 @@ public class StaffManageProductDAO {
                             rs.getInt("product_id"),
                             rs.getString("product_name"),
                             rs.getString("product_description"),
-                            rs.getDouble("product_price"),
+                            rs.getBigDecimal("product_price"),
                             rs.getString("product_image"),
                             rs.getInt("category_id"),
                             rs.getDate("created_date"),
@@ -79,7 +80,7 @@ public class StaffManageProductDAO {
         try ( PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, product.getProductName());
             ps.setString(2, product.getProductDescription());
-            ps.setDouble(3, product.getProductPrice());
+            ps.setBigDecimal(3, product.getProductPrice());
             ps.setString(4, product.getProductImage());
             ps.setInt(5, product.getCategoryId());
             ps.setBoolean(6, product.isIsHidden());
@@ -98,7 +99,7 @@ public class StaffManageProductDAO {
         try ( PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, product.getProductName());
             ps.setString(2, product.getProductDescription());
-            ps.setDouble(3, product.getProductPrice());
+            ps.setBigDecimal(3, product.getProductPrice());
             ps.setString(4, product.getProductImage());
             ps.setInt(5, product.getCategoryId());
             ps.setBoolean(6, product.isIsHidden());

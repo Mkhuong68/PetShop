@@ -4,16 +4,47 @@
  */
 package Model;
 
+import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
  * @author tvhun
  */
 public class RevenueReport {
+
     private int reportId;
     private Date reportDate;
-    private double totalRevenue;
+    private BigDecimal totalRevenue;
+    private int totalOrders;
+    private BigDecimal averageOrderValue;
+    private int createdBy;
+    private Timestamp createdDate;
+
+    public int getTotalOrders() {
+        return totalOrders;
+    }
+
+    public void setTotalOrders(int totalOrders) {
+        this.totalOrders = totalOrders;
+    }
+
+    public int getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(int createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Timestamp getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
+    }
 
     public int getReportId() {
         return reportId;
@@ -31,19 +62,33 @@ public class RevenueReport {
         this.reportDate = reportDate;
     }
 
-    public double getTotalRevenue() {
+    public BigDecimal getTotalRevenue() {
         return totalRevenue;
     }
 
-    public void setTotalRevenue(double totalRevenue) {
+    public void setTotalRevenue(BigDecimal totalRevenue) {
         this.totalRevenue = totalRevenue;
     }
 
-    public RevenueReport() {}
+    public BigDecimal getAverageOrderValue() {
+        return averageOrderValue;
+    }
 
-    public RevenueReport(int reportId, Date reportDate, double totalRevenue) {
+    public void setAverageOrderValue(BigDecimal averageOrderValue) {
+        this.averageOrderValue = averageOrderValue;
+    }
+
+    public RevenueReport() {
+    }
+
+    public RevenueReport(int reportId, Date reportDate, BigDecimal totalRevenue, int totalOrders, BigDecimal averageOrderValue, int createdBy, Timestamp createdDate) {
         this.reportId = reportId;
         this.reportDate = reportDate;
         this.totalRevenue = totalRevenue;
+        this.totalOrders = totalOrders;
+        this.averageOrderValue = averageOrderValue;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
     }
+
 }

@@ -92,4 +92,3 @@ public class CartItem {
         this.productImage = productImage;
     }
 }
-

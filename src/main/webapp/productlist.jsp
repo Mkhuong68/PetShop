@@ -68,10 +68,36 @@
                                     <a href="news.jsp"><i class="bx bx-globe"></i></a>
                                 </li>
                                 <li class="partner">
-                                    <a href="partner.jsp"><i class="bx bx-bell"></i></a>
+                                    <a href="#" class="account-link">
+                                        <i class="fas fa-bell"></i>
+                                        
+                                    </a>
+                                    <div class="notification-dropdown">
+                                        <div class="notification-header">
+                                            <h3>Notifications </h3>
+                                        </div>
+                                        <div class="notification-items">
+                                            <c:if test="${empty notifications}">
+                                                <div class="notification-item">
+                                                    <div class="notification-content">
+                                                        <p class="notification-desc">None notifications</p>
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                            <c:forEach items="${notifications}" var="notification">
+                                                <a href="NotificationDetail?notificationId=${notification.notificationId}" class="notification-item ${notification.isRead ? 'read' : 'unread'}">
+                                                    <div class="notification-content">
+                                                        <h4 class="notification-title">Notifications</h4>
+                                                        <p class="notification-desc">${notification.message}</p>
+                                                        <small><fmt:formatDate value="${notification.createdDate}" pattern="dd/MM/yyyy HH:mm" /></small>
+                                                    </div>
+                                                </a>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li>
-                                    <a href="about.jsp" class="account-link">
+                                    <a href="viewProfile.jsp" class="account-link">
                                         <i class="bx bx-user"></i>
                                         <span class="account-text"></span>
                                     </a>

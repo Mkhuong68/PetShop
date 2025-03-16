@@ -10,13 +10,40 @@ import java.sql.Date;
  *
  * @author tvhun
  */
+
 public class UserAddress {
+
     private int addressId;
     private int accountId;
     private String address;
     private boolean isDefault;
     private Date createdDate;
+    private double latitude;  // Thêm cột latitude
+    private double longitude; // Thêm cột longitude
 
+    // Constructor không tham số
+    public UserAddress() {
+        // Constructor mặc định, có thể để trống hoặc gán giá trị mặc định
+    }
+
+    // Getter và Setter cho các thuộc tính mới
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    // Các getter/setter còn lại cho các thuộc tính khác
     public int getAddressId() {
         return addressId;
     }
@@ -41,11 +68,11 @@ public class UserAddress {
         this.address = address;
     }
 
-    public boolean isIsDefault() {
+    public boolean isDefault() {
         return isDefault;
     }
 
-    public void setIsDefault(boolean isDefault) {
+    public void setDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }
 
@@ -57,13 +84,15 @@ public class UserAddress {
         this.createdDate = createdDate;
     }
 
-    public UserAddress() {}
-
-    public UserAddress(int addressId, int accountId, String address, boolean isDefault, Date createdDate) {
+    // Constructor với tham số
+    public UserAddress(int addressId, int accountId, String address, boolean isDefault, Date createdDate,
+                       double latitude, double longitude) {
         this.addressId = addressId;
         this.accountId = accountId;
         this.address = address;
         this.isDefault = isDefault;
         this.createdDate = createdDate;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

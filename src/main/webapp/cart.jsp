@@ -1,7 +1,7 @@
 <%-- 
     Document   : cart
     Created on : Mar 1, 2025, 1:47:42 AM
-    Author     : Diem Quynh
+    Author     : tvhun
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -22,8 +22,13 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
         <link rel="icon" href="Pet Heaven.png" type="image/png" />
         <style>
-            .cart-item-checkbox { margin-right: 10px; }
-            .item-subtotal { margin-top: 5px; font-weight: bold; }
+            .cart-item-checkbox {
+                margin-right: 10px;
+            }
+            .item-subtotal {
+                margin-top: 5px;
+                font-weight: bold;
+            }
         </style>
     </head>
     <body>
@@ -32,12 +37,12 @@
         <c:if test="${not empty sessionScope.account}">
             <c:set var="cartCount" value="${CartService.getCartCount(pageContext.request)}" />
         </c:if>
-        
+
         <div id="main-content" class="wrap">
             <header class="taskbar">
                 <nav class="container">
                     <div class="logo">
-                        <a href="/Home"><img src="assets/images/Pet Heaven.png" alt="PetShop" /></a>
+                        <a href="login.html"><img src="assets/images/Pet Heaven.png" alt="PetShop"></a>
                     </div>
                     <div class="menu" data-show="0">
                         <div class="d-flex h-100 justify-content-center align-items-center">
@@ -48,38 +53,87 @@
                                         <button type="submit"><i class="bx bx-search"></i></button>
                                     </form>
                                 </li>
-                                
                                 <li class="products">
-                                    <a href="/ProductList">
-                                        <i class='bx bx-archive'></i>
-                                    </a>
+                                    <a href="/ProductList"><i class="bx bx-archive"></i></a>
                                     <div class="product-dropdown">
-                                        <div class="dropdown-grid">
-                                            <c:forEach var="category" items="${categories}" varStatus="status">
-                                                <div class="dropdown-category">
-                                                    <h4>${category.categoryName}</h4>
-                                                    <ul>
-                                                        <li><a href="/ProductList?category=${category.categoryId}">${category.categoryName}</a></li>
-                                                    </ul>
-                                                </div>
-                                            </c:forEach>
+                                        <div class="column">
+                                            <ul>
+                                                <li><a href="#">Cat Food</a></li>
+                                                <li><a href="#">Cat Treats</a></li>
+                                                <li><a href="#">Dog Food</a></li>
+                                                <li><a href="#">Dog Treats</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="column">
+                                            <ul>
+                                                <li><a href="#">Collars & Leashes</a></li>
+                                                <li><a href="#">Beds</a></li>
+                                                <li><a href="#">Toys</a></li>
+                                                <li><a href="#">Apparel</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="column">
+                                            <ul>
+                                                <li><a href="#">Cat Litter</a></li>
+                                                <li><a href="#">Shampoo</a></li>
+                                                <li><a href="#">Odor Control</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="column">
+                                            <ul>
+                                                <li><a href="#">Vitamins</a></li>
+                                                <li><a href="#">Dental Care</a></li>
+                                                <li><a href="#">Flea & Tick</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="column">
+                                            <ul>
+                                                <li><a href="#">Carriers</a></li>
+                                                <li><a href="#">Strollers</a></li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </li>
                                 <li class="community">
-                                    <a href="news.jsp"><i class="bx bx-globe"></i></a>
+                                    <a href="news.html"><i class="bx bx-globe"></i></a>
                                 </li>
                                 <li class="partner">
-                                    <a href="partner.jsp"><i class="bx bx-bell"></i></a>
+                                    <a href="#" class="account-link">
+                                        <i class="fas fa-bell"></i>
+
+                                    </a>
+                                    <div class="notification-dropdown">
+                                        <div class="notification-header">
+                                            <h3>Notifications </h3>
+                                        </div>
+                                        <div class="notification-items">
+                                            <c:if test="${empty notifications}">
+                                                <div class="notification-item">
+                                                    <div class="notification-content">
+                                                        <p class="notification-desc">None notifications</p>
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                            <c:forEach items="${notifications}" var="notification">
+                                                <a href="NotificationDetail?notificationId=${notification.notificationId}" class="notification-item ${notification.isRead ? 'read' : 'unread'}">
+                                                    <div class="notification-content">
+                                                        <h4 class="notification-title">Notifications</h4>
+                                                        <p class="notification-desc">${notification.message}</p>
+                                                        <small><fmt:formatDate value="${notification.createdDate}" pattern="dd/MM/yyyy HH:mm" /></small>
+                                                    </div>
+                                                </a>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li>
-                                    <a href="about.jsp" class="account-link">
+                                    <a href="viewProfile.jsp" class="account-link">
                                         <i class="bx bx-user"></i>
                                         <span class="account-text"></span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/Cart" class="cart-link" style="position: relative;">
+                                    <a href="/Cart" class="cart-link">
                                         <i class="bx bx-cart"></i>
                                         <span class="cart-badge" id="cartCountDisplay">${cartCount}</span>
                                         <span class="cart-text"></span>
@@ -97,7 +151,7 @@
                     </div>
                 </nav>
             </header>
-            
+
             <div class="cart-page">
                 <div class="cart-header">
                     <div class="cart-header-left">
@@ -110,35 +164,40 @@
                 </div>
                 <div class="cart-content">
                     <div class="cart-left">
-                        <c:forEach var="item" items="${cartItems}">
-                            <div class="cart-item">
-                                <input type="checkbox" class="cart-item-checkbox" name="selectedItem" value="${item.cartItemId}">
-                                <div class="item-thumb">
-                                    <img src="${item.productImage}" alt="${item.productName}" />
-                                </div>
-                                <div class="item-info">
-                                    <div class="item-title">${item.productName}</div>
-                                    <div class="item-meta">Product Code: ${item.productId}</div>
-                                    <div class="item-price-quantity">
-                                        <span class="item-price">
-                                            <fmt:formatNumber value="${item.finalPrice}" pattern="#,##0" /> VND
-                                        </span>
-                                        <div class="quantity-control">
-                                            <button type="button" class="minus">-</button>
-                                            <input type="number" class="quantity-input" data-cartitemid="${item.cartItemId}" value="${item.quantity}" min="1">
-                                            <button type="button" class="plus">+</button>
-                                        </div>
-                                        <!-- Hiển thị subtotal cho từng mục (để update khi thay đổi số lượng) -->
-                                        <div class="item-subtotal">
-                                            Subtotal: <span id="item-${item.cartItemId}-total">
-                                                <fmt:formatNumber value="${item.finalPrice * item.quantity}" pattern="#,##0" /> VND
+                        <form action="OrderPage" method="get">
+                            <input type="hidden" name="action" value="orderFromCart">
+                            <c:forEach var="item" items="${cartItems}">
+                                <div class="cart-item">
+                                    <input type="checkbox" class="cart-item-checkbox" name="selectedItem" value="${item.cartItemId}">
+                                    <div class="item-thumb">
+                                        <img src="${item.productImage}" alt="${item.productName}" />
+                                    </div>
+                                    <div class="item-info">
+                                        <div class="item-title">${item.productName}</div>
+                                        <div class="item-meta">Product Code: ${item.productId}</div>
+                                        <div class="item-price-quantity">
+                                            <span class="item-price">
+                                                <fmt:formatNumber value="${item.finalPrice}" pattern="#,##0" /> VND
                                             </span>
+                                            <div class="quantity-control">
+                                                <button type="button" class="minus">-</button>
+                                                <input type="number" class="quantity-input" data-cartitemid="${item.cartItemId}" value="${item.quantity}" min="1">
+                                                <button type="button" class="plus">+</button>
+                                            </div>
+                                            <!-- Hiển thị subtotal cho từng mục (để update khi thay đổi số lượng) -->
+                                            <div class="item-subtotal">
+                                                Subtotal: <span name="subtotal" id="item-${item.cartItemId}-total">
+                                                    <fmt:formatNumber value="${item.finalPrice * item.quantity}" pattern="#,##0" /> VND
+                                                </span>
+                                            </div>
+                                            <a href="/Cart?action=delete&cartItemId=${item.cartItemId}" class="deleteItem">Delete</a>
                                         </div>
-                                        <a href="/Cart?action=delete&cartItemId=${item.cartItemId}" class="deleteItem">Delete</a>
                                     </div>
                                 </div>
-                            </div>
-                        </c:forEach>
+                            </c:forEach>
+                            <input type="hidden" name="totalAmount" value="${total}">
+                            <button type="submit" class="confirm-btn">Confirm the order</button>
+                        </form>
                     </div>
                     <div class="cart-right">
                         <div class="discount-box">
@@ -159,8 +218,7 @@
                                 <span>Total</span>
                                 <span id="cartTotal2"><fmt:formatNumber value="${total}" pattern="#,##0" /> VND</span>
                             </p>
-                        </div>
-                        <a href="OrderPage" class="confirm-btn" id="confirmOrder">Confirm the order</a>
+                        </div>  
                     </div>
                 </div>
             </div>
@@ -212,11 +270,35 @@
                 </div>
             </footer>
         </div>
-        
+
         <!-- jQuery & Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script>
+            // Hàm tính tổng tiền các mục được chọn
+            function calculateSelectedTotal() {
+                var total = 0;
+                $(".cart-item-checkbox:checked").each(function () {
+                    var cartItemId = $(this).closest(".cart-item").find(".quantity-input").data("cartitemid");
+                    var itemText = $("#item-" + cartItemId + "-total").text();
+                    // Chuyển đổi chuỗi "xxx VND" thành số
+                    var itemValue = parseFloat(itemText.replace(/[^\d]/g, ""));
+                    total += itemValue;
+                });
+
+                // Định dạng số tiền theo locale vi_VN
+                var formatter = new Intl.NumberFormat('vi-VN');
+                var formattedTotal = formatter.format(total);
+
+                // Cập nhật hiển thị tổng tiền
+                $("#cartTotal, #cartTotal2").text(formattedTotal + " VND");
+
+                // Nếu không có mục nào được chọn, hiển thị 0
+                if ($(".cart-item-checkbox:checked").length === 0) {
+                    $("#cartTotal, #cartTotal2").text("0 VND");
+                }
+            }
+
             // Khi số lượng thay đổi, gửi AJAX cập nhật và refresh lại thông tin giỏ hàng
             $(".quantity-input").on("change", function () {
                 var newQty = $(this).val();
@@ -224,13 +306,13 @@
                 $.ajax({
                     url: "/Cart",
                     method: "POST",
-                    data: { action: "update", cartItemId: cartItemId, quantity: newQty },
+                    data: {action: "update", cartItemId: cartItemId, quantity: newQty},
                     dataType: "json",
                     success: function (data) {
                         // Cập nhật subtotal của mục được cập nhật
                         $("#item-" + cartItemId + "-total").text(data.itemTotalFormatted + " VND");
                         // Cập nhật tổng tiền giỏ hàng
-                        $("#cartTotal, #cartTotal2").text(data.totalFormatted + " VND");
+                        calculateSelectedTotal();
                         // Cập nhật số lượng giỏ hàng (badge)
                         $("#cartCountDisplay").text(data.cartCount);
                     },
@@ -239,12 +321,12 @@
                     }
                 });
             });
-            
+
             $(".plus").on("click", function () {
                 var input = $(this).siblings(".quantity-input");
                 input.val(parseInt(input.val()) + 1).trigger("change");
             });
-            
+
             $(".minus").on("click", function () {
                 var input = $(this).siblings(".quantity-input");
                 var currentVal = parseInt(input.val());
@@ -252,7 +334,7 @@
                     input.val(currentVal - 1).trigger("change");
                 }
             });
-            
+
             $(".deleteItem").on("click", function (e) {
                 e.preventDefault();
                 var url = $(this).attr("href");
@@ -263,7 +345,6 @@
                     success: function (data) {
                         // Refresh lại thông tin giỏ hàng sau khi xóa mục
                         $("#cartCountDisplay").text(data.cartCount);
-                        $("#cartTotal, #cartTotal2").text(data.totalFormatted + " VND");
                         location.reload();
                     },
                     error: function () {
@@ -271,23 +352,94 @@
                     }
                 });
             });
-            
+
+            // Xử lý sự kiện khi checkbox được chọn/bỏ chọn
             $("#selectAll").on("change", function () {
                 $(".cart-item-checkbox").prop("checked", $(this).prop("checked"));
+                calculateSelectedTotal();
+                updateDeleteButton();
             });
-            
+
+            $(".cart-item-checkbox").on("change", function () {
+                calculateSelectedTotal();
+                updateDeleteButton();
+
+                // Nếu bỏ chọn một mục nhưng Select All đang được chọn, hủy chọn Select All
+                if (!$(this).prop("checked") && $("#selectAll").prop("checked")) {
+                    $("#selectAll").prop("checked", false);
+                }
+
+                // Nếu tất cả các mục đều được chọn, chọn luôn Select All
+                if ($(".cart-item-checkbox:checked").length === $(".cart-item-checkbox").length) {
+                    $("#selectAll").prop("checked", true);
+                }
+            });
+
+            // Cập nhật trạng thái nút Delete All
+            function updateDeleteButton() {
+                if ($(".cart-item-checkbox:checked").length > 0) {
+                    $("#deleteAll").show();
+                } else {
+                    $("#deleteAll").hide();
+                }
+            }
+
             // Khi trang load, làm mới thông tin giỏ hàng
             $(document).ready(function () {
+                // Ban đầu, ẩn nút Delete All
+                $("#deleteAll").hide();
+
+                // Làm mới thông tin giỏ hàng
                 $.ajax({
                     url: "/Cart?action=getSummary",
                     method: "GET",
                     dataType: "json",
                     success: function (data) {
                         $("#cartCountDisplay").text(data.cartCount);
-                        $("#cartTotal, #cartTotal2").text(data.totalFormatted + " VND");
+                        // Không cập nhật tổng tiền ở đây vì nó sẽ được tính bởi calculateSelectedTotal()
                     },
                     error: function () {
                         console.log("Unable to refresh cart summary.");
+                    }
+                });
+
+                // Tính tổng tiền ban đầu dựa trên các mục đã chọn
+                calculateSelectedTotal();
+
+                // Sửa lại hành vi của nút Delete All Selected
+                $("#deleteAll a").on("click", function (e) {
+                    e.preventDefault();
+
+                    if ($(".cart-item-checkbox:checked").length === 0) {
+                        alert("Vui lòng chọn ít nhất một sản phẩm để xóa!");
+                        return;
+                    }
+
+                    if (confirm("Bạn có chắc chắn muốn xóa các sản phẩm đã chọn?")) {
+                        var selectedItems = [];
+                        $(".cart-item-checkbox:checked").each(function () {
+                            var cartItemId = $(this).val();
+                            selectedItems.push(cartItemId);
+                        });
+
+                        // Gửi AJAX request để xóa các mục đã chọn
+                        $.ajax({
+                            url: "/Cart",
+                            method: "POST",
+                            data: {
+                                action: "deleteSelected",
+                                selectedItems: selectedItems.join(",")
+                            },
+                            dataType: "json",
+                            success: function (data) {
+                                // Refresh thông tin giỏ hàng
+                                $("#cartCountDisplay").text(data.cartCount);
+                                location.reload();
+                            },
+                            error: function () {
+                                alert("Có lỗi xảy ra khi xóa sản phẩm.");
+                            }
+                        });
                     }
                 });
             });

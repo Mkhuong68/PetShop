@@ -27,7 +27,7 @@
                 <a class="nav-link" href="StaffManageAccountController?action=list">
                     <i class="bi bi-person"></i> Manage Staff Accounts
                 </a>
-                <a class="nav-link" href="ManageRevenueStatisticsController?action=list">
+                <a class="nav-link" href="AdminRevenueReportController">
                     <i class="bi bi-bar-chart"></i> Manage Revenue Statistics
                 </a>
             </nav>

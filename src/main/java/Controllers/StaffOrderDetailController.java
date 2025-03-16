@@ -63,7 +63,7 @@ public class StaffOrderDetailController extends HttpServlet {
         String oId = request.getParameter("orderId");
         StaffOrderDAO s = new StaffOrderDAO();
         OrderStatusDAO o = new OrderStatusDAO();
-        int orderId = 0;
+        int orderId = -1;
         if (oId != null) {
             orderId = Integer.parseInt(oId);
             if (orderId > 0) {

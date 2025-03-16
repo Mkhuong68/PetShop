@@ -31,7 +31,7 @@ public class ProductDAO {
                 product.setProductId(rs.getInt("product_id"));
                 product.setProductName(rs.getString("product_name"));
                 product.setProductDescription(rs.getString("product_description"));
-                product.setProductPrice(rs.getDouble("product_price"));
+                product.setProductPrice(rs.getBigDecimal("product_price"));
                 product.setProductImage(rs.getString("product_image"));
                 product.setCategoryId(rs.getInt("category_id"));
 
@@ -64,7 +64,7 @@ public class ProductDAO {
                 p.setProductId(rs.getInt("product_id"));
                 p.setProductName(rs.getString("product_name"));
                 p.setProductDescription(rs.getString("product_description"));
-                p.setProductPrice(rs.getDouble("product_price"));
+                p.setProductPrice(rs.getBigDecimal("product_price"));
                 p.setProductImage(rs.getString("product_image"));
                 p.setSoldQuantity(rs.getInt("sold_quantity"));
                 list.add(p);
@@ -105,7 +105,7 @@ public class ProductDAO {
                 p.setProductId(rs.getInt("product_id"));
                 p.setProductName(rs.getString("product_name"));
                 p.setProductDescription(rs.getString("product_description"));
-                p.setProductPrice(rs.getDouble("product_price"));
+                p.setProductPrice(rs.getBigDecimal("product_price"));
                 p.setProductImage(rs.getString("product_image"));
                 p.setSoldQuantity(rs.getInt("sold_quantity"));
                 list.add(p);
@@ -166,7 +166,7 @@ public class ProductDAO {
                 p.setProductId(rs.getInt("product_id"));
                 p.setProductName(rs.getString("product_name"));
                 p.setProductDescription(rs.getString("product_description"));
-                p.setProductPrice(rs.getDouble("product_price"));
+                p.setProductPrice(rs.getBigDecimal("product_price"));
                 p.setProductImage(rs.getString("product_image"));
                 p.setSoldQuantity(rs.getInt("sold_quantity"));
                 list.add(p);
@@ -246,7 +246,7 @@ public class ProductDAO {
                 p.setProductId(rs.getInt("product_id"));
                 p.setProductName(rs.getString("product_name"));
                 p.setProductDescription(rs.getString("product_description"));
-                p.setProductPrice(rs.getDouble("product_price"));
+                p.setProductPrice(rs.getBigDecimal("product_price"));
                 p.setProductImage(rs.getString("product_image"));
                 p.setSoldQuantity(rs.getInt("sold_quantity"));
                 list.add(p);
@@ -269,7 +269,7 @@ public class ProductDAO {
                 product.setProductId(rs.getInt("product_id"));
                 product.setProductName(rs.getString("product_name"));
                 product.setProductDescription(rs.getString("product_description"));
-                product.setProductPrice(rs.getDouble("product_price"));
+                product.setProductPrice(rs.getBigDecimal("product_price"));
                 product.setProductImage(rs.getString("product_image"));
                 product.setSoldQuantity(rs.getInt("sold_quantity"));
                 // Nếu cần, có thể set created_date và rating
@@ -279,6 +279,26 @@ public class ProductDAO {
             e.printStackTrace();
         }
         return product;
+    }
+    public BigDecimal getProductPrice(int productId) {
+        BigDecimal price = null;
+        String sql = "SELECT product_price FROM Products WHERE product_id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                price = rs.getBigDecimal("product_price");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return price != null ? price : new BigDecimal("0");
     }
 
 }

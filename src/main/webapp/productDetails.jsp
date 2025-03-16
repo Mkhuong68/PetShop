@@ -1,7 +1,7 @@
 <%-- 
     Document   : productDetails
     Created on : Feb 28, 2025, 5:15:13 PM
-    Author     : Diem Quynh
+    Author     : tvhun
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="Service.CartService" %>
@@ -23,14 +23,13 @@
         <link rel="icon" href="Pet Heaven.png" type="image/png">
     </head>
     <body>
-        <%-- Lấy số lượng giỏ hàng từ CartService nếu người dùng đã đăng nhập --%>
+        <%-- Thiết lập biến cartCount dựa trên session (nếu người dùng đã đăng nhập) --%>
         <c:set var="cartCount" value="0" />
         <c:if test="${not empty sessionScope.account}">
             <c:set var="cartCount" value="${CartService.getCartCount(pageContext.request)}" />
         </c:if>
 
         <div id="main-content" class="wrap">
-            <!-- Header mẫu (không thay đổi các icon) -->
             <header class="taskbar">
                 <nav class="container">
                     <div class="logo">
@@ -45,6 +44,7 @@
                                         <button type="submit"><i class="bx bx-search"></i></button>
                                     </form>
                                 </li>
+
                                 <li class="products">
                                     <a href="/ProductList">
                                         <i class='bx bx-archive'></i>
@@ -66,10 +66,36 @@
                                     <a href="news.jsp"><i class="bx bx-globe"></i></a>
                                 </li>
                                 <li class="partner">
-                                    <a href="partner.jsp"><i class="bx bx-bell"></i></a>
+                                    <a href="#" class="account-link">
+                                        <i class="fas fa-bell"></i>
+
+                                    </a>
+                                    <div class="notification-dropdown">
+                                        <div class="notification-header">
+                                            <h3>Notifications </h3>
+                                        </div>
+                                        <div class="notification-items">
+                                            <c:if test="${empty notifications}">
+                                                <div class="notification-item">
+                                                    <div class="notification-content">
+                                                        <p class="notification-desc">None notifications</p>
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                            <c:forEach items="${notifications}" var="notification">
+                                                <a href="NotificationDetail?notificationId=${notification.notificationId}" class="notification-item ${notification.isRead ? 'read' : 'unread'}">
+                                                    <div class="notification-content">
+                                                        <h4 class="notification-title">Notifications</h4>
+                                                        <p class="notification-desc">${notification.message}</p>
+                                                        <small><fmt:formatDate value="${notification.createdDate}" pattern="dd/MM/yyyy HH:mm" /></small>
+                                                    </div>
+                                                </a>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li>
-                                    <a href="about.jsp" class="account-link">
+                                    <a href="viewProfile.jsp" class="account-link">
                                         <i class="bx bx-user"></i>
                                         <span class="account-text"></span>
                                     </a>
@@ -116,22 +142,23 @@
                         <div class="product-variations">
                             <label for="color-select">Chọn màu:</label>
                             <select id="color-select" name="color">
-                                <option value="Vang">Yellow</option>
-                                <option value="Hong">Pink</option>
-                                <option value="Xanh">Blue</option>
+                                <option value="Vang">Vàng</option>
+                                <option value="Hong">Hồng</option>
+                                <option value="Xanh">Xanh</option>
                             </select>
                         </div>
 
                         <div class="product-quantity">
-                            <label for="quantity">Quantity:</label>
-                            <input type="number" id="quantity" name="quantity" value="1" min="1" />
+                            <label for="quantity">Số lượng:</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1"
+                                   onchange="document.getElementById('order-link').href = '/OrderPage?action=orderFromDetail&productId=${product.productId}&quantity=' + this.value;" />
                         </div>
 
                         <!-- Nút hành động -->
                         <div class="product-actions">
                             <!-- Link "Thêm vào giỏ" sẽ được cập nhật theo số lượng -->
                             <a href="/Cart?action=add&productId=${product.productId}&quantity=1" class="btn btn-add-to-cart">Thêm vào giỏ</a>
-                            <a href="OrderPage" class="btn btn-order">Order</a>
+                            <a id="order-link" href="/OrderPage?action=orderFromDetail&productId=${product.productId}&quantity=1" class="btn btn-order">Order</a>
                         </div>
                     </div>
                 </div>
@@ -139,39 +166,39 @@
                 <!-- Tabs: Description, Reviews, Q&A -->
                 <div class="product-detail-tabs">
                     <ul class="tabs">
-                        <li class="tab active" data-tab="description">Description</li>
-                        <li class="tab" data-tab="reviews">Feedback</li>
-                        <li class="tab" data-tab="qna">Q&A</li>
+                        <li class="tab active" data-tab="description">Mô tả</li>
+                        <li class="tab" data-tab="reviews">Đánh giá</li>
+                        <li class="tab" data-tab="qna">Hỏi đáp</li>
                     </ul>
                     <div class="tab-content active" id="description">
-                        <h2>Description</h2>
+                        <h2>Mô tả sản phẩm</h2>
                         <p>${product.productDescription}</p>
                     </div>
                     <div class="tab-content" id="reviews">
-                        <h2>Feedback</h2>
-                        <p>Show reviews from customers.</p>
+                        <h2>Đánh giá</h2>
+                        <p>Hiển thị các đánh giá từ khách hàng.</p>
                     </div>
                     <div class="tab-content" id="qna">
-                        <h2>Q&A</h2>
-                        <p>Where customers ask questions and get answers.</p>
+                        <h2>Hỏi đáp</h2>
+                        <p>Nơi khách hàng đặt câu hỏi và được trả lời.</p>
                     </div>
                 </div>
 
                 <!-- Related Products Section (demo tĩnh) -->
                 <div class="related-products-section">
-                    <h2>Related products</h2>
+                    <h2>Sản phẩm liên quan</h2>
                     <div class="related-products">
                         <div class="product-item">
                             <img src="https://via.placeholder.com/150" alt="related1" />
-                            <p>Related product name 1</p>
+                            <p>Tên SP liên quan 1</p>
                         </div>
                         <div class="product-item">
                             <img src="https://via.placeholder.com/150" alt="related2" />
-                            <p>Related product name 2</p>
+                            <p>Tên SP liên quan 2</p>
                         </div>
                         <div class="product-item">
                             <img src="https://via.placeholder.com/150" alt="related3" />
-                            <p>Related product name 3</p>
+                            <p>Tên SP liên quan 3</p>
                         </div>
                     </div>
                 </div>
@@ -229,109 +256,78 @@
 
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                // Khi số lượng thay đổi, cập nhật href của nút "Thêm vào giỏ"
-                $("#quantity").on("change", function () {
-                    var quantity = $(this).val();
-                    var productId = "${product.productId}";
-                    $(".btn-add-to-cart").attr("href", "/Cart?action=add&productId=" + productId + "&quantity=" + quantity);
-                });
-
-                // Xử lý "Thêm vào giỏ" bằng AJAX
-                $(".btn-add-to-cart").on("click", function (e) {
-                    e.preventDefault();
-                    var url = $(this).attr("href");
-                    $.ajax({
-                        url: url,
-                        method: "GET", // hoặc POST nếu cần
-                        dataType: "json",
-                        success: function (response) {
-                            // Cập nhật số lượng giỏ hàng (badge)
-                            $("#cartCountDisplay").text(response.cartCount);
-                        },
-                        error: function () {
-                            alert("Có lỗi khi thêm sản phẩm vào giỏ hàng.");
-                        }
-                    });
-                });
-
-                // Khi nhấn "Order", chuyển hướng trang
-                $(".btn-order").on("click", function (e) {
-                    e.preventDefault();
-                    window.location.href = $(this).attr("href");
-                });
-            });
-        </script>
-            <script>
-        $(document).ready(function () {
-            $.ajax({
-                url: "/Cart?action=getSummary",
-                method: "GET",
-                dataType: "json",
-                success: function (data) {
-                    $("#cartCountDisplay").text(data.cartCount);
-                },
-                error: function () {
-                    console.log("Unable to refresh cart summary.");
-                }
-            });
-        });
-    </script>
-     <script src="https://kit.fontawesome.com/bf61fecb7c.js" crossorigin="anonymous"></script>
-        <!-- Bootstrap & JQuery JS -->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" 
-                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" 
-        crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="assets/js/jquery-1.11.0.min.js"></script>
-        <script type="text/javascript" src="assets/js/jquery-migrate-1.2.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" 
-                integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" 
-        crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" 
-                integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" 
-        crossorigin="anonymous"></script>
-        <script type="text/javascript" src="assets/js/javascript.js"></script>
         <script type="text/javascript" src="assets/js/dropdown.js"></script>
+        <script type="text/javascript" src="assets/js/notification.js"></script>
+        <script>
+                                       $(document).ready(function () {
+                                           // Khi số lượng thay đổi, cập nhật href của nút "Thêm vào giỏ"
+                                           $("#quantity").on("change", function () {
+                                               var quantity = $(this).val();
+                                               var productId = "${product.productId}";
+                                               $(".btn-add-to-cart").attr("href", "/Cart?action=add&productId=" + productId + "&quantity=" + quantity);
+                                           });
+
+                                           // Xử lý "Thêm vào giỏ" bằng AJAX
+                                           $(".btn-add-to-cart").on("click", function (e) {
+                                               e.preventDefault();
+                                               var url = $(this).attr("href");
+                                               $.ajax({
+                                                   url: url,
+                                                   method: "GET", // hoặc POST nếu cần
+                                                   dataType: "json",
+                                                   success: function (response) {
+                                                       // Cập nhật số lượng giỏ hàng (badge)
+                                                       $("#cartCountDisplay").text(response.cartCount);
+                                                   },
+                                                   error: function () {
+                                                       alert("Có lỗi khi thêm sản phẩm vào giỏ hàng.");
+                                                   }
+                                               });
+                                           });
+
+                                           // Khi nhấn "Order", chuyển hướng trang
+                                           $(".btn-order").on("click", function (e) {
+                                               e.preventDefault();
+                                               window.location.href = $(this).attr("href");
+                                           });
+                                       });
+        </script>
+        <script>
+            function refreshNotifications() {
+                $.ajax({
+                    url: "notificationsJson",
+                    type: "GET",
+                    dataType: "json",
+                    success: function (notifications) {
+                        var container = $(".notification-items");
+                        container.empty();
+                        if (!notifications || notifications.length === 0) {
+                            container.append("<p>None Notifications.</p>");
+                        } else {
+                            notifications.forEach(function (n) {
+                                // Đã thay đổi từ n.notificationDate thành n.createdDate
+                                var dateStr = new Date(n.createdDate).toLocaleString();
+                                var html = '<div class="notification-item">' +
+                                        '<div class="notification-content">' +
+                                        '<a href="notificationDetail?notificationId=' + n.notificationId + '">' +
+                                        // Đã thay đổi từ n.notificationContent thành n.message
+                                        '<p class="notification-title">' + n.message + '</p>' +
+                                        '<p class="notification-desc">' + dateStr + '</p>' +
+                                        '</a>' +
+                                        '</div>' +
+                                        '</div>';
+                                container.append(html);
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Lỗi khi tải thông báo: " + status + " - " + error);
+                        console.log(xhr.responseText);
+                    }
+                });
+            }
+        </script>
         <!-- Bootstrap JS -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </body>
 </html>
-<style>
-    .product-item img {
-        width: 270px;
-        height: 270px;
-        object-fit: cover; /* Đảm bảo ảnh không bị méo */
-    }
-
-    .product-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: space-between;
-    }
-
-    .product-item {
-        width: 270px;
-        text-align: center;
-        margin: 10px;
-    }
-
-    .product-item h4 {
-        font-size: 16px;
-        margin-top: 10px;
-    }
-
-    .product-item p {
-        font-size: 14px;
-        color: #777;
-    }
-
-    .price {
-        font-size: 16px;
-        font-weight: bold;
-        margin-top: 10px;
-    }
-</style>
-

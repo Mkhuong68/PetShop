@@ -4,6 +4,7 @@
  */
 package Model;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -20,12 +21,25 @@ public class Voucher {
     private Date voucherValidTo;
     private boolean voucherStatus;
     private boolean isHidden;
-    // Loại voucher: 'high', 'medium', 'new'
     private String voucherType;
     private boolean isUsed;
 
     public Voucher() {
     }
+
+    public Voucher(int voucherId, String voucherCode, String voucherDescription, int voucherDiscount, Date voucherValidFrom, Date voucherValidTo, boolean voucherStatus,boolean isUsed,String voucherType,boolean isHidden) {
+        this.voucherId = voucherId;
+        this.voucherCode = voucherCode;
+        this.voucherDescription = voucherDescription;
+        this.voucherDiscount = voucherDiscount;
+        this.voucherValidFrom = voucherValidFrom;
+        this.voucherValidTo = voucherValidTo;
+        this.voucherStatus = voucherStatus;
+        this.isUsed = isUsed;
+        this.voucherType = voucherType;
+        this.isHidden = isHidden;        
+    }
+
 
     // Getters và setters
     public int getVoucherId() {

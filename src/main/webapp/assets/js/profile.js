@@ -7,14 +7,13 @@ function toggleViewProfileForm() {
     toggleForm("viewProfile");
 }
 
-// Hàm toggle để hiển thị hoặc ẩn phần Update Profile
+// Thay đổi hàm toggleUpdateProfileForm() để chuyển hướng trang
 function toggleUpdateProfileForm() {
-    toggleForm("updateProfileForm");
+    window.location.href = "updateProfile.jsp"; // Chuyển hướng đến trang updateProfile.jsp
 }
 
-// Hàm toggle để hiển thị hoặc ẩn phần Change Password
 function toggleChangePasswordForm() {
-    toggleForm("changePasswordForm");
+    window.location.href = "changePassword.jsp"; 
 }
 
 // Hàm tổng quát dùng để hiển thị hoặc ẩn các form
@@ -23,7 +22,7 @@ function toggleForm(formId) {
     var targetForm = document.getElementById(formId);
 
     // Ẩn tất cả các form
-    forms.forEach(function (form) {
+    forms.forEach(function(form) {
         var formElement = document.getElementById(form);
         if (formElement) {
             formElement.style.display = "none";
@@ -36,27 +35,50 @@ function toggleForm(formId) {
     }
 }
 
-// Xem trước ảnh khi tải lên và lưu Base64
+// Xem trước ảnh khi tải lên
 function previewProfileImage(event) {
-    var file = event.target.files[0]; // Lấy file từ input
+    var file = event.target.files[0];
     var reader = new FileReader();
 
-    reader.onload = function (e) {
-        // Hiển thị ảnh ngay lập tức trên giao diện
-        var previewImg = document.getElementById('previewImage');
-        previewImg.src = e.target.result;  // Cập nhật src của ảnh preview
-        previewImg.style.display = "block";  // Hiển thị ảnh preview
-        document.getElementById('previewIcon').style.display = "none"; // Ẩn icon mặc định
+    var previewImg = document.getElementById('previewImage');
+    var previewIcon = document.getElementById('previewIcon');
+
+    var profileImg = document.getElementById('profilePicture');
+    var defaultIcon = document.getElementById('defaultIcon');
+
+    reader.onload = function () {
+        var imageUrl = reader.result;
+
+        // Hiển thị ảnh thay vì icon
+        previewImg.src = imageUrl;
+        profileImg.src = imageUrl;
+
+        previewImg.style.display = "block";
+        profileImg.style.display = "block";
+
+        previewIcon.style.display = "none";
+        defaultIcon.style.display = "none";
     };
 
     if (file) {
-        reader.readAsDataURL(file); // Đọc ảnh dưới dạng Base64
+        reader.readAsDataURL(file);
     }
 }
 
 // Hàm để xóa ảnh và khôi phục về icon mặc định
 function deletePicture() {
-    document.getElementById('previewImage').src = 'assets/images/default-user.png';
-    document.getElementById('previewIcon').style.display = "block";
-    document.getElementById('base64Image').value = ''; // Xóa giá trị Base64
+    var previewImg = document.getElementById('previewImage');
+    var previewIcon = document.getElementById('previewIcon');
+
+    var profileImg = document.getElementById('profilePicture');
+    var defaultIcon = document.getElementById('defaultIcon');
+
+    // Xóa ảnh
+    previewImg.src = '';
+    previewImg.style.display = "none";
+    profileImg.style.display = "none";
+
+    // Hiển thị icon mặc định
+    previewIcon.style.display = "block";
+    defaultIcon.style.display = "block";
 }

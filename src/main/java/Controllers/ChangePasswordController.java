@@ -16,7 +16,10 @@ import java.io.PrintWriter;
 
 import DAOs.AccountDAO;
 import Model.Account;
-
+/**
+ *
+ * @author THANH THAO
+ */
 /**
  * Servlet để thay đổi mật khẩu người dùng.
  * Kiểm tra mật khẩu cũ, mật khẩu mới, và xác nhận mật khẩu.

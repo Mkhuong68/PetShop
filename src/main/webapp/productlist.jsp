@@ -26,12 +26,12 @@
         <title>Product List</title>
     </head>
     <body class="bgc">
+        <%-- Thiết lập biến cartCount dựa trên session (nếu người dùng đã đăng nhập) --%>
         <c:set var="cartCount" value="0" />
         <c:if test="${not empty sessionScope.account}">
             <c:set var="cartCount" value="${CartService.getCartCount(pageContext.request)}" />
         </c:if>
-
-        <div class="wrap">
+        <div id="main-content" class="wrap">
             <header class="taskbar">
                 <nav class="container">
                     <div class="logo">
@@ -42,7 +42,7 @@
                             <ul>
                                 <li class="search-item">
                                     <form class="search-form" action="#" method="get">
-                                        <input type="text" placeholder="Search..." />
+                                        <input type="text" placeholder="Tìm kiếm..." />
                                         <button type="submit"><i class="bx bx-search"></i></button>
                                     </form>
                                 </li>
@@ -327,6 +327,7 @@
         crossorigin="anonymous"></script>
         <script type="text/javascript" src="assets/js/javascript.js"></script>
         <script type="text/javascript" src="assets/js/dropdown.js"></script>
+        <script type="text/javascript" src="assets/js/notification.js"></script>
 
         <!-- Script to refresh cart count on the taskbar -->
         <script>
@@ -344,6 +345,41 @@
                     });
                 });
         </script>
+        <script>
+        function refreshNotifications() {
+            $.ajax({
+                url: "notificationsJson",
+                type: "GET",
+                dataType: "json",
+                success: function (notifications) {
+                    var container = $(".notification-items");
+                    container.empty();
+                    if (!notifications || notifications.length === 0) {
+                        container.append("<p>None Notifications.</p>");
+                    } else {
+                        notifications.forEach(function (n) {
+                            // Đã thay đổi từ n.notificationDate thành n.createdDate
+                            var dateStr = new Date(n.createdDate).toLocaleString();
+                            var html = '<div class="notification-item">' +
+                                    '<div class="notification-content">' +
+                                    '<a href="notificationDetail?notificationId=' + n.notificationId + '">' +
+                                    // Đã thay đổi từ n.notificationContent thành n.message
+                                    '<p class="notification-title">' + n.message + '</p>' +
+                                    '<p class="notification-desc">' + dateStr + '</p>' +
+                                    '</a>' +
+                                    '</div>' +
+                                    '</div>';
+                            container.append(html);
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("Lỗi khi tải thông báo: " + status + " - " + error);
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+    </script>
     </body>
 </html>
 <style>

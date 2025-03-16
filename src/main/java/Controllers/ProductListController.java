@@ -6,8 +6,11 @@ package Controllers;
 
 import DAOs.ProductDAO;
 import DAOs.CategoryHomeDAO;
+import DAOs.NotificationDAO;
+import Model.Account;
 import Model.Product;
 import Model.Category;
+import Model.Notification;
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.RequestDispatcher;
@@ -26,11 +29,13 @@ public class ProductListController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ProductDAO productDAO;
     private CategoryHomeDAO categoryDAO;
+    private NotificationDAO notificationDAO;
 
     @Override
     public void init() throws ServletException {
         productDAO = new ProductDAO();
         categoryDAO = new CategoryHomeDAO();
+        notificationDAO = new NotificationDAO();
     }
 
     /**
@@ -71,6 +76,11 @@ public class ProductListController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Account account = (Account) request.getSession().getAttribute("account");
+         if (account != null) {
+             List<Notification> notifications = notificationDAO.getNotificationsByAccountId(account.getAccountId());
+             request.setAttribute("notifications", notifications);
+         }
         // Lấy các tham số lọc và sắp xếp từ request
         String[] categoryIds = request.getParameterValues("category");
         String[] priceRanges = request.getParameterValues("priceRange");

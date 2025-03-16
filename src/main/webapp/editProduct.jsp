@@ -7,7 +7,7 @@
     Product product = productDAO.getProductById(productId);
 
     // Xử lý hiển thị giá trong input (Loại bỏ .0 nếu không cần)
-    BigDecimal price = BigDecimal.valueOf(product.getProductPrice());
+    BigDecimal price = product.getProductPrice();
     String formattedPrice = (price.stripTrailingZeros().scale() > 0) ? price.toPlainString() : price.toBigInteger().toString();
 %>
 <html>

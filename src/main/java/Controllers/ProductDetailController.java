@@ -4,7 +4,12 @@
  */
 package Controllers;
 
+import DAOs.CategoryHomeDAO;
+import DAOs.NotificationDAO;
 import DAOs.ProductDAO;
+import Model.Account;
+import Model.Category;
+import Model.Notification;
 import Model.Product;
 import java.io.IOException;
 import jakarta.servlet.RequestDispatcher;
@@ -13,6 +18,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  *
@@ -22,10 +28,14 @@ public class ProductDetailController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private ProductDAO productDAO;
+    private NotificationDAO notificationDAO;
+     private CategoryHomeDAO categoryDAO;
 
     @Override
     public void init() throws ServletException {
         productDAO = new ProductDAO();
+        notificationDAO = new NotificationDAO();
+        categoryDAO = new CategoryHomeDAO();
     }
 
     /**
@@ -66,6 +76,14 @@ public class ProductDetailController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
          throws ServletException, IOException {
+          // Lấy danh sách danh mục để hiển thị trong dropdown
+        List<Category> categories = categoryDAO.getAllCategories();
+        request.setAttribute("categories", categories);
+        Account account = (Account) request.getSession().getAttribute("account");
+         if (account != null) {
+             List<Notification> notifications = notificationDAO.getNotificationsByAccountId(account.getAccountId());
+             request.setAttribute("notifications", notifications);
+         }
          String productIdParam = request.getParameter("productId");
          if (productIdParam != null) {
              try {

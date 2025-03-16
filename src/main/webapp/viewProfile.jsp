@@ -14,9 +14,7 @@
         response.sendRedirect("/login"); // Chuyển hướng về trang đăng nhập nếu chưa đăng nhập
         return;
     }
-    Account account = (Account) currentSession.getAttribute("account");
 %>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -24,6 +22,7 @@
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="css/responsive.css">
         <link rel="stylesheet" type="text/css" href="assets/css/profile.css">
+
         <script src="https://unpkg.com/boxicons@2.1.1/dist/boxicons.js"></script>
         <script src="assets/js/profile.js"></script>
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -109,69 +108,27 @@
             <!-- Cột bên trái: Các nút điều hướng -->
             <div class="account-actions">
                 <h1 class="text-xl font-bold mb-4">Account Page</h1>
-                <h2 class="font-bold text-lg mb-4">
-                    Hello, ${account.username}!
-                </h2>
-                <a href="CustomerOrderHistoryController;" onclick="toggleOrder Details()">Order Details</a>
+
                 <a href="javascript:void(0);" onclick="toggleUpdateProfileForm()">Update Profile</a>
-                <a href="javascript:void(0);" onclick="toggleChangePasswordForm()">Change Password</a>
+                <a href="javascript:void(0);" onclick="toggleUpdatePasswordForm()">Update Password</a>
+                <a href=""">My Feedback</a>
+                <a href="/CustomerOrderHistoryController" ">List Order Detail History</a>
                 <a href="logout">Logout</a>
             </div>
 
             <!-- Cột bên phải: Hiển thị thông tin tài khoản -->
             <div class="profile-info" id="viewProfile" style="display: block;">
                 <!-- Ảnh mặc định hoặc ảnh profile -->
-                <div id="profilePictureContainer" class="profile-icon-wrapper">
+                <div style="margin-bottom: 3%" id="profilePictureContainer" class="profile-icon-wrapper">
                     <box-icon id="defaultIcon" name="user"></box-icon>
                     <img id="profilePicture"
                          src="${sessionScope.account.profileImage != null ? sessionScope.account.profileImage : 'assets/images/profile/default-user.png'}"
                          alt="Profile Picture" class="profile-img"/>
 
                 </div>
-                <p><strong>Full Name:</strong> ${account.firstName} ${account.lastName}</p>
+                <p ><strong>Full Name:</strong> ${account.firstName} ${account.lastName}</p>
                 <p><strong>Email:</strong> ${account.email}</p>
                 <p><strong>Phone:</strong> ${account.phoneNumber}</p>
-                <p><strong>Address:</strong> ${account.userAddress != null ? account.userAddress.address : 'No address available'}</p>
-
-            </div>
-
-            <!-- Form Update Profile -->
-            <div id="updateProfileForm" class="form-right" style="display: none;">
-                <h3>Update Profile</h3>
-                <form action="updateProfile" method="POST" enctype="multipart/form-data">
-                    <div class="file-upload-container">
-                        <label for="profile-upload">Profile Picture:</label>
-                        <!-- Bọc ảnh preview trong khung tròn -->
-                        <div class="profile-icon-wrapper">
-                            <box-icon id="previewIcon" name="user"></box-icon>
-                            <img id="previewImage"
-                                 src="${account.profileImage != null && !account.profileImage.isEmpty() ? account.profileImage : 'assets/images/default-user.png'}"
-                                 alt="Preview Image" class="profile-img"/>
-                        </div>
-
-                        <!-- Input file ẩn và nút Change Picture -->
-                        <input type="file" id="profile-upload" name="profilePicture" onchange="previewProfileImage(event)" style="display: none;">
-                        <button type="button" class="btn-change" onclick="document.getElementById('profile-upload').click()">Change Picture</button>
-                        <!-- Nút Delete Picture -->
-                        <button type="button" class="btn-delete" onclick="deletePicture()">Delete Picture</button>
-                    </div>
-                    <label for="firstName">First Name:</label>
-                    <input type="text" id="firstName" name="firstName" value="${account.firstName}" required><br><br>
-
-                    <label for="lastName">Last Name:</label>
-                    <input type="text" id="lastName" name="lastName" value="${account.lastName}" required><br><br>
-
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="${account.email}" required><br><br>
-
-                    <label for="phone">Phone:</label>
-                    <input type="text" id="phone" name="phone" value="${account.phoneNumber}" required><br><br>
-                    <label for="address">Address:</label>
-                    <input type="text" id="address" name="address" value="${account.userAddress != null ? account.userAddress.address : ''}" required><br><br>
-
-                    <button type="submit" class="btn-submit">Save Changes</button>
-                    <button type="button" class="btn-cancel" onclick="toggleUpdateProfileForm()">Cancel</button>
-                </form>
             </div>
 
             <!-- Form Change Password -->

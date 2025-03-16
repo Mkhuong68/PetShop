@@ -100,40 +100,32 @@
             <div class="profile-container">
                 <h1>Update Profile</h1>
 
-                <form id="updateForm" action="updateProfile" method="POST" enctype="multipart/form-data">
-                    <!-- Avatar Display Section -->
-                    <div class="avatar-section">
-                        <div class="profile-icon-wrapper">
-                            <box-icon id="previewIcon" name="user"></box-icon>
-                            <img id="previewImage"
-                                 src="${sessionScope.account.profileImage != null ? sessionScope.account.profileImage : 'assets/images/default-user.png'}"
-                                 alt="Profile Image" class="profile-img"/>
-                        </div>
-
-                        <div class="button-group">
-                            <input type="file" id="fileInput" name="profilePicture" accept="image/*" onchange="previewProfileImage(event)" style="display: none;"/>
-                            <button type="button" class="btn-change" onclick="document.getElementById('fileInput').click()">Change Picture</button>
-                            <button type="button" class="btn-delete" onclick="deletePicture()">Delete Picture</button>
-                        </div>
-                    </div>
-
-                    <label for="firstName">First Name:</label>
-                    <input type="text" id="firstName" name="firstName" value="${sessionScope.account.firstName}" required><br><br>
-
-                    <label for="lastName">Last Name:</label>
-                    <input type="text" id="lastName" name="lastName" value="${sessionScope.account.lastName}" required><br><br>
+                <form action="UpdateProfileController" method="POST">
+                    <input type="hidden" name="accountId" value="${user.accountId}"/>
 
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="${sessionScope.account.email}" required><br><br>
+                    <input type="email" name="email" value="${user.email}" required/><br/>
 
-                    <label for="phone">Phone:</label>
-                    <input type="text" id="phone" name="phone" value="${sessionScope.account.phoneNumber}" required><br><br>
-                    <!-- Address Section -->
-                    <label for="address">Address:</label>
-                    <input type="text" id="address" name="address" value="${sessionScope.account.userAddress != null ? sessionScope.account.userAddress.address : ''}" required><br><br>
+                    <label for="phoneNumber">Phone:</label>
+                    <input type="text" name="phoneNumber" value="${user.phoneNumber}" required/><br/>
 
-                    <button type="submit" class="btn-submit">Save Changes</button>
-                    <button type="button" class="btn-cancel" onclick="window.history.back()">Cancel</button>
+                    <label for="firstName">First Name:</label>
+                    <input type="text" name="firstName" value="${user.firstName}" required/><br/>
+
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" name="lastName" value="${user.lastName}" required/><br/>
+
+                    <label for="dateOfBirth">Date of Birth:</label>
+                    <input type="date" name="dateOfBirth" value="${user.dateOfBirth}" required/><br/>
+
+                    <label for="gender">Gender:</label>
+                    <select name="gender">
+                        <option value="Male" ${user.gender == 'Male' ? 'selected' : ''}>Male</option>
+                        <option value="Female" ${user.gender == 'Female' ? 'selected' : ''}>Female</option>
+                        <option value="Other" ${user.gender == 'Other' ? 'selected' : ''}>Other</option>
+                    </select><br/>
+
+                    <button type="submit">Update</button>
                 </form>
             </div>
             <!-- FOOTER -->
@@ -205,49 +197,19 @@
 
     <!-- Script để làm mới số lượng giỏ hàng (cart count) trên taskbar -->
     <script>
-                        $(document).ready(function () {
-                            $.ajax({
-                                url: "/Cart?action=getSummary",
-                                method: "GET",
-                                dataType: "json",
-                                success: function (data) {
-                                    $("#cartCountDisplay").text(data.cartCount);
-                                },
-                                error: function () {
-                                    console.log("Unable to refresh cart summary.");
-                                }
-                            });
-                        });
-    </script>
-    <script>
-        // Xem trước ảnh khi chọn
-        function previewProfileImage(event) {
-            var file = event.target.files[0];
-            var reader = new FileReader();
-
-            var previewImg = document.getElementById('previewImage');
-            var previewIcon = document.getElementById('previewIcon');
-
-            reader.onload = function () {
-                var imageUrl = reader.result;
-                previewImg.src = imageUrl;
-                previewImg.style.display = "block";
-                previewIcon.style.display = "none";
-            };
-
-            if (file) {
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Xóa ảnh và khôi phục lại icon mặc định
-        function deletePicture() {
-            var previewImg = document.getElementById('previewImage');
-            var previewIcon = document.getElementById('previewIcon');
-            previewImg.src = 'assets/images/default-user.png';
-            previewImg.style.display = "block";
-            previewIcon.style.display = "none";
-        }
+        $(document).ready(function () {
+            $.ajax({
+                url: "/Cart?action=getSummary",
+                method: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $("#cartCountDisplay").text(data.cartCount);
+                },
+                error: function () {
+                    console.log("Unable to refresh cart summary.");
+                }
+            });
+        });
     </script>
 </body>
 </html>

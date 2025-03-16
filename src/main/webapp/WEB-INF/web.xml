@@ -201,4 +201,13 @@
          <servlet-name>DeliveryOrderListController</servlet-name>
          <url-pattern>/deliveryList</url-pattern>
      </servlet-mapping>
+     <servlet>
+    <servlet-name>UpdateProfileController</servlet-name>
+    <servlet-class>Controllers.UpdateProfileController</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>UpdateProfileController</servlet-name>
+    <url-pattern>/UpdateProfileController</url-pattern>
+</servlet-mapping>
 </web-app>

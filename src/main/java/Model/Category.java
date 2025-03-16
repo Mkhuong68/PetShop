@@ -22,6 +22,14 @@ public class Category {
     public Category() {
     }
 
+    public Category(String categoryName, String categoryDescription, Integer parentCategoryId) {
+        this.categoryName = categoryName;
+        this.categoryDescription = categoryDescription;
+        this.parentCategoryId = parentCategoryId;
+    }
+    
+    
+
     public Category(int categoryId, String categoryName, String categoryDescription, Integer parentCategoryId, boolean isHidden,
                    Date createdDate, Date lastUpdated) {
         this.categoryId = categoryId;

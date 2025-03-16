@@ -17,7 +17,6 @@
         Name: <input type="text" name="name" required><br>
         Description: <input type="text" name="description" required><br>
         Parent Category ID: <input type="text" name="parentId"><br>
-        Hidden: <input type="checkbox" name="hidden"><br>
         <input type="submit" value="Add Category">
     </form>
     <a href="CategoryController?action=list">Back to List</a>

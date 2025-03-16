@@ -17,6 +17,7 @@ public class Product {
     private String productName;
     private String productDescription;
     private BigDecimal productPrice;
+    
     private String productImage;
     private int categoryId;
     private Date createdDate;
@@ -27,9 +28,7 @@ public class Product {
     private int views;
     private double rating;
 
-    public Product(int i, String name, String description, double price, String image, int category, java.sql.Date date, java.sql.Date date0, boolean b, int stock, int i0, int i1) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+
 
     public double getRating() {
         return rating;
@@ -136,7 +135,12 @@ public class Product {
     }
 
     public Product() {
-    }
+    // Nếu bạn cần khởi tạo đối tượng Product, bạn có thể triển khai mã ở đây
+    this.productId = 0;
+    this.productName = "";
+    // Các khởi tạo khác
+}
+
 
     public Product(int productId, String productName, String productDescription, BigDecimal productPrice, String productImage,
             int categoryId, Date createdDate, Date lastUpdated, boolean isHidden, int stockQuantity, int soldQuantity, int views) {

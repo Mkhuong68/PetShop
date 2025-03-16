@@ -20,6 +20,16 @@ public class Account {
     private int priority;  // Thêm thuộc tính priority
     private int voucherId;  // Thêm thuộc tính voucherId
     private UserAddress userAddress;
+    private String phoneNumber;
+    private int roleId;
+    private Date createdDate;
+    private Date lastLogin;
+    private boolean isActive;
+    private String profileImage;
+    private String firstName;
+    private String lastName;
+    private Date dateOfBirth;
+    private String gender;
 
     public int getPriority() {
         return priority;
@@ -167,16 +177,7 @@ public class Account {
     public boolean isGoogleAccount() {
         return this.passwordHash == null || this.passwordHash.isEmpty();
     }
-    private String phoneNumber;
-    private int roleId;
-    private Date createdDate;
-    private Date lastLogin;
-    private boolean isActive;
-    private String profileImage;
-    private String firstName;
-    private String lastName;
-    private Date dateOfBirth;
-    private String gender;
+    
 
     public Account() {
     }
@@ -199,6 +200,33 @@ public class Account {
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.bannedReason = bannedReason;
+    }
+    public Account(int accountId, String email, String phoneNumber, String firstName, String lastName, Date dateOfBirth, String gender) {
+        this.accountId = accountId;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+    }
+    public Account(int accountId, String username, String passwordHash, String email, String phoneNumber, int roleId,
+                   Date createdDate, Date lastLogin, boolean isActive, String profileImage, String firstName, String lastName,
+                   Date dateOfBirth, String gender) {
+        this.accountId = accountId;
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.roleId = roleId;
+        this.createdDate = createdDate;
+        this.lastLogin = lastLogin;
+        this.isActive = isActive;
+        this.profileImage = profileImage;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
     }
 
 }

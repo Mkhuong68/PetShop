@@ -68,7 +68,7 @@
                                 <li class="partner">
                                     <a href="#" class="account-link">
                                         <i class="fas fa-bell"></i>
-
+                                        
                                     </a>
                                     <div class="notification-dropdown">
                                         <div class="notification-header">
@@ -258,6 +258,7 @@
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script type="text/javascript" src="assets/js/dropdown.js"></script>
         <script type="text/javascript" src="assets/js/notification.js"></script>
+        <script type="text/javascript" src="assets/js/javascript.js"></script>
         <script>
                                        $(document).ready(function () {
                                            // Khi số lượng thay đổi, cập nhật href của nút "Thêm vào giỏ"

@@ -93,7 +93,7 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <a href="viewProfile.jsp" class="account-link">
+                                    <a href="/ProfileController" class="account-link">
                                         <i class="bx bx-user"></i>
                                         <span class="account-text"></span>
                                     </a>

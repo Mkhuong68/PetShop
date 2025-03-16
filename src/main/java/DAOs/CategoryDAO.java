@@ -3,12 +3,13 @@ package DAOs;
 import DB.DBConnection;
 import Model.Category;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDAO {
 
-    private Connection conn;
+    Connection conn = DBConnection.getConnection();
 
     public CategoryDAO(Connection conn) {
         this.conn = conn;
@@ -73,15 +74,18 @@ public class CategoryDAO {
         return null;
     }
 
-    public void addCategory(Category category) throws SQLException {
-        String sql = "INSERT INTO Categories (category_name, category_description, parent_category_id, is_hidden, created_date, last_updated) VALUES (?, ?, ?, ?, GETDATE(), GETDATE())";
-        try ( PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, category.getCategoryName());
-            stmt.setString(2, category.getCategoryDescription());
-            stmt.setObject(3, category.getParentCategoryId(), Types.INTEGER);
-            stmt.setBoolean(4, category.isIsHidden());
+    public boolean addCategory(String name, String des, int id) throws SQLException {
+        String sql = "INSERT INTO Categories (category_name, category_description, parent_category_id, is_hidden, created_date, last_updated) VALUES (?, ?, ?, 0, GETDATE(), GETDATE())";
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            stmt.setString(2, des);
+            stmt.setInt(3, id);
             stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return false;
     }
 
     public void updateCategory(Category category) {

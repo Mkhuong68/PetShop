@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 
 public class CategoryController extends HttpServlet {
 
@@ -87,12 +88,16 @@ public class CategoryController extends HttpServlet {
             switch (action) {
                 case "insert":
                     Category newCategory = new Category();
-                    newCategory.setCategoryName(request.getParameter("name"));
-                    newCategory.setCategoryDescription(request.getParameter("description"));
-                    newCategory.setParentCategoryId(request.getParameter("parentId").isEmpty() ? null : Integer.parseInt(request.getParameter("parentId")));
-                    newCategory.setIsHidden(request.getParameter("hidden") != null);
-                    categoryDAO.addCategory(newCategory);
-                    response.sendRedirect("CategoryController?action=list");
+                    String name = request.getParameter("name");
+                    String des = request.getParameter("description");
+                    int parentId = Integer.parseInt(request.getParameter("parentId"));
+                    
+                    boolean isAdded = categoryDAO.addCategory(name, des, parentId);
+                    if (isAdded) {
+                        response.sendRedirect("CategoryController?action=list");
+                    } else {
+                        response.sendRedirect("manageStaff.jsp");
+                    }
                     break;
                 case "update":
                     Category updatedCategory = new Category();
@@ -101,7 +106,6 @@ public class CategoryController extends HttpServlet {
                     updatedCategory.setCategoryDescription(request.getParameter("description"));
                     updatedCategory.setParentCategoryId(request.getParameter("parentId").isEmpty() ? null : Integer.parseInt(request.getParameter("parentId")));
                     updatedCategory.setIsHidden(request.getParameter("hidden") != null);
-
                     categoryDAO.updateCategory(updatedCategory);
                     response.sendRedirect("CategoryController?action=list");
                     break;

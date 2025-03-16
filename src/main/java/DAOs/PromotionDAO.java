@@ -23,6 +23,12 @@ public class PromotionDAO {
         try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+                Timestamp lastUpdatedTs = rs.getTimestamp("last_updated");
+                Date lastUpdatedDate = null;
+                if (lastUpdatedTs != null) {
+                    lastUpdatedDate = new Date(lastUpdatedTs.getTime());
+                }
+                
                 promotions.add(new Promotion(
                         rs.getInt("promotion_id"),
                         rs.getString("promotion_name"),
@@ -35,7 +41,7 @@ public class PromotionDAO {
                         rs.getInt("created_by"),
                         rs.getBoolean("is_hidden"),
                         rs.getTimestamp("created_date"),
-                        rs.getTimestamp("last_updated") != null ? rs.getTimestamp("last_updated").toLocalDateTime() : null
+                        lastUpdatedDate
                 ));
             }
         } catch (SQLException e) {
@@ -54,6 +60,12 @@ public class PromotionDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                Timestamp lastUpdatedTs = rs.getTimestamp("last_updated");
+                Date lastUpdatedDate = null;
+                if (lastUpdatedTs != null) {
+                    lastUpdatedDate = new Date(lastUpdatedTs.getTime());
+                }
+                
                 return new Promotion(
                         rs.getInt("promotion_id"),
                         rs.getString("promotion_name"),
@@ -66,7 +78,7 @@ public class PromotionDAO {
                         rs.getInt("created_by"),
                         rs.getBoolean("is_hidden"),
                         rs.getTimestamp("created_date"),
-                        rs.getTimestamp("last_updated") != null ? rs.getTimestamp("last_updated").toLocalDateTime() : null
+                        lastUpdatedDate
                 );
             }
         } catch (SQLException e) {
@@ -100,7 +112,7 @@ public class PromotionDAO {
     // Cập nhật khuyến mãi
     public boolean updatePromotion(Promotion promotion) {
         String sql = " UPDATE Promotions SET promotion_name = ?, promotion_image = ?, promotion_description = ?,\n"
-                + "                     promotion_discount = ?, promotion_valid_from = ?, promotion_valid_to = ?, priority = ?,\n"
+                + "                     promotion_discount = ?, promotion_valid_from = ?, promotion_valid_to = ?, priority = ?\n"
                 + "                    WHERE promotion_id = ?";
 
         try ( Connection conn = DBConnection.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {

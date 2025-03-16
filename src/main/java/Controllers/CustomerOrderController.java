@@ -77,6 +77,16 @@ public class CustomerOrderController extends HttpServlet {
         BigDecimal totalValue = BigDecimal.valueOf(-1);
         double shippingFee = -1;
         HttpSession session = request.getSession();
+        String loggedInUser = null;
+        CustomerOrderDAO c = new CustomerOrderDAO();
+        Account account = (Account) request.getSession().getAttribute("account");
+        if (account != null) {
+            loggedInUser = account.getUsername();
+        } else {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        int accountId = c.getAccountId(loggedInUser);
 
         // Neu order duoc thuc hien o trang detail
         if ("orderFromDetail".equalsIgnoreCase(action)) {
@@ -138,12 +148,12 @@ public class CustomerOrderController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/Cart");
                 return;
             } else {
-                CustomerOrderDAO c = new CustomerOrderDAO();
+                CustomerOrderDAO cd = new CustomerOrderDAO();
 
                 // Lap qua danh sach da chon trong cart
                 for (String cartItem : selectedItems) {
                     int cartItemId = Integer.parseInt(cartItem);
-                    CartItem product = c.getProductInCart(cartItemId);
+                    CartItem product = cd.getProductInCart(cartItemId);
                     if (product != null) {
                         listItems.add(product);
                     }
@@ -152,35 +162,6 @@ public class CustomerOrderController extends HttpServlet {
             session.setAttribute("dataCart", listItems);
             request.setAttribute("selectedItems", listItems);
         }
-
-        String loggedInUser = null;
-        CustomerOrderDAO c = new CustomerOrderDAO();
-        Account account = (Account) request.getSession().getAttribute("account");
-        if (account != null) {
-            loggedInUser = account.getUsername();
-        } else {
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("username".equals(cookie.getName())) {
-                        loggedInUser = cookie.getValue();
-                        break;
-                    }
-                }
-            } else {
-                request.setAttribute("msg", "No cookie");
-                request.getRequestDispatcher("viewOrderCustomer.jsp").forward(request, response);
-                return;
-            }
-        }
-        if (loggedInUser == null || loggedInUser.isEmpty()) {
-            request.setAttribute("msg", "No user");
-            request.getRequestDispatcher("viewOrderCustomer.jsp").forward(request, response);
-            return;
-        }
-
-        int accountId = c.getAccountId(loggedInUser);
-
         VoucherDAO v = new VoucherDAO();
         List<Voucher> voucherList = v.getAllVoucherAcc(accountId);
         if (voucherList != null && !voucherList.isEmpty()) {

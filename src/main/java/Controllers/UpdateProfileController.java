@@ -66,6 +66,19 @@ public class UpdateProfileController extends HttpServlet {
         String lastName = request.getParameter("lastName");
         Date dateOfBirth = Date.valueOf(request.getParameter("dateOfBirth"));
         String gender = request.getParameter("gender");
+        // Kiểm tra định dạng số điện thoại (10 hoặc 11 chữ số)
+        if (!phoneNumber.matches("^0\\d{9,10}$")) {
+        request.setAttribute("error", "Invalid phone number format. It must start with '0' and contain 10 or 11 digits.");
+        request.getRequestDispatcher("updateProfile.jsp").forward(request, response);
+        return;
+    }
+
+        // Kiểm tra định dạng email
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            request.setAttribute("error", "Invalid email format.");
+            request.getRequestDispatcher("updateProfile.jsp").forward(request, response);
+            return;
+        }
         // Cập nhật tài khoản
         account = new Account(accountId, email, phoneNumber, firstName, lastName, dateOfBirth, gender);
         boolean isUpdated = c.updateAccount(account);

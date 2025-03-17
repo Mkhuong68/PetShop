@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <!-- Định nghĩa các Servlet -->
+    <welcome-file-list>
+        <welcome-file>Home</welcome-file>
+    </welcome-file-list>
     <servlet>
         <servlet-name>CustomerPostController</servlet-name>
         <servlet-class>Controllers.CustomerPostController</servlet-class>
@@ -190,24 +193,22 @@
         <servlet-name>NotificationDetailController</servlet-name>
         <url-pattern>/NotificationDetailController</url-pattern>
     </servlet-mapping>
-    <welcome-file-list>
-        <welcome-file>/Home</welcome-file>
-    </welcome-file-list>
-     <servlet>
-         <servlet-name>DeliveryOrderListController</servlet-name>
-         <servlet-class>Controllers.DeliveryOrderListController</servlet-class>
-     </servlet>
-     <servlet-mapping>
-         <servlet-name>DeliveryOrderListController</servlet-name>
-         <url-pattern>/deliveryList</url-pattern>
-     </servlet-mapping>
-     <servlet>
-    <servlet-name>UpdateProfileController</servlet-name>
-    <servlet-class>Controllers.UpdateProfileController</servlet-class>
-</servlet>
 
-<servlet-mapping>
-    <servlet-name>UpdateProfileController</servlet-name>
-    <url-pattern>/UpdateProfileController</url-pattern>
-</servlet-mapping>
+    <servlet>
+        <servlet-name>DeliveryOrderListController</servlet-name>
+        <servlet-class>Controllers.DeliveryOrderListController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeliveryOrderListController</servlet-name>
+        <url-pattern>/deliveryList</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UpdateProfileController</servlet-name>
+        <servlet-class>Controllers.UpdateProfileController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UpdateProfileController</servlet-name>
+        <url-pattern>/UpdateProfileController</url-pattern>
+    </servlet-mapping>
 </web-app>

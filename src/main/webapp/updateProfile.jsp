@@ -101,14 +101,18 @@
                 <h1>Update Profile</h1>
 
                 <form action="UpdateProfileController" method="POST">
+                    
                     <input type="hidden" name="accountId" value="${user.accountId}"/>
 
                     <label for="email">Email:</label>
                     <input type="email" name="email" value="${user.email}" required/><br/>
 
                     <label for="phoneNumber">Phone:</label>
-                    <input type="text" name="phoneNumber" value="${user.phoneNumber}" required/><br/>
-
+                    <input type="text" name="phoneNumber" id="phoneNumber" 
+                           pattern="^0\d{9,10}$" 
+                           title="Please enter a valid phone number that starts with '0' and contains 10 or 11 digits." 
+                           value="${account.phoneNumber}" required>
+                    <br>
                     <label for="firstName">First Name:</label>
                     <input type="text" name="firstName" value="${user.firstName}" required/><br/>
 

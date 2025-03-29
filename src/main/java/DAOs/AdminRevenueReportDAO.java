@@ -25,13 +25,18 @@ public class AdminRevenueReportDAO {
     Connection conn = DBConnection.getConnection();
 
     public BigDecimal getAverageOrderValue(Date reportDate) {
-        String sql = "SELECT CASE \n"
-                + "    WHEN COUNT(o.order_id) > 0 \n"
-                + "    THEN COALESCE(SUM(d.final_price * d.quantity), 0) / COUNT(o.order_id) \n"
-                + "    ELSE 0 \n"
-                + "END AS average_order_value\n"
+        String sql = "SELECT \n"
+                + "    CASE \n"
+                + "        WHEN COUNT(DISTINCT o.order_id) > 0 \n"
+                + "        THEN COALESCE(SUM(filtered_orders.final_price), 0) / COUNT(DISTINCT o.order_id) \n"
+                + "        ELSE 0 \n"
+                + "    END AS average_order_value\n"
                 + "FROM Orders o\n"
-                + "JOIN OrderDetails d ON o.order_id = d.order_id\n"
+                + "JOIN (\n"
+                + "    SELECT order_id, MIN(final_price) AS final_price\n"
+                + "    FROM OrderDetails\n"
+                + "    GROUP BY order_id\n"
+                + ") AS filtered_orders ON o.order_id = filtered_orders.order_id\n"
                 + "WHERE CAST(o.order_date AS DATE) = ?";
         try {
             Connection conn = DBConnection.getConnection();
@@ -48,9 +53,14 @@ public class AdminRevenueReportDAO {
     }
 
     public BigDecimal getTotalRevenue(Date reportDate) {
-        String sql = "  SELECT COALESCE(SUM(d.final_price * d.quantity), 0) AS total_revenue\n"
+        String sql = "SELECT \n"
+                + "    COALESCE(SUM(d.final_price), 0) AS total_revenue\n"
                 + "FROM Orders o\n"
-                + "JOIN OrderDetails d ON o.order_id = d.order_id\n"
+                + "JOIN (\n"
+                + "    SELECT order_id, MIN(final_price) AS final_price\n"
+                + "    FROM OrderDetails\n"
+                + "    GROUP BY order_id\n"
+                + ") d ON o.order_id = d.order_id\n"
                 + "WHERE CAST(o.order_date AS DATE) = ?";
         try {
             Connection conn = DBConnection.getConnection();

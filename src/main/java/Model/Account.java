@@ -11,11 +11,48 @@ import java.sql.Date;
  * @author tvhun
  */
 public class Account {
+
     private int accountId;
     private String username;
     private String passwordHash;
     private String email;
     private String bannedReason;
+    private int priority;  // Thêm thuộc tính priority
+    private int voucherId;  // Thêm thuộc tính voucherId
+    private UserAddress userAddress;
+    private String phoneNumber;
+    private int roleId;
+    private Date createdDate;
+    private Date lastLogin;
+    private boolean isActive;
+    private String profileImage;
+    private String firstName;
+    private String lastName;
+    private Date dateOfBirth;
+    private String gender;
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public UserAddress getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(UserAddress userAddress) {
+        this.userAddress = userAddress;
+    }
+        public int getVoucherId() {
+        return voucherId;
+    }
+
+    public void setVoucherId(int voucherId) {
+        this.voucherId = voucherId;
+    }
 
     public int getAccountId() {
         return accountId;
@@ -94,7 +131,11 @@ public class Account {
     }
 
     public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
+        if (profileImage != null && !profileImage.trim().isEmpty()) {
+            this.profileImage = profileImage;  // Lưu Base64 nếu có
+        } else {
+            this.profileImage = "assets/images/default-user.png"; // Ảnh mặc định nếu không có ảnh
+        }
     }
 
     public String getFirstName() {
@@ -129,7 +170,6 @@ public class Account {
         this.gender = gender;
     }
 
-    // Phương thức kiểm tra tài khoản Google
     public String getBannedReason() {
         return bannedReason;
     }
@@ -137,16 +177,7 @@ public class Account {
     public boolean isGoogleAccount() {
         return this.passwordHash == null || this.passwordHash.isEmpty();
     }
-    private String phoneNumber;
-    private int roleId;
-    private Date createdDate;
-    private Date lastLogin;
-    private boolean isActive;
-    private String profileImage;
-    private String firstName;
-    private String lastName;
-    private Date dateOfBirth;
-    private String gender;
+    
 
     public Account() {
     }
@@ -170,6 +201,32 @@ public class Account {
         this.gender = gender;
         this.bannedReason = bannedReason;
     }
+    public Account(int accountId, String email, String phoneNumber, String firstName, String lastName, Date dateOfBirth, String gender) {
+        this.accountId = accountId;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+    }
+    public Account(int accountId, String username, String passwordHash, String email, String phoneNumber, int roleId,
+                   Date createdDate, Date lastLogin, boolean isActive, String profileImage, String firstName, String lastName,
+                   Date dateOfBirth, String gender) {
+        this.accountId = accountId;
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.roleId = roleId;
+        this.createdDate = createdDate;
+        this.lastLogin = lastLogin;
+        this.isActive = isActive;
+        this.profileImage = profileImage;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+    }
 
 }
-

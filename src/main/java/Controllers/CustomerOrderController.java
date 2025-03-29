@@ -4,10 +4,12 @@
  */
 package Controllers;
 
+import DAOs.AccountDAO;
 import DAOs.CartDAO;
 import DAOs.CustomerOrderDAO;
 import DAOs.OrderDetailDAO;
 import DAOs.ProductDAO;
+import DAOs.UserVoucherDAO;
 import DAOs.VoucherDAO;
 import Model.Account;
 import Model.CartItem;
@@ -25,6 +27,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,123 +78,149 @@ public class CustomerOrderController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+        String momoStatus = request.getParameter("momoStatus");
         BigDecimal totalValue = BigDecimal.valueOf(-1);
         double shippingFee = -1;
+
+        // Kiểm tra người dùng đăng nhập
         HttpSession session = request.getSession();
-
-        // Neu order duoc thuc hien o trang detail
-        if ("orderFromDetail".equalsIgnoreCase(action)) {
-            String pId = request.getParameter("productId");
-            String quantity = request.getParameter("quantity");
-            if (pId != null && quantity != null) {
-                ProductDAO productDAO = new ProductDAO();
-                int productId = Integer.parseInt(pId);
-                int qty = Integer.parseInt(quantity);
-                Product product = productDAO.getProductById(productId);
-
-                if (product != null && qty > 0) {
-                    CartItem cartItem = new CartItem();
-                    cartItem.setProductId(product.getProductId());
-                    cartItem.setProductName(product.getProductName());
-                    BigDecimal productPriceRounded = product.getProductPrice().setScale(0, RoundingMode.HALF_UP);
-                    cartItem.setOriginalPrice(productPriceRounded);
-                    cartItem.setQuantity(qty);
-                    session.setAttribute("dataProduct", cartItem);
-                    request.setAttribute("product", cartItem);
-
-                    totalValue = productPriceRounded.multiply(BigDecimal.valueOf(qty)).setScale(0, RoundingMode.HALF_UP);
-
-                    // Kiem tra tong gia tri don hang de tinh phi ship
-                    if (totalValue.doubleValue() >= 300000) {
-                        shippingFee = 5000;
-                    } else if (totalValue.doubleValue() >= 150000) {
-                        shippingFee = 10000;
-                    } else {
-                        shippingFee = 15000;
-                    }
-                }
-
-            } else {
-                request.setAttribute("msg", "No product");
-                request.getRequestDispatcher("viewOrderCustomer.jsp").forward(request, response);
-                return;
-            }
-
-            // Neu order duoc thu hien o trang cart
-        } else if ("orderFromCart".equalsIgnoreCase(action)) {
-            List<CartItem> listItems = new ArrayList<>();
-            String total = request.getParameter("totalAmount");
-            if (total != null && !total.isEmpty()) {
-                totalValue = new BigDecimal(total).setScale(0, RoundingMode.HALF_UP);
-                // Kiem tra tong gia tri don hang de tinh phi ship
-                if (totalValue.doubleValue() >= 300000) {
-                    shippingFee = 5000;
-                } else if (totalValue.doubleValue() >= 150000) {
-                    shippingFee = 10000;
-                } else {
-                    shippingFee = 15000;
-                }
-            }
-
-            // Kiem tra cac san pham da chon trong cart
-            String[] selectedItems = request.getParameterValues("selectedItem");
-            if (selectedItems == null || selectedItems.length == 0) {
-                response.sendRedirect(request.getContextPath() + "/Cart");
-                return;
-            } else {
-                CustomerOrderDAO c = new CustomerOrderDAO();
-
-                // Lap qua danh sach da chon trong cart
-                for (String cartItem : selectedItems) {
-                    int cartItemId = Integer.parseInt(cartItem);
-                    CartItem product = c.getProductInCart(cartItemId);
-                    if (product != null) {
-                        listItems.add(product);
-                    }
-                }
-            }
-            session.setAttribute("dataCart", listItems);
-            request.setAttribute("selectedItems", listItems);
-        }
-
-        String loggedInUser = null;
         CustomerOrderDAO c = new CustomerOrderDAO();
-        Account account = (Account) request.getSession().getAttribute("account");
-        if (account != null) {
-            loggedInUser = account.getUsername();
+        Account account = (Account) session.getAttribute("account");
+
+        if (account == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
         } else {
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("username".equals(cookie.getName())) {
-                        loggedInUser = cookie.getValue();
-                        break;
+            System.out.println("Account in session: " + account);
+        }
+        AccountDAO a = new AccountDAO();
+
+        int accountId = c.getAccountId(account.getUsername());
+        Account acc = a.getAccountById(accountId);
+        String phoneNumber = acc.getPhoneNumber();
+        String firstName = acc.getFirstName();
+        String lastName = acc.getLastName();
+
+        try {
+
+            if ("orderFromDetail".equalsIgnoreCase(action)) {
+                // Lấy thông tin sản phẩm từ request
+                String pId = request.getParameter("productId");
+                String quantity = request.getParameter("quantity");
+
+                if (pId == null || quantity == null) {
+                    request.setAttribute("msg", "No product selected.");
+                } else {
+                    ProductDAO productDAO = new ProductDAO();
+                    int productId = Integer.parseInt(pId);
+                    int qty = Integer.parseInt(quantity);
+
+                    Product product = productDAO.getProductById(productId);
+
+                    if (product == null || qty <= 0) {
+                        request.setAttribute("msg", "Invalid product or quantity.");
+                    } else {
+                        // Tạo CartItem
+                        CartItem cartItem = new CartItem();
+                        cartItem.setProductId(product.getProductId());
+                        cartItem.setProductName(product.getProductName());
+                        BigDecimal productPriceRounded = product.getProductPrice().setScale(0, RoundingMode.HALF_UP);
+                        cartItem.setOriginalPrice(productPriceRounded);
+                        cartItem.setQuantity(qty);
+
+                        // Lưu vào session và request
+                        session.setAttribute("dataProduct", cartItem);
+                        request.setAttribute("product", cartItem);
+
+                        // Tính tổng tiền
+                        totalValue = productPriceRounded.multiply(BigDecimal.valueOf(qty)).setScale(0, RoundingMode.HALF_UP);
                     }
                 }
-            } else {
-                request.setAttribute("msg", "No cookie");
-                request.getRequestDispatcher("viewOrderCustomer.jsp").forward(request, response);
-                return;
+
+            } else if ("orderFromCart".equalsIgnoreCase(action)) {
+                List<CartItem> listItems = new ArrayList<>();
+                String total = request.getParameter("totalAmount");
+                System.out.println("Total received in servlet: " + total);
+
+                if (total != null && !total.isEmpty()) {
+                    totalValue = new BigDecimal(total).setScale(0, RoundingMode.HALF_UP);
+                }
+
+                // Lấy danh sách sản phẩm đã chọn trong cart
+                String[] selectedItems = request.getParameterValues("selectedItem");
+
+                if (selectedItems == null || selectedItems.length == 0) {
+                    response.sendRedirect(request.getContextPath() + "/Cart");
+                    return;
+                } else {
+                    for (String cartItem : selectedItems) {
+                        int cartItemId = Integer.parseInt(cartItem);
+                        CartItem product = c.getProductInCart(cartItemId);
+                        if (product != null) {
+                            listItems.add(product);
+                        }
+                    }
+                }
+
+                session.setAttribute("dataCart", listItems);
+                request.setAttribute("selectedItems", listItems);
             }
-        }
-        if (loggedInUser == null || loggedInUser.isEmpty()) {
-            request.setAttribute("msg", "No user");
-            request.getRequestDispatcher("viewOrderCustomer.jsp").forward(request, response);
-            return;
-        }
 
-        int accountId = c.getAccountId(loggedInUser);
+            // Tính phí ship
+            if (totalValue.doubleValue() >= 300000) {
+                shippingFee = 5000;
+            } else if (totalValue.doubleValue() >= 150000) {
+                shippingFee = 10000;
+            } else {
+                shippingFee = 15000;
+            }
 
-        VoucherDAO v = new VoucherDAO();
-        List<Voucher> voucherList = v.getAllVoucher(accountId);
-        if (voucherList != null && !voucherList.isEmpty()) {
+            // Lấy danh sách voucher
+            UserVoucherDAO u = new UserVoucherDAO();
+            VoucherDAO v = new VoucherDAO();
+            List<Voucher> voucherList = new ArrayList<>();
+
+            List<Integer> voucherIds = u.getVoucherIdByAccId(accountId);
+            if (voucherIds != null && !voucherIds.isEmpty()) {
+                for (Integer voucherId : voucherIds) {
+                    voucherList.addAll(v.getAllVoucherAcc(voucherId));
+                }
+            }
+            session.setAttribute("voucherList", voucherList);
             request.setAttribute("voucherList", voucherList);
+
+            if (phoneNumber != null && !phoneNumber.trim().isEmpty()) {
+                request.setAttribute("phoneNumber", phoneNumber);
+            } else {
+                request.setAttribute("phoneNumber", "");
+            }
+
+            if (firstName != null && !firstName.trim().isEmpty()) {
+                request.setAttribute("firstName", firstName);
+            } else {
+                request.setAttribute("firstName", "");
+            }
+
+            if (lastName != null && !lastName.trim().isEmpty()) {
+                request.setAttribute("lastName", phoneNumber);
+            } else {
+                request.setAttribute("lastName", "");
+            }
+        } catch (Exception e) {
+            request.setAttribute("msg", "An error occurred: " + e.getMessage());
         }
+
+        request.setAttribute("phoneNumber", phoneNumber);
+        request.setAttribute("firstName", firstName);
+        request.setAttribute("lastName", lastName);
 
         session.setAttribute("shippingFee", shippingFee);
         request.setAttribute("shippingFee", shippingFee);
+
+        session.setAttribute("totalAmount", totalValue);
         request.setAttribute("totalAmount", totalValue);
-        request.setAttribute("voucherList", voucherList);
+
+        request.setAttribute("account", account);
         request.getRequestDispatcher("/viewOrderCustomer.jsp").forward(request, response);
     }
 
@@ -219,25 +249,6 @@ public class CustomerOrderController extends HttpServlet {
         if (account != null) {
             loggedInUser = account.getUsername();
 
-        } else {
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("username".equals(cookie.getName())) {
-                        loggedInUser = cookie.getValue();
-                        break;
-                    }
-                }
-            } else {
-                request.setAttribute("msg", "No cookie");
-                request.getRequestDispatcher("viewOrderCustomer.jsp").forward(request, response);
-                return;
-            }
-        }
-        if (loggedInUser == null || loggedInUser.isEmpty()) {
-            request.setAttribute("msg", "No user");
-            request.getRequestDispatcher("viewOrderCustomer.jsp").forward(request, response);
-            return;
         }
         int accountId = c.getAccountId(loggedInUser);
 
@@ -245,40 +256,88 @@ public class CustomerOrderController extends HttpServlet {
         String orderNote = request.getParameter("orderNote");
         String paymentMethod = request.getParameter("paymentMethod");
         String voucherCode = request.getParameter("applyVoucher");
-
-
-        // Kiem tra chon phuong thuc thanh toan nao
-        boolean paymentStatus = true;
-        if (paymentMethod.equalsIgnoreCase("COD")) {
-            paymentStatus = false;
-        }
-
-        // Lay voucher da chon
-        VoucherDAO v = new VoucherDAO();
-        int voucherId = v.getVoucherIdByAccountId(voucherCode);
+        String momoStatus = request.getParameter("resultCode");
+        String name = request.getParameter("name");
 
         // Kiem tra phi ship
         double shippingFee = -1;
         if (session.getAttribute("shippingFee") != null) {
             shippingFee = (Double) session.getAttribute("shippingFee");
         }
+
+        BigDecimal totalAmount = (BigDecimal) session.getAttribute("totalAmount");
+        if (totalAmount == null) {
+            totalAmount = BigDecimal.ZERO;
+        }
+
+        Integer userVoucherId = null;
+        BigDecimal discountAmount = BigDecimal.ZERO;
+        VoucherDAO v = new VoucherDAO();
+
+        if (voucherCode != null && !voucherCode.trim().isEmpty()) {
+            userVoucherId = v.getVoucherIdByAccId(voucherCode);
+            if (userVoucherId != null) {
+                double voucherDiscount = v.getVoucherDiscount(userVoucherId);
+
+                if (voucherDiscount >= 0 && voucherDiscount <= 100) {
+                    discountAmount = totalAmount.multiply(BigDecimal.valueOf(voucherDiscount / 100));
+                } else if (voucherDiscount >= 1000) {
+                    discountAmount = BigDecimal.valueOf(voucherDiscount);
+
+                    if (discountAmount.compareTo(totalAmount) > 0) {
+                        discountAmount = totalAmount;
+                    }
+                }
+            } else {
+                userVoucherId = -1;
+            }
+        }
+
+        BigDecimal finalAmount = totalAmount.subtract(discountAmount);
+        finalAmount = finalAmount.add(BigDecimal.valueOf(shippingFee));
+
         // Kiem tra ghi chu
         if (orderNote.isEmpty()) {
             orderNote = "";
         }
 
-        BigDecimal finalPrice = BigDecimal.valueOf(-1);
         BigDecimal purchasePrice = BigDecimal.valueOf(-1);
         int lastId = -1;
+
+        String phoneNumber = request.getParameter("phoneNumber");
+        String phoneRegex = "^(0[3|5|7|8|9])+([0-9]{8})$";
+        if (!phoneNumber.matches(phoneRegex)) {
+            List<Voucher> voucherList = (List<Voucher>) session.getAttribute("voucherList");
+            request.setAttribute("voucherList", voucherList);
+            request.setAttribute("phoneError", "Invalid phone number! Please enter a valid one.");
+            request.setAttribute("deliveryAddress", deliveryAddress);
+            request.setAttribute("orderNote", orderNote);
+            request.setAttribute("paymentMethod", paymentMethod);
+            request.setAttribute("voucherCode", voucherCode);
+            request.setAttribute("totalAmount", totalAmount);
+            request.setAttribute("shippingFee", shippingFee);
+            request.setAttribute("finalAmount", finalAmount);
+
+            if (session.getAttribute("dataCart") != null) {
+                request.setAttribute("selectedItems", session.getAttribute("dataCart"));
+            } else if (session.getAttribute("dataProduct") != null) {
+                request.setAttribute("product", session.getAttribute("dataProduct"));
+            }
+
+            request.getRequestDispatcher("viewOrderCustomer.jsp").forward(request, response);
+            return;
+        }
+        boolean paymentStatus = false;
 
         // Kiem tra co san pham da chon trong cart hay khong
         if (session.getAttribute("dataCart") != null) {
             List<CartItem> selectedItems = (List<CartItem>) request.getSession().getAttribute("dataCart");
 
             // Them du lieu vao Order
-            Order newOrder = new Order(0, loggedInUser, accountId, new Timestamp(System.currentTimeMillis()), 1, "Received", deliveryAddress, voucherId, paymentStatus, paymentMethod, shippingFee, orderNote);
+            Order newOrder = new Order(0, loggedInUser, accountId, new Timestamp(System.currentTimeMillis()), 1, "Received", deliveryAddress, userVoucherId, paymentStatus, paymentMethod, shippingFee, orderNote);
             c.addOrder(newOrder);
             lastId = c.getLastInsertedOrderId(accountId);
+            session.setAttribute("lastId", lastId);
 
             // Them du lieu vao order detail;
             for (CartItem item : selectedItems) {
@@ -286,8 +345,7 @@ public class CustomerOrderController extends HttpServlet {
                 productId = item.getProductId();
                 quantity = item.getQuantity();
                 purchasePrice = item.getFinalPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-                finalPrice = purchasePrice.add(BigDecimal.valueOf(shippingFee));
-                OrderDetail detail = new OrderDetail(0, lastId, productId, quantity, finalPrice.doubleValue(), purchasePrice.doubleValue());
+                OrderDetail detail = new OrderDetail(0, lastId, productId, quantity, finalAmount.doubleValue(), purchasePrice.doubleValue());
                 boolean isAdded = odDAO.insertOrderDetail(detail);
                 if (isAdded) {
                     cart.deleteCartItem(cartItemId);
@@ -300,7 +358,6 @@ public class CustomerOrderController extends HttpServlet {
             quantity = cartItem.getQuantity();
             productId = cartItem.getProductId();
             purchasePrice = cartItem.getOriginalPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
-            finalPrice = purchasePrice.add(BigDecimal.valueOf(shippingFee));
             ProductDAO pDao = new ProductDAO();
             product = pDao.getProductById(productId);
             if (product == null) {
@@ -310,18 +367,36 @@ public class CustomerOrderController extends HttpServlet {
             } else {
 
                 // Them du lieu vao Order
-                Order newOrder = new Order(0, loggedInUser, accountId, new Timestamp(System.currentTimeMillis()), 1, "Received", deliveryAddress, voucherId, paymentStatus, paymentMethod, shippingFee, orderNote);
+                Order newOrder = new Order(0, loggedInUser, accountId, new Timestamp(System.currentTimeMillis()), 1, "Received", deliveryAddress, userVoucherId, paymentStatus, paymentMethod, shippingFee, orderNote);
                 c.addOrder(newOrder);
                 lastId = c.getLastInsertedOrderId(accountId);
 
                 // Them du lieu vao order detail;
-                OrderDetail detail = new OrderDetail(0, lastId, productId, quantity, finalPrice.doubleValue(), purchasePrice.doubleValue());
+                OrderDetail detail = new OrderDetail(0, lastId, productId, quantity, finalAmount.doubleValue(), purchasePrice.doubleValue());
                 odDAO.insertOrderDetail(detail);
 
             }
         }
-        response.sendRedirect(request.getContextPath() + "/CustomerOrderDetailController?orderId=" + lastId);
+        if ("MOMO".equals(paymentMethod)) {
+            if (momoStatus == null) {
+                session.setAttribute("totalAmount", finalAmount.toPlainString());
+                request.getRequestDispatcher("/MoMoPaymentServlet").forward(request, response);
+                return;
+            }
+        }
 
+        String encodedPhone = URLEncoder.encode(phoneNumber, StandardCharsets.UTF_8);
+        String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);
+
+        Cookie phoneCookie = new Cookie("phoneNumber", encodedPhone);
+        Cookie nameCookie = new Cookie("name", encodedName);
+
+        phoneCookie.setMaxAge(7 * 24 * 60 * 60);
+        nameCookie.setMaxAge(7 * 24 * 60 * 60);
+
+        response.addCookie(phoneCookie);
+        response.addCookie(nameCookie);
+        response.sendRedirect(request.getContextPath() + "/CustomerOrderDetailController?orderId=" + lastId);
     }
 
     /**

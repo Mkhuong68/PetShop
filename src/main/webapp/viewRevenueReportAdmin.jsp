@@ -45,13 +45,13 @@
                         <c:forEach var="report" items="${reports}">
                             <tr>
                                 <td>${report.reportId}</td>
-                                <td><fmt:formatDate value="${report.reportDate}" pattern="yyyy-MM-dd" /></td>
+                                <td><fmt:formatDate value="${report.reportDate}" pattern="MM/dd/yyyy" /></td>
                                 <td><fmt:formatNumber value="${report.totalRevenue}" pattern="#,##0" /> VND</td>
                                 <td>${report.totalOrders}</td>
                                 <td><fmt:formatNumber value="${report.averageOrderValue}" pattern="#,##0" /> VND</td>
-                                <td><fmt:formatDate value="${report.createdDate}" pattern="yyyy-MM-dd" /></td>
+                                <td><fmt:formatDate value="${report.createdDate}" pattern="MM/dd/yyyy" /></td>
                                 <td>
-                                    <a href="AdminRevenueReportController?action=delete&reportId=${report.reportId}" onclick="return confirm('Are you sure?')">Delete</a>
+                                    <a href="AdminRevenueReportController?action=delete&reportId=${report.reportId}" onclick="return confirm('Are you sure you want to delete this report?')">Delete</a>
                                 </td>
                             </tr>
                         </c:forEach>

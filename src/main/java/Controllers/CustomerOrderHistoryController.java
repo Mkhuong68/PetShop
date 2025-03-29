@@ -5,8 +5,9 @@
 package Controllers;
 
 import DAOs.CustomerOrderDAO;
+import DAOs.OrderTempDAO;
 import Model.Account;
-import Model.Order;
+import Model.OrderTemp;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -62,7 +63,8 @@ public class CustomerOrderHistoryController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        CustomerOrderDAO c = new CustomerOrderDAO();
+        OrderTempDAO c = new OrderTempDAO();
+        CustomerOrderDAO co = new CustomerOrderDAO();
 
         // Kiem tra dang nhap nguoi dung
         HttpSession session = request.getSession();
@@ -70,29 +72,17 @@ public class CustomerOrderHistoryController extends HttpServlet {
         Account account = (Account) request.getSession().getAttribute("account");
         if (account != null) {
             loggedInUser = account.getUsername();
-
-        } else {
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("username".equals(cookie.getName())) {
-                        loggedInUser = cookie.getValue();
-                        break;
-                    }
-                }
-            } else {
-                response.sendRedirect(request.getContextPath() + "/login");
-            }
         }
         if (loggedInUser == null || loggedInUser.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/login");
+            return;
         }
-        int accountId = c.getAccountId(loggedInUser);
+        int accountId = co.getAccountId(loggedInUser);
 
-        List<Order> delivered = c.getAllOrderDelivered(accountId);
-        List<Order> cancelled = c.getAllOrderCancelled(accountId);
-        List<Order> received = c.getAllOrderReceived(accountId);
-        List<Order> pending = c.getAllOrderPending(accountId);
+        List<OrderTemp> delivered = c.getOrderDeliveredById(accountId);
+        List<OrderTemp> cancelled = c.getOrderCancelledById(accountId);
+        List<OrderTemp> received = c.getOrderReceivedById(accountId);
+        List<OrderTemp> pending = c.getOrderPendingById(accountId);
 
         if (delivered != null && cancelled != null && received != null && pending != null) {
             if (delivered.isEmpty()) {

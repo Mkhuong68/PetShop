@@ -5,7 +5,7 @@
 package Controllers;
 
 import DAOs.StaffOrderDAO;
-import Model.Order;
+import Model.OrderTemp;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -59,14 +59,16 @@ public class StaffOrderController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         StaffOrderDAO c = new StaffOrderDAO();
-        List<Order> list = c.getAllOrder();
-        if (list != null || list.size() != 0) {
+        List<OrderTemp> list = c.getAllOrders();
+
+        if (list != null && !list.isEmpty()) {
             request.setAttribute("list", list);
-            request.getRequestDispatcher("viewOrderListStaff.jsp").forward(request, response);
         } else {
+            System.out.println("There is no order list.");
             request.setAttribute("msg", "There is no list");
-            request.getRequestDispatcher("viewOrderListStaff.jsp").forward(request, response);
         }
+
+        request.getRequestDispatcher("viewOrderListStaff.jsp").forward(request, response);
     }
 
     /**

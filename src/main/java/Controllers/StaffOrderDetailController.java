@@ -4,6 +4,7 @@
  */
 package Controllers;
 
+import DAOs.AccountDAO;
 import DAOs.OrderStatusDAO;
 import DAOs.StaffOrderDAO;
 import Model.OrderStatus;
@@ -61,13 +62,19 @@ public class StaffOrderDetailController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String oId = request.getParameter("orderId");
+        String aId = request.getParameter("accountId");
         StaffOrderDAO s = new StaffOrderDAO();
         OrderStatusDAO o = new OrderStatusDAO();
+        AccountDAO a = new AccountDAO();
         int orderId = -1;
+        int accountId = -1;
         if (oId != null) {
             orderId = Integer.parseInt(oId);
+            accountId = Integer.parseInt(aId);
             if (orderId > 0) {
-                request.setAttribute("data", s.getOrderbyId(orderId));
+                request.setAttribute("orderInfo", s.getOrderByOrderId(orderId));
+                request.setAttribute("orderDetails", s.getOrderDetailByOrderId(orderId));
+                request.setAttribute("account", a.getAccountById(accountId));
                 request.setAttribute("statusList", o.getAllOrderStatus());
                 request.getRequestDispatcher("viewOrderDetailStaff.jsp").forward(request, response);
             }

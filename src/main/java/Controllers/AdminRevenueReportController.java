@@ -4,6 +4,7 @@
  */
 package Controllers;
 
+import DAOs.AccountDAO;
 import DAOs.AdminRevenueReportDAO;
 import DAOs.CustomerOrderDAO;
 import Model.Account;
@@ -65,6 +66,19 @@ public class AdminRevenueReportController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        CustomerOrderDAO c = new CustomerOrderDAO();
+        String loggedInUser = null;
+        Account account = (Account) request.getSession().getAttribute("account");
+        if (account != null) {
+            loggedInUser = account.getUsername();
+        }
+        if (loggedInUser == null || loggedInUser.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        int accountId = c.getAccountId(loggedInUser);
+
         AdminRevenueReportDAO r = new AdminRevenueReportDAO();
         List<RevenueReport> reports = r.getAllRevenueReports();
         if (reports != null || reports.size() != 0) {
@@ -96,25 +110,9 @@ public class AdminRevenueReportController extends HttpServlet {
         Account account = (Account) request.getSession().getAttribute("account");
         if (account != null) {
             loggedInUser = account.getUsername();
-
-        } else {
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("username".equals(cookie.getName())) {
-                        loggedInUser = cookie.getValue();
-                        break;
-                    }
-                }
-            } else {
-                request.setAttribute("msg", "No cookie");
-                request.getRequestDispatcher("viewRevenueReportAdmin.jsp").forward(request, response);
-                return;
-            }
         }
         if (loggedInUser == null || loggedInUser.isEmpty()) {
-            request.setAttribute("msg", "No user");
-            request.getRequestDispatcher("viewRevenueReportAdmin.jsp").forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         int accountId = c.getAccountId(loggedInUser);
@@ -126,16 +124,11 @@ public class AdminRevenueReportController extends HttpServlet {
             int totalOrders = r.getTotalOrdersByDate(reportDate);
             BigDecimal totalRevenue = r.getTotalRevenue(reportDate);
             BigDecimal averageOrderValue = r.getAverageOrderValue(reportDate);
-            
+
             RevenueReport report = new RevenueReport(0, reportDate, totalRevenue, totalOrders,
                     averageOrderValue, accountId, new Timestamp(System.currentTimeMillis())
             );
             boolean isAdded = r.createRevenueReport(report);
-            if (isAdded) {
-                request.setAttribute("msg", "Revenue report created successfully!");
-            } else {
-                request.setAttribute("msg", "Failed to create revenue report!");
-            }
             response.sendRedirect(request.getContextPath() + "/AdminRevenueReportController");
         }
     }

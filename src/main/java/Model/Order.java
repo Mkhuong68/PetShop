@@ -19,7 +19,7 @@ public class Order {
     private int statusId;
     private String statusName;
     private String deliveryAddress;
-    private int voucherId;
+    private Integer userVoucherId;
     private boolean paymentStatus;
     private String paymentMethod;
     private double shippingFee;
@@ -34,12 +34,12 @@ public class Order {
     }
 
     
-    public int getVoucherId() {
-        return voucherId;
+    public Integer getVoucherId() {
+        return userVoucherId;
     }
 
-    public void setVoucherId(int voucherId) {
-        this.voucherId = voucherId;
+    public void setVoucherId(Integer userVoucherId) {
+        this.userVoucherId = userVoucherId;
     }
 
     public int getOrderId() {
@@ -125,7 +125,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(int orderId, String username, int accountId, Timestamp orderDate, int statusId, String statusName, String deliveryAddress, int voucherId, boolean paymentStatus, String paymentMethod, double shippingFee, String orderNote) {
+    public Order(int orderId, String username, int accountId, Timestamp orderDate, int statusId, String statusName, String deliveryAddress, int userVoucherId, boolean paymentStatus, String paymentMethod, double shippingFee, String orderNote) {
         this.orderId = orderId;
         this.username = username;
         this.accountId = accountId;
@@ -133,7 +133,7 @@ public class Order {
         this.statusId = statusId;
         this.statusName = statusName;
         this.deliveryAddress = deliveryAddress;
-        this.voucherId = voucherId;
+        this.userVoucherId = userVoucherId;
         this.paymentStatus = paymentStatus;
         this.paymentMethod = paymentMethod;
         this.shippingFee = shippingFee;

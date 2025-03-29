@@ -4,15 +4,22 @@
  */
 package Controllers;
 
-import DAOs.CustomerOrderDAO;
 import DAOs.OrderDetailDAO;
+import DAOs.OrderTempDAO;
 import DAOs.ProductDAO;
+import Model.OrderTemp;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -59,12 +66,32 @@ public class CustomerOrderDetailController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String oId = request.getParameter("orderId");
+        
+        Cookie[] cookies = request.getCookies();
+        String phoneNumber = null;
+        String name = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("phoneNumber")) {
+                    phoneNumber = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
+                }
+                if (cookie.getName().equals("name")) {
+                    name = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
+                }
+            }
+        }
+
+        request.setAttribute("phoneNumber", phoneNumber);
+        request.setAttribute("name", name);
+
         if (oId != null) {
             int orderId = Integer.parseInt(oId);
-            CustomerOrderDAO order = new CustomerOrderDAO();
-            OrderDetailDAO odetail = new OrderDetailDAO();
-            request.setAttribute("order", order.getOrderbyOrderId(orderId));
-            request.setAttribute("orderDetails", odetail.getOrderDetailsByOrderId(orderId));
+            OrderTempDAO orderDAO = new OrderTempDAO();
+            List<OrderTemp> orderDetails = orderDAO.getOrderDetailByOrderId(orderId);
+            OrderTemp orderInfo = orderDAO.getOrderByOrderId(orderId);
+            request.setAttribute("orderInfo", orderInfo);
+            request.setAttribute("orderDetails", orderDetails);
         }
         request.getRequestDispatcher("viewOrderDetailCustomer.jsp").forward(request, response);
     }

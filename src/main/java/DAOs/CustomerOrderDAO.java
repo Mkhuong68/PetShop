@@ -12,8 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Types;
 
 /**
  *
@@ -22,6 +21,17 @@ import java.util.List;
 public class CustomerOrderDAO {
 
     Connection conn = DBConnection.getConnection();
+
+    public void updateOrderStatus(int orderId, boolean paymentStatus) {
+        String query = "UPDATE Orders SET payment_status = ? WHERE order_id = ?";
+        try ( PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setBoolean(1, paymentStatus);
+            ps.setInt(2, orderId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public boolean cancelOrder(int orderId) {
         String sql = "UPDATE Orders SET status_id = 5 WHERE order_id = ?";
@@ -57,13 +67,17 @@ public class CustomerOrderDAO {
 
     public boolean addOrder(Order o) {
         int orderId = -1;
-        String sql = "INSERT INTO orders (account_id, staff_id, voucher_id, order_note, shipping_fee, status_id, order_date, payment_status, payment_method, deliver_to ,last_updated) "
+        String sql = "INSERT INTO orders (account_id, staff_id, user_voucher_id, order_note, shipping_fee, status_id, order_date, payment_status, payment_method, deliver_to ,last_updated) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, o.getAccountId());
             ps.setNull(2, java.sql.Types.INTEGER);
-            ps.setInt(3, o.getVoucherId());
+            if (o.getVoucherId() == null || o.getVoucherId() == -1) {
+                ps.setNull(3, Types.INTEGER);
+            } else {
+                ps.setInt(3, o.getVoucherId());
+            }
             ps.setString(4, o.getOrderNote());
             ps.setDouble(5, o.getShippingFee());
             ps.setInt(6, o.getStatusId());
@@ -124,119 +138,16 @@ public class CustomerOrderDAO {
         }
         return null;
     }
-
-    public List<Order> getAllOrderCancelled(int id) {
-        List<Order> list = new ArrayList<>();
-        String sql = "SELECT Account.account_id, Account.username, Orders.order_id, OrderStatus.status_id, OrderStatus.status_name, Orders.shipping_fee, Orders.order_note, Orders.order_date, Vouchers.voucher_id, Orders.payment_status, Orders.payment_method, Orders.deliver_to\n"
-                + "                              FROM     Account INNER JOIN\n"
-                + "                              Orders ON Account.account_id = Orders.account_id INNER JOIN\n"
-                + "                              OrderStatus ON Orders.status_id = OrderStatus.status_id LEFT JOIN\n"
-                + "                          Vouchers ON Orders.voucher_id = Vouchers.voucher_id where Orders.account_id = ? AND status_name IN ('Cancelled')\n"
-                + "               	   order by Orders.last_updated desc ";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Order o = new Order(
-                        rs.getInt("order_id"),
-                        rs.getString("username"),
-                        rs.getInt("account_id"),
-                        rs.getTimestamp("order_date"),
-                        rs.getInt("status_id"),
-                        rs.getString("status_name"),
-                        rs.getString("deliver_to"),
-                        rs.getInt("voucher_id"),
-                        rs.getBoolean("payment_status"),
-                        rs.getString("payment_method"),
-                        rs.getDouble("shipping_fee"),
-                        rs.getString("order_note"));
-                list.add(o);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public List<Order> getAllOrderPending(int id) {
-        List<Order> list = new ArrayList<>();
-        String sql = "SELECT Account.account_id, Account.username, Orders.order_id, OrderStatus.status_id, OrderStatus.status_name, Orders.shipping_fee, Orders.order_note, Orders.order_date, Vouchers.voucher_id, Orders.payment_status, Orders.payment_method, Orders.deliver_to\n"
-                + "                              FROM     Account INNER JOIN\n"
-                + "                              Orders ON Account.account_id = Orders.account_id INNER JOIN\n"
-                + "                              OrderStatus ON Orders.status_id = OrderStatus.status_id LEFT JOIN\n"
-                + "                          Vouchers ON Orders.voucher_id = Vouchers.voucher_id where Orders.account_id = ? AND status_name NOT IN ('Cancelled', 'Delivered', 'Received')\n"
-                + "               	   order by Orders.last_updated desc ";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Order o = new Order(
-                        rs.getInt("order_id"),
-                        rs.getString("username"),
-                        rs.getInt("account_id"),
-                        rs.getTimestamp("order_date"),
-                        rs.getInt("status_id"),
-                        rs.getString("status_name"),
-                        rs.getString("deliver_to"),
-                        rs.getInt("voucher_id"),
-                        rs.getBoolean("payment_status"),
-                        rs.getString("payment_method"),
-                        rs.getDouble("shipping_fee"),
-                        rs.getString("order_note"));
-                list.add(o);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public List<Order> getAllOrderDelivered(int id) {
-        List<Order> list = new ArrayList<>();
-        String sql = "SELECT Account.account_id, Account.username, Orders.order_id, OrderStatus.status_id, OrderStatus.status_name, Orders.shipping_fee, Orders.order_note, Orders.order_date, Vouchers.voucher_id, Orders.payment_status, Orders.payment_method, Orders.deliver_to\n"
-                + "                              FROM     Account INNER JOIN\n"
-                + "                              Orders ON Account.account_id = Orders.account_id INNER JOIN\n"
-                + "                              OrderStatus ON Orders.status_id = OrderStatus.status_id LEFT JOIN\n"
-                + "                          Vouchers ON Orders.voucher_id = Vouchers.voucher_id where Orders.account_id = ? AND status_name IN ('Delivered')\n"
-                + "               	   order by Orders.last_updated desc ";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Order o = new Order(
-                        rs.getInt("order_id"),
-                        rs.getString("username"),
-                        rs.getInt("account_id"),
-                        rs.getTimestamp("order_date"),
-                        rs.getInt("status_id"),
-                        rs.getString("status_name"),
-                        rs.getString("deliver_to"),
-                        rs.getInt("voucher_id"),
-                        rs.getBoolean("payment_status"),
-                        rs.getString("payment_method"),
-                        rs.getDouble("shipping_fee"),
-                        rs.getString("order_note")
-                );
-                list.add(o);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
+    
     public Order getOrderbyOrderId(int id) {
         Order o = new Order();
         try {
-            String sql = "SELECT Account.account_id, Account.username, Orders.order_id, OrderStatus.status_id, OrderStatus.status_name, Vouchers.voucher_id, Orders.order_note, Orders.shipping_fee, Orders.order_date, \n"
+            String sql = "SELECT Account.account_id, Account.username, Orders.order_id, OrderStatus.status_id, OrderStatus.status_name, UserVouchers.user_voucher_id, Orders.order_note, Orders.shipping_fee, Orders.order_date, \n"
                     + "                  Orders.payment_status, Orders.payment_method, Orders.deliver_to\n"
                     + "FROM     Account INNER JOIN\n"
                     + "                  Orders ON Account.account_id = Orders.account_id INNER JOIN\n"
                     + "                  OrderStatus ON Orders.status_id = OrderStatus.status_id LEFT JOIN\n"
-                    + "                  Vouchers ON Orders.voucher_id = Vouchers.voucher_id where Orders.order_id = ?";
+                    + "                  UserVouchers ON Orders.user_voucher_id = UserVouchers.user_voucher_id where Orders.order_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -248,7 +159,7 @@ public class CustomerOrderDAO {
                 o.setStatusId(rs.getInt("status_id"));
                 o.setStatusName(rs.getString("status_name"));
                 o.setDeliveryAddress(rs.getString("deliver_to"));
-                o.setVoucherId(rs.getInt("voucher_id"));
+                o.setVoucherId(rs.getInt("user_voucher_id"));
                 o.setPaymentStatus(rs.getBoolean("payment_status"));
                 o.setPaymentMethod(rs.getString("payment_method"));
                 o.setShippingFee(rs.getDouble("shipping_fee"));
@@ -258,41 +169,6 @@ public class CustomerOrderDAO {
             e.printStackTrace();
         }
         return o;
-    }
-
-    public List<Order> getAllOrderReceived(int id) {
-        List<Order> list = new ArrayList<>();
-        String sql = "SELECT Account.account_id, Account.username, Orders.order_id, OrderStatus.status_id, OrderStatus.status_name, Orders.shipping_fee, Orders.order_note, Orders.order_date, Vouchers.voucher_id, Orders.payment_status, Orders.payment_method, Orders.deliver_to\n"
-                + "                              FROM     Account INNER JOIN\n"
-                + "                              Orders ON Account.account_id = Orders.account_id INNER JOIN\n"
-                + "                              OrderStatus ON Orders.status_id = OrderStatus.status_id LEFT JOIN\n"
-                + "                          Vouchers ON Orders.voucher_id = Vouchers.voucher_id where Orders.account_id = ? AND status_name IN ('Received')\n"
-                + "               	   order by Orders.last_updated desc ";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Order o = new Order(
-                        rs.getInt("order_id"),
-                        rs.getString("username"),
-                        rs.getInt("account_id"),
-                        rs.getTimestamp("order_date"),
-                        rs.getInt("status_id"),
-                        rs.getString("status_name"),
-                        rs.getString("deliver_to"),
-                        rs.getInt("voucher_id"),
-                        rs.getBoolean("payment_status"),
-                        rs.getString("payment_method"),
-                        rs.getDouble("shipping_fee"),
-                        rs.getString("order_note")
-                );
-                list.add(o);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
     }
 
 }

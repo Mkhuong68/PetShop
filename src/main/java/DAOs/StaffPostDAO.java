@@ -3,90 +3,73 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package DAOs;
-import Model.Post;
-import DB.DBConnection;
-import Model.PostStatus;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
 /**
  *
  * @author THANH THAO
  */
+import DB.DBConnection;
+import Model.Post;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StaffPostDAO {
 
-    // Lấy tất cả bài viết và trạng thái từ cơ sở dữ liệu
-    public List<Post> getAllPosts() {
-        List<Post> posts = new ArrayList<>();
-        String sql = "SELECT p.post_id, p.title, p.content, p.account_id, p.status_id, p.created_date, ps.status_name " +
-                     "FROM Posts p JOIN PostStatus ps ON p.status_id = ps.status_id WHERE p.is_hidden = 0";
+    private Connection conn = DBConnection.getConnection();
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
+    // Lấy danh sách tất cả bài viết của Customer (role_id = 3)
+    public List<Post> getAllCustomerPosts() {
+        List<Post> list = new ArrayList<>();
+        String sql = "SELECT p.* FROM Posts p "
+                + "JOIN Account a ON p.author_id = a.account_id "
+                + "WHERE a.role_id = 3 "
+                + // Chỉ lấy bài của Customer
+                "ORDER BY p.created_date DESC";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Post post = new Post();
-                PostStatus status = new PostStatus();
-                status.setStatusId(rs.getInt("status_id"));
-                status.setStatusName(rs.getString("status_name"));
-
-                post.setPostId(rs.getInt("post_id"));
-                post.setTitle(rs.getString("title"));
-                post.setContent(rs.getString("content"));
-                post.setAccountId(rs.getInt("account_id"));
-                post.setCreatedDate(rs.getTimestamp("created_date"));
-                post.setStatus(status);  // Gán đối tượng PostStatus vào bài viết
-
-                posts.add(post);
+                Post p = new Post(
+                        rs.getInt("post_id"),
+                        rs.getInt("author_id"),
+                        rs.getString("title"),
+                        rs.getString("content"),
+                        rs.getInt("status_id"),
+                        rs.getTimestamp("created_date")
+                );
+                list.add(p);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return posts;
+        return list;
     }
 
-    // Duyệt bài viết (Cập nhật trạng thái bài viết thành Accepted)
-    public boolean acceptPost(int postId) {
-        String sql = "UPDATE Posts SET status_id = 1 WHERE post_id = ?";  // 1 = Accepted
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    // Duyệt bài viết (Accept Post)
+    public void acceptPost(int postId) {
+        String sql = "UPDATE Posts SET status_id = 1, last_updated = GETDATE() WHERE post_id = ?"; // 1 = Accept
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, postId);
-            return ps.executeUpdate() > 0;
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
-    // Từ chối bài viết (Cập nhật trạng thái bài viết thành Rejected và lưu lý do từ chối)
-    public boolean rejectPost(int postId, String rejectReason) {
-        String sql = "UPDATE Posts SET status_id = 2, reject_reason = ? WHERE post_id = ?";  // 2 = Rejected
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, rejectReason);
-            ps.setInt(2, postId);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    // Xóa bài viết
-    public boolean deletePost(int postId) {
-        String sql = "UPDATE Posts SET is_hidden = 1 WHERE post_id = ?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    // Xóa bài viết (Delete Post)
+    public void deletePost(int postId) {
+        String sql = "DELETE FROM Posts WHERE post_id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, postId);
-            return ps.executeUpdate() > 0;
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 }

@@ -4,18 +4,19 @@
  */
 package Model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
  * @author tvhun
  */
 public class Comment {
+
     private int commentId;
     private int postId;
     private int accountId;
     private String content;
-    private Date createdDate;
+    private Timestamp createdDate;
 
     public int getCommentId() {
         return commentId;
@@ -49,17 +50,18 @@ public class Comment {
         this.content = content;
     }
 
-    public Date getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Comment() {}
+    public Comment() {
+    }
 
-    public Comment(int commentId, int postId, int accountId, String content, Date createdDate) {
+    public Comment(int commentId, int postId, int accountId, String content, Timestamp createdDate) {
         this.commentId = commentId;
         this.postId = postId;
         this.accountId = accountId;

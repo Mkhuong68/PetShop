@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <!-- Định nghĩa các Servlet -->
-   <servlet>
-    <servlet-name>UpdateProfileController</servlet-name>
-    <servlet-class>Controllers.UpdateProfileController</servlet-class>
-</servlet>
-
-<servlet-mapping>
-    <servlet-name>UpdateProfileController</servlet-name>
-    <url-pattern>/UpdateProfileController</url-pattern>
-</servlet-mapping>
-
-
+    <servlet>
+        <servlet-name>UpdateProfileController</servlet-name>
+        <servlet-class>Controllers.UpdateProfileController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StaffCommentController</servlet-name>
+        <servlet-class>Controllers.StaffCommentController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StaffPostController</servlet-name>
+        <servlet-class>Controllers.StaffPostController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProfileController</servlet-name>
+        <url-pattern>/UpdateProfileController</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>ProductController</servlet-name>
         <servlet-class>Controllers.ProductController</servlet-class>
@@ -65,6 +70,14 @@
     <servlet-mapping>
         <servlet-name>StaffManageCommentsController</servlet-name>
         <url-pattern>/StaffManageCommentsController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffCommentController</servlet-name>
+        <url-pattern>/StaffCommentController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StaffPostController</servlet-name>
+        <url-pattern>/StaffPostController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

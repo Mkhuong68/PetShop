@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <!-- Định nghĩa các Servlet -->
+    <welcome-file-list>
+        <welcome-file>Home</welcome-file>
+    </welcome-file-list>
     <servlet>
         <servlet-name>CustomerPostController</servlet-name>
         <servlet-class>Controllers.CustomerPostController</servlet-class>
@@ -29,10 +33,6 @@
         <servlet-class>Controllers.ProductDetailController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>HomepageController</servlet-name>
-        <servlet-class>Controllers.HomepageController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>CustomerOrderController</servlet-name>
         <servlet-class>Controllers.CustomerOrderController</servlet-class>
     </servlet>
@@ -52,10 +52,22 @@
         <servlet-name>AdminRevenueReportController</servlet-name>
         <servlet-class>Controllers.AdminRevenueReportController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>MoMoPaymentServlet</servlet-name>
+        <servlet-class>Controllers.MoMoPaymentServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfirmCheckOut</servlet-name>
+        <servlet-class>Controllers.ConfirmCheckOut</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/HomeServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>Controllers.HomeServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>CustomerPostController</servlet-name>
         <url-pattern>/CustomerPostController</url-pattern>
@@ -85,10 +97,6 @@
         <url-pattern>/ProductDetail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>HomepageController</servlet-name>
-        <url-pattern>/Home</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>CustomerOrderController</servlet-name>
         <url-pattern>/OrderPage</url-pattern>
     </servlet-mapping>
@@ -108,11 +116,48 @@
         <servlet-name>AdminRevenueReportController</servlet-name>
         <url-pattern>/AdminRevenueReportController</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VoucherController</servlet-name>
+        <url-pattern>/ManageVoucher</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>VoucherController</servlet-name>
+        <servlet-class>Controllers.VoucherController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductController</servlet-name>
+        <servlet-class>Controllers.ProductController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HomepageController</servlet-name>
+        <servlet-class>Controllers.HomepageController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CartController</servlet-name>
+        <servlet-class>Controllers.CartController</servlet-class>
+    </servlet>
+    <!-- Mapping URL đến các Servlet -->
+    <servlet-mapping>
+        <servlet-name>HomepageController</servlet-name>
+        <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CartController</servlet-name>
+        <url-pattern>/Cart</url-pattern>
+    </servlet-mapping>
+    <!-- Cấu hình Session -->
+    <servlet-mapping>
+        <servlet-name>MoMoPaymentServlet</servlet-name>
+        <url-pattern>/MoMoPaymentServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmCheckOut</servlet-name>
+        <url-pattern>/ConfirmCheckOut</url-pattern>
+    </servlet-mapping>
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
+    <!-- Thêm các Servlet khác -->
     <servlet>
         <servlet-name>VerifyEmailController</servlet-name>
         <servlet-class>Controllers.VerifyEmailController</servlet-class>
@@ -121,10 +166,7 @@
         <servlet-name>LoginController</servlet-name>
         <servlet-class>Controllers.LoginController</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>HomeServlet</servlet-name>
-        <servlet-class>Controllers.HomeServlet</servlet-class>
-    </servlet>
+    <!-- Mapping URL đến các Servlet -->
     <servlet-mapping>
         <servlet-name>VerifyEmailController</servlet-name>
         <url-pattern>/verifyEmail</url-pattern>
@@ -137,24 +179,29 @@
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
-    <welcome-file-list>
-        <welcome-file>login</welcome-file>
-    </welcome-file-list>
     <servlet>
-        <servlet-name>CustomerProfileController</servlet-name>
-        <servlet-class>Controllers.CustomerProfileController</servlet-class>
+        <servlet-name>CategoryController</servlet-name>
+        <servlet-class>Controllers.CategoryController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>CustomerProfileController</servlet-name>
-        <url-pattern>/viewProfile</url-pattern>
+        <servlet-name>CategoryController</servlet-name>
+        <url-pattern>/CategoryController</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>BanCustomerAccountController</servlet-name>
-        <servlet-class>Controllers.BanCustomerAccountController</servlet-class>
+        <servlet-name>NotificationController</servlet-name>
+        <servlet-class>Controllers.NotificationController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>NotificationDetailController</servlet-name>
+        <servlet-class>Controllers.NotificationDetailController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>BanCustomerAccountController</servlet-name>
-        <url-pattern>/BanCustomerAccountController</url-pattern>
+        <servlet-name>NotificationController</servlet-name>
+        <url-pattern>/notificationsJson</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NotificationDetailController</servlet-name>
+        <url-pattern>/NotificationDetailController</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>DeliveryOrderListController</servlet-name>
@@ -163,5 +210,13 @@
     <servlet-mapping>
         <servlet-name>DeliveryOrderListController</servlet-name>
         <url-pattern>/deliveryList</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UpdateProfileController</servlet-name>
+        <servlet-class>Controllers.UpdateProfileController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProfileController</servlet-name>
+        <url-pattern>/UpdateProfileController</url-pattern>
     </servlet-mapping>
 </web-app>

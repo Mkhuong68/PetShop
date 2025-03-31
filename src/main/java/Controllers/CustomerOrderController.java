@@ -236,6 +236,7 @@ public class CustomerOrderController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Product product = new Product();
+        ProductDAO p = new ProductDAO();
         CartDAO cart = new CartDAO();
         OrderDetailDAO odDAO = new OrderDetailDAO();
         int productId = -1;
@@ -276,6 +277,9 @@ public class CustomerOrderController extends HttpServlet {
 
         if (voucherCode != null && !voucherCode.trim().isEmpty()) {
             userVoucherId = v.getVoucherIdByAccId(voucherCode);
+            Integer voucherId = v.getVoucherIdByAccId(voucherCode);
+            boolean isUsed = true;
+            v.updateVoucherIsUsed(isUsed, voucherId);
             if (userVoucherId != null) {
                 double voucherDiscount = v.getVoucherDiscount(userVoucherId);
 
@@ -344,6 +348,11 @@ public class CustomerOrderController extends HttpServlet {
                 int cartItemId = item.getCartItemId();
                 productId = item.getProductId();
                 quantity = item.getQuantity();
+                int stock = p.getStockQuantity(productId);
+                int stockRemain = stock - quantity;
+                int stockSold = p.getSoldQuantity(productId) + quantity;
+                p.updateSoldQuantity(stockSold, productId);
+                p.updateStockQuantity(stockRemain, productId);
                 purchasePrice = item.getFinalPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
                 OrderDetail detail = new OrderDetail(0, lastId, productId, quantity, finalAmount.doubleValue(), purchasePrice.doubleValue());
                 boolean isAdded = odDAO.insertOrderDetail(detail);
@@ -357,6 +366,11 @@ public class CustomerOrderController extends HttpServlet {
             CartItem cartItem = (CartItem) session.getAttribute("dataProduct");
             quantity = cartItem.getQuantity();
             productId = cartItem.getProductId();
+            int stock = p.getStockQuantity(productId);
+            int stockRemain = stock - quantity;
+            int stockSold = p.getSoldQuantity(productId) + quantity;
+            p.updateSoldQuantity(stockSold, productId);
+            p.updateStockQuantity(stockRemain, productId);
             purchasePrice = cartItem.getOriginalPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
             ProductDAO pDao = new ProductDAO();
             product = pDao.getProductById(productId);

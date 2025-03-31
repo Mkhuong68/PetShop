@@ -148,7 +148,7 @@ public class VoucherDAO {
         List<Voucher> list = new ArrayList<>();
         String sql = "  SELECT * FROM vouchers WHERE voucher_id = ?\n"
                 + "                AND GETDATE() BETWEEN voucher_valid_from AND voucher_valid_to\n"
-                + "                AND voucher_status = 'TRUE'";
+                + "                AND is_used = 'FALSE'  AND is_hidden = 'FALSE'";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, voucherId);
@@ -172,5 +172,16 @@ public class VoucherDAO {
             System.out.println(e);
         }
         return list;
+    }
+
+    public void updateVoucherIsUsed(boolean isUsed, Integer voucherId) {
+        String sql = "UPDATE Vouchers SET is_used = ?  WHERE voucher_id = ?";
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBoolean(1, isUsed);
+            ps.setInt(2, voucherId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

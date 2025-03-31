@@ -4,6 +4,7 @@
  */
 package DAOs;
 
+import java.math.BigDecimal;
 import DB.DBConnection;
 import Model.Product;
 import java.sql.Connection;
@@ -19,37 +20,88 @@ import java.util.List;
  */
 public class ProductDAO {
 
-    public List<Product> getTopProducts() {
-        List<Product> list = new ArrayList<>();
-        String sql = "SELECT TOP 4 p.product_id, p.product_name, p.product_description, p.product_price, p.product_image, p.sold_quantity, "
-                + "       AVG(CAST(pf.rating AS FLOAT)) as avg_rating "
-                + "FROM Products p "
-                + "LEFT JOIN OrderDetails od ON p.product_id = od.product_id "
-                + "LEFT JOIN ProductFeedback pf ON od.order_detail_id = pf.order_detail_id "
-                + "GROUP BY p.product_id, p.product_name, p.product_description, p.product_price, p.product_image, p.sold_quantity "
-                + "ORDER BY p.sold_quantity DESC";
-        try ( Connection conn = DBConnection.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+    public void updateSoldQuantity(int quantity, int productId) {
+        String sql = "UPDATE Products SET sold_quantity = ?  WHERE product_id = ?";
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, quantity);
+            ps.setInt(2, productId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            while (rs.next()) {
-                Product p = new Product();
-                p.setProductId(rs.getInt("product_id"));
-                p.setProductName(rs.getString("product_name"));
-                p.setProductDescription(rs.getString("product_description"));
-                p.setProductPrice(rs.getBigDecimal("product_price"));
-                p.setProductImage(rs.getString("product_image"));
-                p.setSoldQuantity(rs.getInt("sold_quantity"));
-                // Nếu avg_rating là null (chưa có phản hồi) thì gán giá trị 0
-                double avgRating = rs.getDouble("avg_rating");
-                if (rs.wasNull()) {
-                    avgRating = 0.0;
-                }
-                p.setRating(avgRating);
-                list.add(p);
+    public void updateStockQuantity(int quantity, int productId) {
+        String sql = "UPDATE Products SET stock_quantity = ?  WHERE product_id = ?";
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, quantity);
+            ps.setInt(2, productId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getStockQuantity(int productId) {
+        int stock = -1;
+        String sql = "Select stock_quantity from Products WHERE product_id = ?";
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                stock = rs.getInt("stock_quantity");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return list;
+        return stock;
+    }
+
+    public int getSoldQuantity(int productId) {
+        int stock = -1;
+        String sql = "Select sold_quantity from Products WHERE product_id = ?";
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                stock = rs.getInt("sold_quantity");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stock;
+    }
+
+    public List<Product> getTopProducts() {
+        List<Product> topProducts = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE rating IS NOT NULL ORDER BY rating DESC LIMIT 10"; // Truy vấn sản phẩm theo rating cao nhất
+
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Product product = new Product();
+                product.setProductId(rs.getInt("product_id"));
+                product.setProductName(rs.getString("product_name"));
+                product.setProductDescription(rs.getString("product_description"));
+                product.setProductPrice(rs.getBigDecimal("product_price"));
+                product.setProductImage(rs.getString("product_image"));
+                product.setCategoryId(rs.getInt("category_id"));
+
+                // Lấy và gán giá trị rating cho sản phẩm
+                double rating = rs.getDouble("rating");
+                if (rating >= 0 && rating <= 5) { // Kiểm tra rating hợp lệ
+                    product.setRating(rating);
+                } else {
+                    product.setRating(0); // Gán giá trị mặc định nếu rating không hợp lệ
+                }
+
+                topProducts.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return topProducts;
     }
 
     // Phiên bản gốc không sắp xếp
@@ -273,11 +325,32 @@ public class ProductDAO {
                 product.setProductImage(rs.getString("product_image"));
                 product.setSoldQuantity(rs.getInt("sold_quantity"));
                 // Nếu cần, có thể set created_date và rating
-                product.setCreatedDate(rs.getTimestamp("created_date"));
+                product.setCreatedDate(rs.getDate("created_date"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return product;
     }
+
+    public BigDecimal getProductPrice(int productId) {
+        BigDecimal price = null;
+        String sql = "SELECT product_price FROM Products WHERE product_id = ?";
+
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                price = rs.getBigDecimal("product_price");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return price != null ? price : new BigDecimal("0");
+    }
+
 }

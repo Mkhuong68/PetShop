@@ -37,7 +37,7 @@ public class AdminRevenueReportDAO {
                 + "    FROM OrderDetails\n"
                 + "    GROUP BY order_id\n"
                 + ") AS filtered_orders ON o.order_id = filtered_orders.order_id\n"
-                + "WHERE CAST(o.order_date AS DATE) = ?";
+                + "WHERE CAST(o.order_date AS DATE) = ? AND status_id = 4";
         try {
             Connection conn = DBConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -61,7 +61,7 @@ public class AdminRevenueReportDAO {
                 + "    FROM OrderDetails\n"
                 + "    GROUP BY order_id\n"
                 + ") d ON o.order_id = d.order_id\n"
-                + "WHERE CAST(o.order_date AS DATE) = ?";
+                + "WHERE CAST(o.order_date AS DATE) = ? AND status_id = 4";
         try {
             Connection conn = DBConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -79,7 +79,7 @@ public class AdminRevenueReportDAO {
     public int getTotalOrdersByDate(Date reportDate) {
         String sql = "SELECT COUNT(order_id) AS total_orders \n"
                 + "FROM Orders \n"
-                + "WHERE CAST(order_date AS DATE) = ?;";
+                + "WHERE CAST(order_date AS DATE) = ? AND status_id = 4;";
         try {
             Connection conn = DBConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);

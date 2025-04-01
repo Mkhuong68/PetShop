@@ -30,7 +30,14 @@
                         <h2>${post.title}</h2>
                         <p>${post.content}</p>
                         <a class="btn-update" href="/CustomerUpdatePostController?postId=${post.postId}">Update Post</a>
-                        <a class="btn-comment" href="?postId=${post.postId}&show=true">Comment</a>
+                        <c:choose>
+                            <c:when test="${param.show == 'true' && param.postId == post.postId}">
+                                <a class="btn-comment" href="?postId=${post.postId}&show=false">Hide Comments</a>
+                            </c:when>
+                            <c:otherwise>
+                                <a class="btn-comment" href="?postId=${post.postId}&show=true">Show Comments</a>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
 
                     <c:if test="${param.show == 'true' && param.postId == post.postId}">

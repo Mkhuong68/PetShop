@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controllers;
 
 import DAOs.CustomerPostDAO;
@@ -63,21 +59,7 @@ public class CustomerCommentController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String pId = request.getParameter("postId");
-        int postId = Integer.parseInt(pId);
-        CustomerPostDAO cd = new CustomerPostDAO();
-        Post post = cd.getPostbyId(postId);
-        if (post != null) {
-            List<Comment> comments = cd.getCommentsByPostId(postId);
-            if (comments.size() < 1) {
-                request.setAttribute("msg", "No comments");
-            } else {
-                request.setAttribute("comments", comments);
-            }
-            request.setAttribute("post", post);
-            request.getRequestDispatcher("cpost.jsp").forward(request, response);
-        }
-
+        response.sendRedirect(request.getContextPath() + "/CustomerPostController");
     }
 
     /**
@@ -93,7 +75,7 @@ public class CustomerCommentController extends HttpServlet {
             throws ServletException, IOException {
         String pId = request.getParameter("postId");
         int postId = Integer.parseInt(pId);
-        String comment = request.getParameter("comment");
+        String content = request.getParameter("comment");
         Timestamp createdDate = new Timestamp(System.currentTimeMillis());
         CustomerPostDAO cd = new CustomerPostDAO();
         String loggedInUser = null;
@@ -119,12 +101,19 @@ public class CustomerCommentController extends HttpServlet {
         int accountId = cd.getAccountId(loggedInUser);
         if (accountId < 0) {
             request.setAttribute("msg", "You are not logged in");
-            request.getRequestDispatcher("cpost .jsp").forward(request, response);
+            request.getRequestDispatcher("cpost.jsp").forward(request, response);
             return;
         }
-        cd.addComment(new Comment(0, postId, accountId, comment, createdDate));
-        response.sendRedirect(request.getContextPath() + "/CustomerPostController");
 
+        // Tạo comment mới với Model đã cập nhật
+        Comment comment = new Comment();
+        comment.setPostId(postId);
+        comment.setAccountId(accountId);
+        comment.setContent(content);
+        comment.setCreatedDate(createdDate);
+
+        cd.addComment(comment);
+        response.sendRedirect(request.getContextPath() + "/CustomerPostController?postId="+ postId +"&show=true");
     }
 
     /**
@@ -136,5 +125,4 @@ public class CustomerCommentController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

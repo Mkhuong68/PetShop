@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controllers;
 
 import DAOs.CustomerPostDAO;
 import Model.Account;
+import Model.Comment;
 import Model.Post;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -64,11 +61,30 @@ public class CustomerPostController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         CustomerPostDAO c = new CustomerPostDAO();
-        List<Post> list = c.getAllPost();
-        if (list != null) {
-            request.setAttribute("list", list);
-            request.getRequestDispatcher("/cpost.jsp").forward(request, response);
+        String pId = request.getParameter("postId");
+
+        Post post = null;
+        List<Comment> comments = new ArrayList<>();
+
+        if (pId != null) {
+            try {
+                int postId = Integer.parseInt(pId);
+                post = c.getPostbyId(postId);
+                if (post != null) {
+                    comments = c.getCommentsByPostId(postId); 
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("msg", "Invalid post ID");
+            }
         }
+
+        List<Post> list = c.getAllPost();
+
+        request.setAttribute("post", post);
+        request.setAttribute("comments", comments);
+        request.setAttribute("list", list);
+
+        request.getRequestDispatcher("/cpost.jsp").forward(request, response);
     }
 
     /**
@@ -126,10 +142,17 @@ public class CustomerPostController extends HttpServlet {
         }
         Timestamp createdDate = new Timestamp(System.currentTimeMillis());
         int status_id = 3;
-        Post p = new Post(0, account_id, title, content, status_id, createdDate);
-        c.addPost(p);
-        response.sendRedirect(request.getContextPath() + "/CustomerPostController");
 
+        // Sử dụng model đã cập nhật
+        Post post = new Post();
+        post.setAccountId(account_id);
+        post.setTitle(title);
+        post.setContent(content);
+        post.setStatusId(status_id);
+        post.setCreatedDate(createdDate);
+
+        c.addPost(post);
+        response.sendRedirect(request.getContextPath() + "/CustomerPostController");
     }
 
     /**
@@ -141,5 +164,4 @@ public class CustomerPostController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

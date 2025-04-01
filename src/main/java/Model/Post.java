@@ -10,37 +10,17 @@ import java.sql.Timestamp;
  *
  * @author tvhun
  */
-
 public class Post {
 
     private int postId;
     private int accountId;
     private String title;
     private String content;
-    private int statusId;  // Giữ lại statusId
-    private PostStatus status;  // Thêm PostStatus để lấy tên trạng thái
+    private int statusId;
     private Timestamp createdDate;
-    private String rejectReason;
+    private String rejectReason; // Thêm thuộc tính reject_reason
+    private String deleteReason; // Thêm thuộc tính delete_reason
 
-    // Getter và Setter cho statusId
-    public int getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(int statusId) {
-        this.statusId = statusId;
-    }
-
-    // Getter và Setter cho status (PostStatus)
-    public PostStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(PostStatus status) {
-        this.status = status;
-    }
-
-    // Các getter và setter khác
     public int getPostId() {
         return postId;
     }
@@ -73,6 +53,14 @@ public class Post {
         this.content = content;
     }
 
+    public int getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
+    }
+
     public Timestamp getCreatedDate() {
         return createdDate;
     }
@@ -81,16 +69,8 @@ public class Post {
         this.createdDate = createdDate;
     }
 
-    public String getRejectReason() {
-        return rejectReason;
+    public Post() {
     }
-
-    public void setRejectReason(String rejectReason) {
-        this.rejectReason = rejectReason;
-    }
-
-    // Constructor
-    public Post() {}
 
     public Post(int postId, int accountId, String title, String content, int statusId, Timestamp createdDate) {
         this.postId = postId;
@@ -101,8 +81,20 @@ public class Post {
         this.createdDate = createdDate;
     }
 
-    // Phương thức kiểm tra đối tượng Post có hợp lệ không
+    // Constructor đầy đủ với các thuộc tính mới
+    public Post(int postId, int accountId, String title, String content, int statusId, 
+                Timestamp createdDate, String rejectReason, String deleteReason) {
+        this.postId = postId;
+        this.accountId = accountId;
+        this.title = title;
+        this.content = content;
+        this.statusId = statusId;
+        this.createdDate = createdDate;
+        this.rejectReason = rejectReason;
+        this.deleteReason = deleteReason;
+    }
     public static boolean isEmpty(Post p) {
         return p.getPostId() < 0 && p.getAccountId() < 0;
     }
+
 }

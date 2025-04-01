@@ -11,10 +11,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Staff - Comment Management</title>
-        <link rel="stylesheet" type="text/css" href="assets/css/staff-comment.css">
+        <link rel="stylesheet" type="text/css" href="assets/css/staffcomment.css">
     </head>
     <body>
         <h1>Staff - Manage Customer Comments</h1>
+        <a href="manageStaff.jsp" class="back-btn">Back Manage Staff</a> <!-- Added Back button -->
         <table border="1">
             <tr>
                 <th>ID</th>

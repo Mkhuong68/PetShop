@@ -3,18 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package DAOs;
+
 import DB.DBConnection;
 import Model.ProductPromotion;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-/**
- *
- * @author THANH THAO
- */
 
 public class ProductPromotionDAO {
 
@@ -24,26 +21,11 @@ public class ProductPromotionDAO {
         this.conn = DBConnection.getConnection();
     }
 
-    // Lấy danh sách tên sản phẩm
-    public List<String> getProductNames() {
-        List<String> productNames = new ArrayList<>();
-        String sql = "SELECT product_name FROM Products WHERE is_hidden = 0";
-        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                productNames.add(rs.getString("product_name"));
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi SQL khi lấy danh sách tên sản phẩm: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return productNames;
-    }
-
     // Lấy danh sách sản phẩm kèm giá gốc
     public List<ProductPromotion> getProductsWithPrice() {
         List<ProductPromotion> products = new ArrayList<>();
         String sql = "SELECT product_id, product_name, product_price FROM Products WHERE is_hidden = 0";
-        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+        try ( PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 ProductPromotion product = new ProductPromotion();
                 product.setProductId(rs.getInt("product_id"));
@@ -58,36 +40,41 @@ public class ProductPromotionDAO {
         return products;
     }
 
-    // Chuyển đổi product_name thành product_id
-    public int getProductIdByName(String productName) {
-        String sql = "SELECT product_id FROM Products WHERE product_name = ? AND is_hidden = 0";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, productName);
+    // Lấy thông tin sản phẩm theo productId
+    public ProductPromotion getProductById(int productId) {
+        String sql = "SELECT product_id, product_name, product_price FROM Products WHERE product_id = ? AND is_hidden = 0";
+        try ( PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt("product_id");
+                ProductPromotion product = new ProductPromotion();
+                product.setProductId(rs.getInt("product_id"));
+                product.setProductName(rs.getString("product_name"));
+                product.setOriginalPrice(rs.getBigDecimal("product_price"));
+                return product;
             }
         } catch (SQLException e) {
-            System.err.println("Lỗi SQL khi lấy productId theo tên: " + e.getMessage());
+            System.err.println("Lỗi SQL khi lấy thông tin sản phẩm: " + e.getMessage());
             e.printStackTrace();
         }
-        return -1;
+        return null;
     }
 
     // Tạo bản ghi mới trong bảng Promotions và trả về promotion_id
-    public int createPromotion(int discountPercentage, int createdBy) {
-        String sql = "INSERT INTO Promotions (promotion_name, promotion_discount, promotion_valid_from, promotion_valid_to, priority, created_by) " +
-                     "VALUES (?, ?, ?, ?, ?, ?); SELECT SCOPE_IDENTITY() AS promotion_id";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+    public int createPromotion(int discountPercentage, Date validFrom, Date validTo, int createdBy) {
+        String sql = "INSERT INTO Promotions (promotion_name, promotion_discount, promotion_valid_from, promotion_valid_to, priority, created_by) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+        try ( PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, "Khuyến mãi " + discountPercentage + "%");
             stmt.setInt(2, discountPercentage);
-            stmt.setDate(3, new java.sql.Date(System.currentTimeMillis())); // Ngày bắt đầu: hôm nay
-            stmt.setDate(4, new java.sql.Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000)); // Ngày kết thúc: 30 ngày sau
+            stmt.setTimestamp(3, new java.sql.Timestamp(validFrom.getTime()));
+            stmt.setTimestamp(4, new java.sql.Timestamp(validTo.getTime()));
             stmt.setInt(5, 1); // Priority mặc định
             stmt.setInt(6, createdBy); // created_by (giả sử là admin, account_id = 1)
-            ResultSet rs = stmt.executeQuery();
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                return rs.getInt("promotion_id");
+                return rs.getInt(1);
             }
         } catch (SQLException e) {
             System.err.println("Lỗi SQL khi tạo khuyến mãi: " + e.getMessage());
@@ -99,7 +86,7 @@ public class ProductPromotionDAO {
     // Thêm khuyến mãi vào bảng ProductPromotions
     public boolean addPromotion(ProductPromotion promotion) {
         String sql = "INSERT INTO ProductPromotions (product_id, promotion_id) VALUES (?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, promotion.getProductId());
             stmt.setInt(2, promotion.getPromotionId());
             int rowsAffected = stmt.executeUpdate();
@@ -120,12 +107,12 @@ public class ProductPromotionDAO {
     // Lấy danh sách khuyến mãi để hiển thị
     public List<ProductPromotion> getAllPromotions() {
         List<ProductPromotion> promotions = new ArrayList<>();
-        String sql = "SELECT pp.product_id, pp.promotion_id, p.product_name, p.product_price, p.product_image, pr.promotion_name, pr.promotion_discount " +
-                     "FROM ProductPromotions pp " +
-                     "JOIN Products p ON pp.product_id = p.product_id " +
-                     "JOIN Promotions pr ON pp.promotion_id = pr.promotion_id " +
-                     "WHERE p.is_hidden = 0";
-        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+        String sql = "SELECT pp.product_id, pp.promotion_id, p.product_name, p.product_price, p.product_image, pr.promotion_name, pr.promotion_discount, pr.promotion_valid_from, pr.promotion_valid_to "
+                + "FROM ProductPromotions pp "
+                + "JOIN Products p ON pp.product_id = p.product_id "
+                + "JOIN Promotions pr ON pp.promotion_id = pr.promotion_id "
+                + "WHERE p.is_hidden = 0 AND pr.is_hidden = 0";
+        try ( PreparedStatement stmt = conn.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 ProductPromotion promotion = new ProductPromotion();
                 promotion.setProductId(rs.getInt("product_id"));
@@ -135,11 +122,13 @@ public class ProductPromotionDAO {
                 promotion.setOriginalPrice(rs.getBigDecimal("product_price"));
                 promotion.setPromotionName(rs.getString("promotion_name"));
                 promotion.setDiscountPercentage(rs.getInt("promotion_discount"));
+                promotion.setPromotionValidFrom(rs.getTimestamp("promotion_valid_from"));
+                promotion.setPromotionValidTo(rs.getTimestamp("promotion_valid_to"));
 
-                // Tính giá sau khuyến mãi
+                // Tính giá sau giảm
                 BigDecimal originalPrice = promotion.getOriginalPrice();
                 int discountPercentage = promotion.getDiscountPercentage();
-                BigDecimal discountAmount = originalPrice.multiply(BigDecimal.valueOf(discountPercentage)).divide(BigDecimal.valueOf(100));
+                BigDecimal discountAmount = originalPrice.multiply(BigDecimal.valueOf(discountPercentage)).divide(BigDecimal.valueOf(100), 3, BigDecimal.ROUND_HALF_UP);
                 BigDecimal discountedPrice = originalPrice.subtract(discountAmount);
                 promotion.setDiscountedPrice(discountedPrice);
 
@@ -155,7 +144,7 @@ public class ProductPromotionDAO {
     // Cập nhật khuyến mãi
     public boolean updatePromotion(ProductPromotion promotion) {
         String sql = "UPDATE Promotions SET promotion_discount = ? WHERE promotion_id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, promotion.getDiscountPercentage());
             stmt.setInt(2, promotion.getPromotionId());
             int rowsAffected = stmt.executeUpdate();
@@ -170,7 +159,7 @@ public class ProductPromotionDAO {
     // Xóa khuyến mãi
     public boolean deletePromotion(int productId, int promotionId) {
         String sql = "DELETE FROM ProductPromotions WHERE product_id = ? AND promotion_id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, productId);
             stmt.setInt(2, promotionId);
             int rowsAffected = stmt.executeUpdate();
@@ -184,12 +173,12 @@ public class ProductPromotionDAO {
 
     // Lấy thông tin khuyến mãi để chỉnh sửa
     public ProductPromotion getPromotionById(int productId, int promotionId) {
-        String sql = "SELECT pp.product_id, pp.promotion_id, p.product_name, p.product_price, p.product_image, pr.promotion_name, pr.promotion_discount " +
-                     "FROM ProductPromotions pp " +
-                     "JOIN Products p ON pp.product_id = p.product_id " +
-                     "JOIN Promotions pr ON pp.promotion_id = pr.promotion_id " +
-                     "WHERE pp.product_id = ? AND pp.promotion_id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT pp.product_id, pp.promotion_id, p.product_name, p.product_price, p.product_image, pr.promotion_name, pr.promotion_discount, pr.promotion_valid_from, pr.promotion_valid_to "
+                + "FROM ProductPromotions pp "
+                + "JOIN Products p ON pp.product_id = p.product_id "
+                + "JOIN Promotions pr ON pp.promotion_id = pr.promotion_id "
+                + "WHERE pp.product_id = ? AND pp.promotion_id = ? AND p.is_hidden = 0 AND pr.is_hidden = 0";
+        try ( PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, productId);
             stmt.setInt(2, promotionId);
             ResultSet rs = stmt.executeQuery();
@@ -202,11 +191,13 @@ public class ProductPromotionDAO {
                 promotion.setOriginalPrice(rs.getBigDecimal("product_price"));
                 promotion.setPromotionName(rs.getString("promotion_name"));
                 promotion.setDiscountPercentage(rs.getInt("promotion_discount"));
+                promotion.setPromotionValidFrom(rs.getTimestamp("promotion_valid_from"));
+                promotion.setPromotionValidTo(rs.getTimestamp("promotion_valid_to"));
 
-                // Tính giá sau khuyến mãi
+                // Tính giá sau giảm
                 BigDecimal originalPrice = promotion.getOriginalPrice();
                 int discountPercentage = promotion.getDiscountPercentage();
-                BigDecimal discountAmount = originalPrice.multiply(BigDecimal.valueOf(discountPercentage)).divide(BigDecimal.valueOf(100));
+                BigDecimal discountAmount = originalPrice.multiply(BigDecimal.valueOf(discountPercentage)).divide(BigDecimal.valueOf(100), 3, BigDecimal.ROUND_HALF_UP);
                 BigDecimal discountedPrice = originalPrice.subtract(discountAmount);
                 promotion.setDiscountedPrice(discountedPrice);
 
@@ -221,12 +212,12 @@ public class ProductPromotionDAO {
 
     // Lấy thông tin khuyến mãi cho một sản phẩm cụ thể
     public ProductPromotion getPromotionForProduct(int productId) {
-        String sql = "SELECT pp.product_id, pp.promotion_id, p.product_price, pr.promotion_discount, pr.promotion_valid_from, pr.promotion_valid_to " +
-                     "FROM ProductPromotions pp " +
-                     "JOIN Products p ON pp.product_id = p.product_id " +
-                     "JOIN Promotions pr ON pp.promotion_id = pr.promotion_id " +
-                     "WHERE pp.product_id = ? AND p.is_hidden = 0";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT pp.product_id, pp.promotion_id, p.product_price, pr.promotion_discount, pr.promotion_valid_from, pr.promotion_valid_to "
+                + "FROM ProductPromotions pp "
+                + "JOIN Products p ON pp.product_id = p.product_id "
+                + "JOIN Promotions pr ON pp.promotion_id = pr.promotion_id "
+                + "WHERE pp.product_id = ? AND p.is_hidden = 0 AND pr.is_hidden = 0";
+        try ( PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, productId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -235,17 +226,21 @@ public class ProductPromotionDAO {
                 promotion.setPromotionId(rs.getInt("promotion_id"));
                 promotion.setOriginalPrice(rs.getBigDecimal("product_price"));
                 promotion.setDiscountPercentage(rs.getInt("promotion_discount"));
-                promotion.setPromotionValidFrom(rs.getDate("promotion_valid_from"));
-                promotion.setPromotionValidTo(rs.getDate("promotion_valid_to"));
+                promotion.setPromotionValidFrom(rs.getTimestamp("promotion_valid_from"));
+                promotion.setPromotionValidTo(rs.getTimestamp("promotion_valid_to"));
 
-                // Tính giá sau khuyến mãi
+                // Tính giá sau giảm
                 BigDecimal originalPrice = promotion.getOriginalPrice();
                 int discountPercentage = promotion.getDiscountPercentage();
-                BigDecimal discountAmount = originalPrice.multiply(BigDecimal.valueOf(discountPercentage)).divide(BigDecimal.valueOf(100));
+                BigDecimal discountAmount = originalPrice.multiply(BigDecimal.valueOf(discountPercentage)).divide(BigDecimal.valueOf(100), 3, BigDecimal.ROUND_HALF_UP);
                 BigDecimal discountedPrice = originalPrice.subtract(discountAmount);
                 promotion.setDiscountedPrice(discountedPrice);
 
-                return promotion;
+                // Kiểm tra ngày hợp lệ
+                Date now = new Date();
+                if (now.after(promotion.getPromotionValidFrom()) && now.before(promotion.getPromotionValidTo())) {
+                    return promotion;
+                }
             }
         } catch (SQLException e) {
             System.err.println("Lỗi SQL khi lấy thông tin khuyến mãi cho sản phẩm: " + e.getMessage());

@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Thêm Khuyến Mãi</title>
+        <title>Add Promotion</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
         <style>
             body {
@@ -36,55 +36,65 @@
     </head>
     <body>
         <div class="container">
-            <h2 class="text-center mb-4">Thêm Khuyến Mãi</h2>
+            <h2 class="text-center mb-4">Add Promotion</h2>
 
-            <!-- Hiển thị thông báo lỗi nếu có -->
+            <!-- Display error message if any -->
             <c:if test="${not empty errorMessage}">
                 <div class="alert alert-danger">
                     ${errorMessage}
                 </div>
             </c:if>
 
-            <!-- Form thêm khuyến mãi -->
+            <!-- Add promotion form -->
             <form action="ProductPromotionController" method="post">
                 <input type="hidden" name="action" value="add">
                 <div class="form-group">
-                    <label for="productName">Tên Sản Phẩm:</label>
-                    <select name="productName" id="productName" class="form-control" required>
-                        <option value="">-- Chọn sản phẩm --</option>
-                        <c:forEach var="productName" items="${productNames}">
-                            <option value="${productName}">${productName}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Giá Gốc:</label>
-                    <select class="form-control" disabled>
+                    <label for="productId">Product Name:</label>
+                    <select name="productId" id="productId" class="form-control" required onchange="updateOriginalPrice()">
+                        <option value="">-- Select a product --</option>
                         <c:forEach var="product" items="${products}">
-                            <option data-product-name="${product.productName}">
-                                <fmt:formatNumber value="${product.originalPrice}" pattern="#,##0" /> VND
-                            </option>
+                            <option value="${product.productId}" data-price="${product.originalPrice}">${product.productName}</option>
                         </c:forEach>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="discountPercentage">Phần Trăm Giảm Giá (%):</label>
+                    <label for="originalPrice">Original Price:</label>
+                    <input type="text" id="originalPrice" class="form-control" readonly value="">
+                </div>
+                <div class="form-group">
+                    <label for="discountPercentage">Discount Percentage (%):</label>
                     <input type="number" name="discountPercentage" id="discountPercentage" class="form-control" min="0" max="100" required>
                 </div>
                 <div class="form-group">
-                    <label for="validFrom">Ngày Bắt Đầu:</label>
-                    <input type="date" name="validFrom" id="validFrom" class="form-control" required>
+                    <label for="validFrom">Start Date:</label>
+                    <input type="date" name="validFrom" id="validFrom" required>
+                    <div class="date-display" id="validFromDisplay"></div>
                 </div>
                 <div class="form-group">
-                    <label for="validTo">Ngày Kết Thúc:</label>
-                    <input type="date" name="validTo" id="validTo" class="form-control" required>
+                    <label for="validTo">End Date:</label>
+                    <input type="date" name="validTo" id="validTo" required>
+                    <div class="date-display" id="validToDisplay"></div>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Thêm Khuyến Mãi</button>
-                <a href="ProductPromotionController?action=view" class="btn btn-secondary w-100 mt-3">Quay Lại</a>
+                <button type="submit" class="btn btn-primary w-100">Add Promotion</button>
+                <a href="ProductPromotionController?action=view" class="btn btn-secondary w-100 mt-3">Back</a>
             </form>
         </div>
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function updateOriginalPrice() {
+                const productSelect = document.getElementById("productId");
+                const originalPriceInput = document.getElementById("originalPrice");
+                const selectedOption = productSelect.options[productSelect.selectedIndex];
+                const price = selectedOption.getAttribute("data-price");
+
+                if (price) {
+                    originalPriceInput.value = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'VND'}).format(price);
+                } else {
+                    originalPriceInput.value = "";
+                }
+            }
+        </script>
     </body>
 </html>

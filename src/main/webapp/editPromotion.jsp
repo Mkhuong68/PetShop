@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Cập Nhật Khuyến Mãi</title>
+        <title>Edit Promotion</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
         <style>
             body {
@@ -36,34 +36,34 @@
     </head>
     <body>
         <div class="container">
-            <h2 class="text-center mb-4">Cập Nhật Khuyến Mãi</h2>
+            <h2 class="text-center mb-4">Update Promotion</h2>
 
-            <!-- Hiển thị thông báo lỗi nếu có -->
+            <!-- Display error message if any -->
             <c:if test="${not empty errorMessage}">
                 <div class="alert alert-danger">
                     ${errorMessage}
                 </div>
             </c:if>
 
-            <!-- Form cập nhật khuyến mãi -->
+            <!-- Update promotion form -->
             <form action="ProductPromotionController" method="post">
                 <input type="hidden" name="action" value="update">
                 <input type="hidden" name="productId" value="${promotion.productId}">
                 <input type="hidden" name="promotionId" value="${promotion.promotionId}">
                 <div class="form-group">
-                    <label for="productName">Tên Sản Phẩm:</label>
+                    <label for="productName">Product Name:</label>
                     <input type="text" name="productName" id="productName" class="form-control" value="${promotion.productName}" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="originalPrice">Giá Gốc:</label>
+                    <label for="originalPrice">Original Price:</label>
                     <input type="text" name="originalPrice" id="originalPrice" class="form-control" value="<fmt:formatNumber value='${promotion.originalPrice}' pattern='#,##0' /> VND" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="discountPercentage">Phần Trăm Giảm Giá (%):</label>
+                    <label for="discountPercentage">Discount Percentage (%):</label>
                     <input type="number" name="discountPercentage" id="discountPercentage" class="form-control" value="${promotion.discountPercentage}" min="0" max="100" required>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Cập Nhật</button>
-                <a href="ProductPromotionController?action=list" class="btn btn-secondary w-100 mt-3">Quay Lại</a>
+                <button type="submit" class="btn btn-primary w-100">Update</button>
+                <a href="ProductPromotionController?action=list" class="btn btn-secondary w-100 mt-3">Back</a>
             </form>
         </div>
 

@@ -27,8 +27,7 @@ public class StaffPostDAO {
         String sql = "SELECT p.* FROM Posts p "
                 + "JOIN Account a ON p.author_id = a.account_id "
                 + "WHERE a.role_id = 3 "
-                + // Chỉ lấy bài của Customer
-                "ORDER BY p.created_date DESC";
+                + "ORDER BY p.created_date DESC";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -39,7 +38,9 @@ public class StaffPostDAO {
                         rs.getString("title"),
                         rs.getString("content"),
                         rs.getInt("status_id"),
-                        rs.getTimestamp("created_date")
+                        rs.getTimestamp("created_date"),
+                        rs.getString("reject_reason"), // Lấy reject_reason
+                        rs.getString("delete_reason")  // Lấy delete_reason
                 );
                 list.add(p);
             }
@@ -51,7 +52,7 @@ public class StaffPostDAO {
 
     // Duyệt bài viết (Accept Post)
     public void acceptPost(int postId) {
-        String sql = "UPDATE Posts SET status_id = 1, last_updated = GETDATE() WHERE post_id = ?"; // 1 = Accept
+        String sql = "UPDATE Posts SET status_id = 1, last_updated = GETDATE() WHERE post_id = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, postId);
@@ -61,11 +62,36 @@ public class StaffPostDAO {
         }
     }
 
-    // Xóa bài viết (Delete Post)
-    public void deletePost(int postId) {
-        String sql = "DELETE FROM Posts WHERE post_id = ?";
+    // Từ chối bài viết (Reject Post) với lý do
+    public void rejectPost(int postId, String reason) {
+        String sql = "UPDATE Posts SET status_id = 2, reject_reason = ?, last_updated = GETDATE() WHERE post_id = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, reason);
+            ps.setInt(2, postId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Xóa bài viết (Delete Post) với lý do
+    public void deletePost(int postId, String reason) {
+        // Lưu lý do xóa trước khi xóa bài viết
+        String updateSql = "UPDATE Posts SET delete_reason = ?, last_updated = GETDATE() WHERE post_id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(updateSql);
+            ps.setString(1, reason);
+            ps.setInt(2, postId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Xóa bài viết
+        String deleteSql = "DELETE FROM Posts WHERE post_id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(deleteSql);
             ps.setInt(1, postId);
             ps.executeUpdate();
         } catch (SQLException e) {

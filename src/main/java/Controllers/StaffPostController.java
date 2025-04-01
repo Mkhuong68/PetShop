@@ -2,6 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package Controllers;
 
 import DAOs.StaffPostDAO;
@@ -42,8 +46,12 @@ public class StaffPostController extends HttpServlet {
 
         if ("accept".equals(action)) {
             staffPostDAO.acceptPost(postId);
+        } else if ("reject".equals(action)) {
+            String rejectReason = request.getParameter("rejectReason");
+            staffPostDAO.rejectPost(postId, rejectReason);
         } else if ("delete".equals(action)) {
-            staffPostDAO.deletePost(postId);
+            String deleteReason = request.getParameter("deleteReason");
+            staffPostDAO.deletePost(postId, deleteReason);
         }
         response.sendRedirect(request.getContextPath() + "/StaffPostController");
     }

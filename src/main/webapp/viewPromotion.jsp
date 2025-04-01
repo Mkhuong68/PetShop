@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Quản Lý Khuyến Mãi</title>
+        <title>Manage Promotions</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
         <style>
             body {
@@ -45,9 +45,9 @@
     </head>
     <body>
         <div class="container">
-            <h2 class="text-center mb-4">Quản Lý Khuyến Mãi</h2>
+            <h2 class="text-center mb-4">Manage Promotions</h2>
 
-            <!-- Hiển thị thông báo thành công hoặc lỗi -->
+            <!-- Display success or error message -->
             <c:if test="${not empty successMessage}">
                 <div class="alert alert-success">
                     ${successMessage}
@@ -59,15 +59,15 @@
                 </div>
             </c:if>
 
-            <!-- Bảng danh sách khuyến mãi -->
+            <!-- Promotions table -->
             <table class="table table-bordered">
                 <thead class="table-dark">
                     <tr>
-                        <th>Tên Sản Phẩm</th>
-                        <th>Giá Gốc</th>
-                        <th>Giá Sau Khuyến Mãi</th>
-                        <th>Phần Trăm Giảm Giá</th>
-                        <th>Hành Động</th>
+                        <th>Product Name</th>
+                        <th>Original Price</th>
+                        <th>Discounted Price</th>
+                        <th>Discount Percentage</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,19 +82,18 @@
                             </td>
                             <td>${promotion.discountPercentage}%</td>
                             <td>
-                                <a href="ProductPromotionController?action=edit&productId=${promotion.productId}&promotionId=${promotion.promotionId}" class="btn btn-warning btn-sm">Sửa</a>
-                                <a href="ProductPromotionController?action=delete&productId=${promotion.productId}&promotionId=${promotion.promotionId}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa khuyến mãi này?')">Xóa</a>
-                            </td>
+                                <a href="ProductPromotionController?action=edit&productId=${promotion.productId}&promotionId=${promotion.promotionId}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="ProductPromotionController?action=delete&productId=${promotion.productId}&promotionId=${promotion.promotionId}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this promotion?')">Delete</a>                            </td>
                         </tr>
                     </c:forEach>
                     <c:if test="${empty productPromotions}">
                         <tr>
-                            <td colspan="5" class="text-center">Không có khuyến mãi nào.</td>
+                            <td colspan="5" class="text-center">No promotions available.</td>
                         </tr>
                     </c:if>
                 </tbody>
             </table>
-            <a href="${pageContext.request.contextPath}/manageStaff.jsp" class="btn btn-secondary w-100 mt-3">Quay Lại</a>
+            <a href="${pageContext.request.contextPath}/manageStaff.jsp" class="btn btn-secondary w-100 mt-3">Back</a>
         </div>
 
         <!-- Bootstrap JS -->

@@ -38,12 +38,9 @@ public class DeliveryOrderListController extends HttpServlet {
         Account currentUser = (Account) request.getSession().getAttribute("account");
         if (currentUser == null) {
             // Nếu chưa đăng nhập, chuyển hướng về trang đăng nhập
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("/login");
             return;
         }
-
-        // 2. Nếu đã đăng nhập, tiếp tục xử lý logic cho DeliveryOrderList
-        // Lấy tham số action
         String action = request.getParameter("action");
         if (action != null) {
             if (action.equals("edit")) {
@@ -56,6 +53,8 @@ public class DeliveryOrderListController extends HttpServlet {
                         request.setAttribute("customerName", orderDetailsMap.get("customerName"));
                         request.setAttribute("customerPhone", orderDetailsMap.get("customerPhone"));
                         request.setAttribute("customerAddress", orderDetailsMap.get("customerAddress"));
+                        request.setAttribute("currentStatusId", deliveryDAO.getCurrentStatusId(deliveryId));
+
                         RequestDispatcher dispatcher = request.getRequestDispatcher("editDeliveryOrder.jsp");
                         dispatcher.forward(request, response);
                         return;
@@ -88,10 +87,44 @@ public class DeliveryOrderListController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request, response);
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    String action = request.getParameter("action");
+
+    if (action != null && action.equals("updateStatus")) {
+        try {
+            int deliveryId = Integer.parseInt(request.getParameter("deliveryId"));
+            int newStatusId = Integer.parseInt(request.getParameter("newStatus"));
+
+            Map<String, String> result = deliveryDAO.updateDeliveryStatus(deliveryId, newStatusId);
+
+            if ("true".equals(result.get("success"))) {
+                request.getSession().setAttribute("successMessage", result.get("message"));
+            } else {
+                request.getSession().setAttribute("errorMessage", result.get("error"));
+            }
+
+            // Redirect back to the delivery order list or edit page
+            String referer = request.getHeader("Referer");
+            if (referer != null && referer.contains("edit")) {
+                // If coming from edit page, redirect back there
+                response.sendRedirect("deliveryList?action=edit&deliveryId=" + deliveryId);
+            } else {
+                // Otherwise redirect to the list
+                response.sendRedirect("deliveryList");
+            }
+            return;
+
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("errorMessage", "Invalid input: Delivery ID or Status ID is not a valid number.");
+            response.sendRedirect("deliveryList");
+            return;
+        }
     }
+
+    // If not updateStatus action, forward to doGet
+    doGet(request, response);
+}
 
     @Override
     public String getServletInfo() {

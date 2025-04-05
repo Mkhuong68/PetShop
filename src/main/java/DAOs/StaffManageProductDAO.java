@@ -94,20 +94,47 @@ public class StaffManageProductDAO {
     }
 
     // Cập nhật sản phẩm
-    public void updateProduct(Product product) {
-        String sql = "UPDATE Products SET product_name=?, product_description=?, product_price=?, product_image=?, category_id=?, last_updated=GETDATE(), is_hidden=?, stock_quantity=? WHERE product_id=?";
+    public boolean updateProduct(Product product) {
+        String sql = "UPDATE Products SET product_name=?, product_description=?, product_price=?, product_image=?, category_id=?, last_updated=GETDATE(), is_hidden=?, stock_quantity=?, sold_quantity=? WHERE product_id=?";
+
         try ( PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, product.getProductName());
             ps.setString(2, product.getProductDescription());
             ps.setBigDecimal(3, product.getProductPrice());
             ps.setString(4, product.getProductImage());
             ps.setInt(5, product.getCategoryId());
-            ps.setBoolean(6, product.isIsHidden());
+
+            // Nếu stock_quantity = 0, set is_hidden = 1 (ẩn sản phẩm)
+            boolean isHidden = product.getStockQuantity() == 0;
+            ps.setBoolean(6, isHidden); // Cập nhật is_hidden
+
             ps.setInt(7, product.getStockQuantity());
-            ps.setInt(8, product.getProductId());
-            ps.executeUpdate();
+
+            // Kiểm tra nếu sold_quantity > stock_quantity, nếu vượt quá thì giới hạn lại
+            if (product.getSoldQuantity() > product.getStockQuantity()) {
+                product.setSoldQuantity(product.getStockQuantity()); // Giới hạn sold_quantity
+            }
+
+            ps.setInt(8, product.getSoldQuantity());
+            ps.setInt(9, product.getProductId());
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean addQuantityProductByName(String productName, int quantity) throws SQLException {
+        String sql = "UPDATE Products \n"
+                + "SET stock_quantity = stock_quantity + ? \n"
+                + "WHERE product_name = ?;";
+
+        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, quantity);       // Đặt quantity vào vị trí đầu tiên
+            ps.setString(2, productName); // Đặt productName vào vị trí thứ hai
+
+            int rowsUpdated = ps.executeUpdate(); // Thực thi câu lệnh SQL
+            return rowsUpdated > 0; // Nếu có dòng nào được cập nhật thì trả về true
         }
     }
 

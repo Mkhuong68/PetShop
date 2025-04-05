@@ -3,22 +3,30 @@
     Created on : Mar 11, 2025, 11:51:16 PM
     Author     : Admin
 --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<head>
-    <title>Add Staff Account</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-</head>
-<body>
-    <h2>Add New Staff Account</h2>
+    <head>
+        <title>Add Staff Account</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    <body>
+        <h2>Add New Staff Account</h2>
+
+        <!-- Hiển thị thông báo lỗi nếu có -->
+    <c:if test="${not empty errorMessage}">
+        <div style="color: red; font-weight: bold; text-align: center;">
+            ${errorMessage}
+        </div>
+    </c:if>
+
     <form action="StaffManageAccountController" method="post">
         <input type="hidden" name="action" value="insert">
         Username: <input type="text" name="username" required><br>
         Password: <input type="password" name="password" required><br>
         Email: <input type="email" name="email" required><br>
         Phone: <input type="text" name="phone"><br>
-        Active: <input type="checkbox" name="active"><br>
         First Name: <input type="text" name="firstName" required><br>
         Last Name: <input type="text" name="lastName" required><br>
         Date of Birth: <input type="date" name="dob" required><br>
@@ -27,74 +35,134 @@
             <option value="Male">Male</option>
             <option value="Female">Female</option>
         </select><br>
-        Banned Reason: <input type="text" name="bannedReason"><br>
-        <input type="submit" value="Add Account">
+        <label for="role">Role:</label>
+        <select name="role" id="role">
+            <c:forEach var="role" items="${roleList}">
+                <option value="${role.roleId}">
+                    ${role.roleName}
+                </option>
+            </c:forEach>
+        </select>
+         Active: <input type="checkbox" name="active"><br>
+        <div class="button-container">
+            <input type="submit" value="Add Account">
+            <a class="back-button" href="StaffManageAccountController?action=list">Back to List</a>
+        </div>
     </form>
-    <a href="StaffManageAccountController?action=list">Back to List</a>
+
 </body>
+<c:if test="${not empty errorMessage}">
+    <div class="error-message">
+        ${errorMessage}
+    </div>
+</c:if>
 </html>
+
 <style>
-    /* Container cho form */
-    .form-container {
-        width: 50%;
-        margin: 20px auto;
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
         padding: 20px;
-        background: #8AAAE5;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* Tiêu đề */
     h2 {
         text-align: center;
-        color: #2c3e50;
+        color: #333;
     }
 
-    /* Label cho các trường dữ liệu */
-    label {
-        display: block;
-        margin: 10px 0 5px;
-        font-weight: bold;
-        color: #2c3e50;
-    }
-
-    /* Input text và checkbox */
-    input[type="text"], input[type="password"], input[type="email"], input[type="date"], select {
-        width: calc(100% - 16px);
-        padding: 8px;
-        margin-bottom: 10px;
-        border: 1px solid #8AAAE5;
+    form {
+        background-color: #fff;
+        padding: 20px;
         border-radius: 5px;
-        display: block;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: 0 auto;
     }
 
-    /* Nút bấm submit */
-    input[type="submit"], button {
-        background: #8AAAE5;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        cursor: pointer;
-        border-radius: 5px;
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="date"],
+    select {
         width: 100%;
-        margin-top: 10px;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
     }
 
-    /* Hiệu ứng hover cho nút */
-    input[type="submit"]:hover, button:hover {
-        background: #2c3e50;
+    input[type="checkbox"] {
+        margin: 10px 0;
     }
 
-    /* Liên kết quay lại */
-    .back-link {
+    input[type="submit"] {
+        background-color: #8AAAE5;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #4cae4c;
+    }
+
+    .error-message {
+        color: red;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    a {
         display: block;
         text-align: center;
-        margin-top: 15px;
-        color: #8AAAE5;
+        margin-top: 20px;
+        color: #007bff;
         text-decoration: none;
     }
 
-    .back-link:hover {
+    a:hover {
         text-decoration: underline;
+    }
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        align-items: center;
+    }
+
+    button, input[type="submit"], .back-button {
+        background: #8AAAE5;
+        color: white;
+        border: none;
+        padding: 20px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 40%; /* Adjusted width to fit two buttons */
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none; /* Remove underline from link */
+        transition: background 0.3s;
+        height: 20%;
+    }
+
+    button:hover, input[type="submit"]:hover, .back-button:hover {
+        background: #7a9bc2;
+    }
+
+    .back-button {
+        display: inline-block; /* Make it behave like a button */
+        margin: 20px;
+    }
+    .button-container a {
+        width: 35%;
+        text-align: center;
+        height: 18%;
+        text-decoration: none;
     }
 </style>

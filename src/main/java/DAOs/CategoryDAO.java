@@ -21,7 +21,7 @@ public class CategoryDAO {
     }
 
     public CategoryDAO() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public List<Category> getAllCategories() {
@@ -53,27 +53,52 @@ public class CategoryDAO {
         return categories;
     }
 
-    public Category getCategoryById(int categoryId) throws SQLException {
-        String sql = "SELECT * FROM Categories WHERE category_id = ?";
-        try ( PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, categoryId);
-            try ( ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Category(
-                            rs.getInt("category_id"),
-                            rs.getString("category_name"),
-                            rs.getString("category_description"),
-                            rs.getInt("parent_category_id"),
-                            rs.getBoolean("is_hidden"),
-                            rs.getDate("created_date"),
-                            rs.getDate("last_updated")
-                    );
-                }
+    public List<Category> getAllCategoriesHavePrudct() {
+        List<Category> categories = new ArrayList<>();
+        try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement("select * from Categories c \n"
+                + "join Products  p on c.category_id = p.category_id");  ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                categories.add(new Category(
+                        rs.getInt("category_id"),
+                        rs.getString("category_name"),
+                        rs.getString("category_description"),
+                        rs.getInt("parent_category_id"),
+                        rs.getBoolean("is_hidden"),
+                        rs.getDate("created_date"),
+                        rs.getDate("last_updated")
+                ));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
+
+        // 🚨 Nếu danh sách rỗng, in ra log để kiểm tra
+        if (categories.isEmpty()) {
+            System.out.println("⚠ WARNING: No categories found in database.");
+        } else {
+            System.out.println("✅ Loaded " + categories.size() + " categories from database.");
+        }
+
+        return categories;
     }
 
+    public int getCategoryIdByName(String categoryName) throws SQLException {
+        String sql = "SELECT category_id FROM Categories WHERE category_name = ?";
+        try ( PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, categoryName);
+            try ( ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int categoryId = rs.getInt("category_id");
+                    return categoryId;
+
+                }
+
+            }
+        }
+        return -1; // Trả về -1 nếu không tìm thấy danh mục
+    }
+ 
     public boolean addCategory(String name, String des, int id) throws SQLException {
         String sql = "INSERT INTO Categories (category_name, category_description, parent_category_id, is_hidden, created_date, last_updated) VALUES (?, ?, ?, 0, GETDATE(), GETDATE())";
         try ( Connection conn = DBConnection.getConnection();  PreparedStatement stmt = conn.prepareStatement(sql)) {

@@ -7,101 +7,129 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="Model.ReportedIssue" %>
 <html>
-<head>
-    <title>Update Issue</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-</head>
-<body>
-    <h2>Update Issue Status</h2>
-    <%
-        ReportedIssue issue = (ReportedIssue) request.getAttribute("issue");
-        if (issue == null) {
-    %>
+    <head>
+        <title>Update Issue</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    <body>
+        <h2>Update Issue Status</h2>
+        <%
+            ReportedIssue issue = (ReportedIssue) request.getAttribute("issue");
+            if (issue == null) {
+        %>
         <p>Error: Issue not found!</p>
-    <%
+        <%
         } else {
-    %>
+        %>
         <form action="ManageIssueAdminController" method="post">
             <input type="hidden" name="action" value="update">
-            <input type="hidden" name="id" value="<%= issue.getIssueId() %>">
-            <label>Description: <%= issue.getIssueDescription() %></label><br>
-            <label>Reported Date: <%= issue.getReportedDate() %></label><br>
+            <input type="hidden" name="id" value="<%= issue.getIssueId()%>">
+            <label>Description: <%= issue.getIssueDescription()%></label><br>
+            <label>Reported Date: <%= issue.getReportedDate()%></label><br>
             <label>Resolved:</label>
-            <input type="checkbox" name="isResolved" <%= issue.isIsResolved() ? "checked" : "" %>><br>
-            <input type="submit" value="Update">
+            <input type="checkbox" name="isResolved" <%= issue.isIsResolved() ? "checked" : ""%>><br>
+            <div>
+                <input type="submit" value="Update">
+                <button class="button" onclick="location.href = 'ManageIssueAdminController?action=list'">Back to List</button>
+            </div>
         </form>
-    <%
-        }
-    %>
-    <a href="ManageIssueAdminController?action=list">Back to List</a>
-</body>
+        <%
+            }
+        %>
+    </body>
 </html>
 <style>
-    .form-container {
-        width: 40%;
-        margin: 50px auto;
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
         padding: 20px;
-        background: #f7f7f7;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
     h2 {
-        text-align: center;
         color: #333;
-        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    form {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        margin: auto;
     }
 
     label {
         display: block;
-        margin: 10px 0 5px;
-        font-weight: bold;
-        color: #2c3e50;
-    }
-
-    .issue-info {
-        background: #ecf0f1;
-        padding: 10px;
-        border-radius: 5px;
         margin-bottom: 10px;
-        border: 1px solid #bdc3c7;
+        font-weight: bold;
     }
 
     input[type="checkbox"] {
-        margin-left: 10px;
+        margin-right: 10px;
     }
 
-    button, input[type="submit"] {
-        background: #3498db;
+    input[type="submit"] {
+        background-color: #8AAAE5;
         color: white;
         border: none;
         padding: 10px 15px;
-        cursor: pointer;
         border-radius: 5px;
-        width: 100%;
-        margin-top: 15px;
+        cursor: pointer;
+        font-size: 16px;
     }
 
-    button:hover, input[type="submit"]:hover {
-        background: #2980b9;
+    input[type="submit"]:hover {
+        background-color: #0056b3;
     }
 
-    .back-link {
-        display: block;
-        text-align: center;
-        margin-top: 15px;
-        color: #2c3e50;
+    a {
+        display: inline-block;
+        margin-top: 20px;
         text-decoration: none;
-        font-weight: bold;
+        color: #007bff;
     }
 
-    .back-link:hover {
+    a:hover {
         text-decoration: underline;
     }
+    .button {
+        background-color: #8AAAE5; /* Màu nền */
+        color: white; /* Màu chữ */
+        border: none; /* Không có viền */
+        padding: 10px 20px; /* Khoảng cách bên trong */
+        border-radius: 5px; /* Bo góc */
+        cursor: pointer; /* Con trỏ khi di chuột */
+        font-size: 16px; /* Kích thước chữ */
+        transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu */
+        margin-top: 10px;
+        height: 50px;
+        width: 100px;
+    }
 
-    .error-message {
-        color: red;
-        text-align: center;
-        font-weight: bold;
+    .button:hover {
+        background-color: #0056b3; /* Màu nền khi di chuột */
+    }
+    .button, input[type="submit"] {
+        background-color: #8AAAE5; /* Màu nền */
+        color: white; /* Màu chữ */
+        border: none; /* Không có viền */
+        padding: 10px 20px; /* Khoảng cách bên trong */
+        border-radius: 5px; /* Bo góc */
+        cursor: pointer; /* Con trỏ khi di chuột */
+        font-size: 16px; /* Kích thước chữ */
+        transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu */
+        margin-top: 10px; /* Khoảng cách giữa hai nút */
+    }
+
+    .button:hover, input[type="submit"]:hover {
+        background-color: #0056b3; /* Màu nền khi di chuột */
+    }
+
+    div {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
     }
 </style>

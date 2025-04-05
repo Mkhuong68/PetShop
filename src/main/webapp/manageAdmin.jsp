@@ -55,12 +55,6 @@
             </div>
         </div>
 
-        <!-- Main Content Area -->
-        <div class="main-content">
-            <h1>Admin Dashboard</h1>
-            <p>Welcome to the Admin Dashboard. You can manage different sections from here.</p>
-        </div>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             // Highlight active menu item
@@ -219,16 +213,4 @@
         margin-bottom: 20px;
     }
 
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .sidebar {
-            transform: translateX(-100%);
-        }
-        .top-nav {
-            left: 0;
-        }
-        .main-content {
-            margin-left: 0;
-        }
-    }
 </style>

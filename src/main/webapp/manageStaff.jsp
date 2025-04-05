@@ -81,7 +81,7 @@
 
             /* Main Content Area */
             .main-content {
-                margin-left: 250px;
+                margin-left: 200px;
                 padding: 80px 20px 20px;
             }
 
@@ -176,7 +176,7 @@
                 <i class="bi bi-shop"></i> PetShop Staff
             </div>
             <nav class="nav flex-column">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="manageProduct.jsp">
                     <i class="bi bi-people"></i> Manage Accounts
                 </a>
                 <a class="nav-link" href="CategoryController?action=list">
@@ -188,7 +188,7 @@
                 <a class="nav-link" href="${pageContext.request.contextPath}/ManageOption/list">
                     <i class="bi bi-gear"></i> Manage Options
                 </a>
-                <a class="nav-link" href="">
+                <a class="nav-link" href="manageProduct.jsp">
                     <i class="bi bi-tag"></i> Manage Promotion
                 </a>
                 <a class="nav-link" href="${pageContext.request.contextPath}/ManageVoucher">
@@ -197,18 +197,15 @@
                 <a class="nav-link" href="StaffOrderController">
                     <i class="bi bi-cart"></i> Manage Order
                 </a>
-                <a class="nav-link" href="">
+                <a class="nav-link" href="manageProduct.jsp">
                     <i class="bi bi-star"></i> Manage Feedback
                 </a>
-                <a class="nav-link" href="">
+                <a class="nav-link" href="manageProduct.jsp">
                     <i class="bi bi-file-text"></i> Manage Post
                 </a>
-                <a class="nav-link" href="">
+                <a class="nav-link" href="manageProduct.jsp">
                     <i class="bi bi-chat"></i> Manage Comment
                 </a>
-
-
-
             </nav>
         </div>
 

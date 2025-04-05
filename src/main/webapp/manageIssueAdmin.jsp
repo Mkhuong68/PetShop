@@ -6,6 +6,7 @@
         <link rel="stylesheet" type="text/css" href="styles.css">
     </head>
     <body>
+        <jsp:include page="manageAdmin.jsp" />
         <div class="main-content">
             <h2>Reported Issues</h2>
             <table>
@@ -13,6 +14,7 @@
                     <tr>
                         <th>Issue ID</th>
                         <th>Reporter ID</th>
+                        <th>Order ID</th>
                         <th>Description</th>
                         <th>Reported Date</th>
                         <th>Resolved</th>
@@ -24,6 +26,14 @@
                         <tr>
                             <td>${issue.issueId}</td>
                             <td>${issue.accountId}</td>
+                            <td>
+                                <c:forEach var="info" items="${list}">
+                                    <c:if test="${info.issueId == issue.issueId}">
+                                        ${info.orderId}
+                                    </c:if>
+                                </c:forEach>
+                                ${issue.issueId}
+                            </td>                         
                             <td>${issue.issueDescription}</td>
                             <td>${issue.reportedDate}</td>
                             <td>${issue.isIsResolved() ? "Yes" : "No"}</td>
@@ -53,6 +63,11 @@
         padding: 0;
         box-sizing: border-box;
         font-family: Arial, sans-serif;
+    }
+    h2 {
+        color: #2c3e50;
+        margin-top: 70px;
+        font-size: 30px;
     }
 
     /* Container chính */

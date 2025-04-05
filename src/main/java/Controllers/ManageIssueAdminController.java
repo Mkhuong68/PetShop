@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  *
@@ -47,12 +48,16 @@ public class ManageIssueAdminController extends HttpServlet {
 
                 default:
                     List<ReportedIssue> issues = issueDAO.getAllIssues();
+                    List<Map<String, Object>> list = issueDAO.getOrderIdByIssueById(123);
+
                     if (issues == null || issues.isEmpty()) {
                         System.out.println("No issues found in the database.");
                     } else {
                         System.out.println("Issues loaded successfully. Total: " + issues.size());
                     }
                     request.setAttribute("issueList", issues);
+                    request.setAttribute("list", list);
+
                     request.getRequestDispatcher("manageIssueAdmin.jsp").forward(request, response);
                     break;
             }

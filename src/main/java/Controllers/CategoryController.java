@@ -1,7 +1,6 @@
 package Controllers;
 
 import DAOs.CategoryDAO;
-import DB.DBConnection;
 import Model.Category;
 import java.io.IOException;
 import java.sql.Connection;
@@ -11,12 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.PreparedStatement;
-import java.sql.Timestamp;
+import jakarta.servlet.http.HttpSession;
 
 public class CategoryController extends HttpServlet {
 
@@ -44,40 +41,75 @@ public class CategoryController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        try {
-            switch (action == null ? "list" : action) {
-                case "new":
-                    RequestDispatcher dispatcherNew = request.getRequestDispatcher("addCategory.jsp");
-                    dispatcherNew.forward(request, response);
-                    break;
-                case "edit":
-                    int categoryId = Integer.parseInt(request.getParameter("id"));
-                    Category existingCategory = categoryDAO.getCategoryById(categoryId);
-                    request.setAttribute("category", existingCategory);
-                    RequestDispatcher dispatcherEdit = request.getRequestDispatcher("updateCategory.jsp");
-                    dispatcherEdit.forward(request, response);
-                    break;
 
-                case "delete":
-                    categoryId = Integer.parseInt(request.getParameter("id"));
-                    categoryDAO.deleteCategory(categoryId);
-                    response.sendRedirect("CategoryController?action=list");
-                    break;
-                default:
-                    List<Category> categories = categoryDAO.getAllCategories();
-                    if (categories == null) {
-                        categories = new ArrayList<>();
+        switch (action == null ? "list" : action) {
+            case "new":
+                RequestDispatcher dispatcherNew = request.getRequestDispatcher("addCategory.jsp");
+                dispatcherNew.forward(request, response);
+                break;
+            case "edit":
+                int categoryId = Integer.parseInt(request.getParameter("id"));
+                List<Category> categoryList = categoryDAO.getAllCategories();
+                Category c = new Category();
+                boolean ok = false;
+                for (Category category : categoryList) {
+                    if (category.getCategoryId() == categoryId) {
+                        c = category;
+                        // Lưu cả đối tượng vào request
+                        ok = true;
+                        break;
                     }
-                    System.out.println("Controller - Categories found: " + categories.size()); // Debug
+                }
+                if (ok == false) {
+                    throw new RuntimeException("Category ID không khớp với bất kỳ danh mục nào!");
+                } else {
+                    request.setAttribute("category", c);
+                }
+                RequestDispatcher dispatcherEdit = request.getRequestDispatcher("updateCategory.jsp");
+                dispatcherEdit.forward(request, response);
+                break;
 
-                    request.setAttribute("categoryList", categories);
-                    RequestDispatcher dispatcherList = request.getRequestDispatcher("manageCategory.jsp");
-                    dispatcherList.forward(request, response);
-                    break;
+            case "delete":
+                categoryId = Integer.parseInt(request.getParameter("id"));
+                List<Category> categoryListHaveProduct = categoryDAO.getAllCategoriesHavePrudct();
+                boolean okc = false;
+                for (Category category : categoryListHaveProduct) {
+                    if (category.getCategoryId() == categoryId) {
+                        // Lưu lỗi vào session
+                        okc = true;
 
-            }
-        } catch (SQLException e) {
-            throw new ServletException(e);
+                        return;
+                    }
+                }
+                if (okc == true) {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("errorMessage", "❌ Không thể xóa danh mục vì vẫn còn sản phẩm thuộc danh mục này!");
+                    // Chuyển hướng về danh sách danh mục
+                    response.sendRedirect("CategoryController?action=list");
+                } else {
+                    categoryDAO.deleteCategory(categoryId);
+                }
+
+                // Lưu thông báo thành công vào session
+                HttpSession session = request.getSession();
+                session.setAttribute("successMessage", "✅ Danh mục đã được xóa thành công.");
+
+                // Chuyển hướng về danh sách danh mục
+                response.sendRedirect("CategoryController?action=list");
+                break;
+
+            default:
+                List<Category> categories = categoryDAO.getAllCategories();
+                if (categories == null) {
+                    categories = new ArrayList<>();
+                }
+                System.out.println("Controller - Categories found: " + categories.size()); // Debug
+
+                request.setAttribute("categoryList", categories);
+                RequestDispatcher dispatcherList = request.getRequestDispatcher("manageCategory.jsp");
+                dispatcherList.forward(request, response);
+                break;
+
         }
     }
 
@@ -87,16 +119,26 @@ public class CategoryController extends HttpServlet {
         try {
             switch (action) {
                 case "insert":
-                    Category newCategory = new Category();
+                    List<Category> CategoryList = new ArrayList<>();
+                    CategoryList = categoryDAO.getAllCategories();
                     String name = request.getParameter("name");
                     String des = request.getParameter("description");
                     int parentId = Integer.parseInt(request.getParameter("parentId"));
-                    
-                    boolean isAdded = categoryDAO.addCategory(name, des, parentId);
-                    if (isAdded) {
-                        response.sendRedirect("CategoryController?action=list");
-                    } else {
-                        response.sendRedirect("manageStaff.jsp");
+
+                    boolean caExit = false;
+                    for (Category category : CategoryList) {
+                        if (category.getCategoryName().equals(name)) {
+                            caExit = true;
+                            break;
+                        }
+                    }
+                    if (caExit == false) {
+                        boolean isAdded = categoryDAO.addCategory(name, des, parentId);
+                        if (isAdded) {
+                            response.sendRedirect("CategoryController?action=list");
+                        } else {
+                            response.sendRedirect("manageStaff.jsp");
+                        }
                     }
                     break;
                 case "update":
@@ -111,6 +153,14 @@ public class CategoryController extends HttpServlet {
                     break;
                 case "delete":
                     int categoryIdToDelete = Integer.parseInt(request.getParameter("id"));
+                    List<Category> categoryListHaveProduct = categoryDAO.getAllCategoriesHavePrudct();
+                    for (Category category : categoryListHaveProduct) {
+                        if (category.getCategoryId() == categoryIdToDelete) {
+                            request.setAttribute("errorMessage", "❌ Không thể xóa danh mục vì vẫn còn sản phẩm thuộc danh mục này!");
+                            response.sendRedirect("CategoryController?action=list");
+                            return;
+                        }
+                    }
                     categoryDAO.deleteCategory(categoryIdToDelete);
                     response.sendRedirect("CategoryController?action=list");
                     break;

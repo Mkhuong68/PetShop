@@ -8,193 +8,207 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
     <head>
+        <meta charset="UTF-8">
         <title>Manage Staff Accounts</title>
         <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <style>
+            /* Thiết lập chung */
+            body {
+                background-color: #f4f4f4;
+                color: #333;
+                padding: 20px;
+                display: flex; /* Sử dụng flexbox */
+                margin-left: 100px;
+            }
+
+            /* Layout chính */
+            .container {
+                display: flex;
+                flex-direction: row;
+                align-items: flex-start; /* Canh trên cùng */
+                gap: 20px; /* Khoảng cách giữa các phần */
+                margin: 20px;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                width: 250px;
+                background-color: white;
+                padding: 15px;
+                box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+            }
+
+            /* Nội dung chính */
+            .main-content {
+                flex-grow: 1;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin-top: 20px;
+                margin-left:120px;
+
+                min-height: 500px; /* Đảm bảo chiều cao tối thiểu */
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between; /* Giữ cho phần nội dung không bị đẩy lên */
+            }
+
+            /* Tiêu đề */
+            h2 {
+                color: #2c3e50;
+                margin-bottom: 20px;
+                font-size: 24px;
+            }
+
+            /* Button chung */
+            .button,
+            a.button {
+                background-color: #8AAAE5; /* Màu nền */
+                color: white; /* Màu chữ */
+                padding: 6px 12px;
+                font-size: 14px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                text-align: center;
+                display: inline-block;
+                width: 150px;
+                margin-top: 15px;
+                text-decoration: none;
+                height: 50px;
+            }
+
+            .button:hover,
+            a.button:hover {
+                background-color: #7A9AD5; /* Màu nền khi hover */
+            }
+
+            /* Bảng */
+            table {
+                width: auto;
+                border-collapse: collapse;
+                margin-top: 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                background: white;
+            }
+
+            table, th, td {
+                border: 1px solid #bdc3c7;
+            }
+
+            th, td {
+                padding: 10px;
+                text-align: left;
+            }
+
+            th {
+                background-color: #8AAAE5; /* Màu nền tiêu đề bảng */
+                color: white; /* Màu chữ tiêu đề bảng */
+            }
+
+            /* Hàng chẵn có màu nền khác */
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            tr:hover {
+                background-color: #ddd;
+            }
+
+            /* Link trong bảng */
+            td a {
+                text-decoration: none;
+                color: #2c3e50; /* Màu chữ link */
+                padding: 5px;
+                margin-right: 5px;
+            }
+
+            td a:hover {
+                color: #34495e; /* Màu chữ link khi hover */
+            }
+
+            /* Nút Edit & Delete */
+            td form button {
+                background-color: #8AAAE5; /* Màu nền cho nút Edit & Delete */
+                color: white; /* Màu chữ cho nút Edit & Delete */
+                padding: 5px 10px;
+                border-radius: 5px;
+                border: none; /* Không có viền */
+                cursor: pointer; /* Con trỏ chuột khi di chuột qua */
+            }
+
+            td form button:hover {
+                background-color: #7A9AD5; /* Màu nền khi hover */
+            }
+        </style>
     </head>
     <body>
-        <h2>Staff Account List</h2>
-        <a href="StaffManageAccountController?action=new" class="button">Add New Staff</a>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Active</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Date of Birth</th>
-                    <th>Gender</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="account" items="${accountList}">
+        <div class="container">
+            <div class="sidebar">
+                <jsp:include page="manageAdmin.jsp" />
+            </div>
+            <div class="main-content">
+                <h2>Staff Account List</h2>
+                <a href="StaffManageAccountController?action=new" class="button">Add New Staff</a>
+                <table>
                     <tr>
-                        <td>${account.accountId}</td>
-                        <td>${account.username}</td>
-                        <td>${account.email}</td>
-                        <td>${account.phoneNumber}</td>
-                        <td>${account[isActive]}</td>
-                        <td>${account.firstName}</td>
-                        <td>${account.lastName}</td>
-                        <td>${account.dateOfBirth}</td>
-                        <td>${account.gender}</td>
-                        <td>
-                            <a href="StaffManageAccountController?action=edit&id=${account.accountId}">Edit</a> |
-                            <a href="StaffManageAccountController?action=delete&id=${account.accountId}" onclick="return confirm('Are you sure you want to delete this account?');">Delete</a>
-                        </td>
+                        <th>Account ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Date of Birth</th>
+                        <th>Gender</th>
+                        <th>Actions</th>
                     </tr>
-                </c:forEach>
-                <c:if test="${empty accountList}">
-                    <tr>
-                        <td colspan="10">No accounts found.</td>
-                    </tr>
-                </c:if>
-            </tbody>
-        </table>
-        <a href="manageAdmin.jsp">
-            <button class="button">Back to Manage Staff</button>
-        </a>
+
+                    <c:forEach var="account" items="${accountList}">
+                        <c:set var="status" value="${statusMap[account.accountId]}" />
+                        <c:set var="role" value="${roleLookup[account.roleId]}" />
+
+                        <tr>
+                            <td>${account.accountId}</td>
+                            <td>${account.username}</td>
+                            <td>${account.email}</td>
+                            <td>${role != null ? role.roleName : 'No Role'}</td>
+                            <td>${account.phoneNumber}</td>
+                            <td>${status == 1 ? 'Active' : 'Inactive'}</td>
+                            <td>${account.firstName}</td>
+                            <td>${account.lastName}</td>
+                            <td>${account.dateOfBirth}</td>
+                            <td>${account.gender}</td>
+                            <td>
+                                <form action="StaffManageAccountController" method="get" style="display:inline;">
+                                    <input type="hidden" name="action" value="edit">
+                                    <input type="hidden" name="id" value="${account.accountId}">
+                                    <button type="submit">Edit</button>
+                                </form>
+
+                                <form action="StaffManageAccountController" method="post" style="display:inline;" 
+                                      onsubmit="return confirm('Are you sure you want to delete this account?');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="${account.accountId}">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+
+                <a href="manageAdmin.jsp">
+                    <button class="button">Back to Manage Staff</button>
+                </a>
+            </div>
+        </div>
     </body>
+
 </html>
-<style>
-    /* CSS riêng cho manageAccountStaff.jsp */
 
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 0;
-    }
 
-    h2 {
-        color: #2c3e50;
-        margin-bottom: 20px;
-        font-size: 24px;
-    }
-
-    a.button {
-        background-color: #8AAAE5;
-        color: white;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 5px;
-        margin-bottom: 20px;
-        display: inline-block;
-    }
-
-    a.button:hover {
-        background-color: #8AAAE5;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    table, th, td {
-        border: 1px solid #bdc3c7;
-    }
-
-    th, td {
-        padding: 10px;
-        text-align: left;
-    }
-
-    th {
-        background-color: #8AAAE5;
-        color: white;
-    }
-
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    tr:hover {
-        background-color: #ddd;
-    }
-
-    td a {
-        text-decoration: none;
-        color: #2c3e50;
-        padding: 5px;
-        margin-right: 5px;
-    }
-
-    td a:hover {
-        color: #34495e;
-    }
-
-    td a.edit {
-        background-color: #27ae60;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 5px;
-    }
-
-    td a.delete {
-        background-color: #e74c3c;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 5px;
-    }
-
-    td a.edit:hover {
-        background-color: #2ecc71;
-    }
-
-    td a.delete:hover {
-        background-color: #c0392b;
-    }
-
-    table td,
-    table th {
-        text-align: left;
-    }
-
-    table th {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    table td {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    /* Thêm khoảng cách và margin cho phần nội dung */
-    .main-content {
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
-    }
-
-    /* Đảm bảo tất cả các phần tử được căn chỉnh hợp lý */
-    .container {
-        display: flex;
-        flex-direction: column;
-        margin: 20px;
-    }
-    .button {
-        padding: 6px 12px;  /* Giảm padding để nút nhỏ lại */
-        font-size: 14px;     /* Điều chỉnh kích thước font nhỏ hơn */
-        background-color: #8AAAE5;
-        color: white;
-        border: none;
-        border-radius: 5px;  /* Bo tròn góc nhẹ */
-        cursor: pointer;
-        text-align: center;  /* Căn giữa văn bản */
-        display: inline-block; /* Giúp nút không chiếm hết chiều rộng */
-        width: auto;  /* Để nút có kích thước tự động, không kéo dài */
-        margin-top: 15px; /* Thêm một chút khoảng cách trên nút */
-    }
-
-    .button:hover {
-        background-color: #7A9AD5; /* Hiệu ứng hover */
-    }
-</style>
